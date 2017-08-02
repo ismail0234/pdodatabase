@@ -35,7 +35,6 @@ Class PDO_MYSQL
 			 $this->pdo = new PDO($connstring,$fw_config["database"]["username"],$fw_config["database"]["password"]);
 
 			 $this->pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
-//             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 			 $this->prefix = $fw_config["database"]["prefix"];
 
@@ -380,21 +379,3 @@ Class PDO_MYSQL
 }
 $db = new PDO_MYSQL;
 
-echo "<pre>";
-
-print_r(
-
-
-$db->select('*')->from('testtable')->where(array('uid' => 2  ))->orderby('id','ASC')->limit(0,30)->result()
-
-
-
-
-);
-//$db->insert_batch('testtable',array(array('text' => 1,'uid' => 2),array('a1' => 1,'a2' => 2),array('a1' => 1,'a2' => 2),array('a1' => 1,'a2' => 2),array('a1' => 1,'a2' => 2)));
-
-//$db->truncate('testGGGtable');
-
-//$db->drop('testGGGtable');
-
-//$db->empty_table('testGGGtable');
