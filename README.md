@@ -7,11 +7,12 @@
 require "application/config/config.php";
 require "application/database/database.php";
 
+```
 ### Debug
 
 ![alt text](http://i.imgur.com/vldGpuK.png)
 
-```
+
 
 
 ### Truncate Table 
