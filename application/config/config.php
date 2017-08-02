@@ -2,10 +2,10 @@
 
 /*
 |--------------------------------------------------------------------------
-| VERITABANI BAĞLANTI
+| DATABASE CONNECTION
 |--------------------------------------------------------------------------
 |
-| VERITABANI BAĞLANTI IP 
+| DATABASE CONNECTION IP 
 | DEFAULT => localhost
 */
 
