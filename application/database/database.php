@@ -14,9 +14,9 @@ Class PDO_MYSQL
 
      protected $orderby = [];
 
-     protected $from = null;
+	 protected $from = null;
 
-     protected $where = null;
+     protected $where = array("var" => [],"sql" => "");
 
      protected $limit = [];
 
@@ -35,6 +35,7 @@ Class PDO_MYSQL
 			 $this->pdo = new PDO($connstring,$fw_config["database"]["username"],$fw_config["database"]["password"]);
 
 			 $this->pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
+//             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 			 $this->prefix = $fw_config["database"]["prefix"];
 
@@ -99,8 +100,8 @@ Class PDO_MYSQL
 	      	
 	      	default:
  			         foreach((array)$arr as $key => $value){
-			     		$this->wherearr[$key]["val"] = $value;
-			     		$this->wherearr[$key]["tur"] = $isaret;
+			     		$this->whereand[$key]["val"] = $value;
+			     		$this->whereand[$key]["tur"] = $isaret;
 
 			         }
       		break;
@@ -113,6 +114,7 @@ Class PDO_MYSQL
      private function where_combine($arr,$isaret = 'AND'){
 
     	$sql = [];
+
 
         if(!empty($this->where["sql"])){
 
@@ -132,8 +134,11 @@ Class PDO_MYSQL
 
  		}    	
 
+        if(count($sql) > 0){
 
-        $this->where["sql"] = implode(' '.$isaret.' ', $sql);
+            $this->where["sql"] = implode(' '.$isaret.' ', $sql);
+
+        }
 
      }
 
@@ -310,7 +315,7 @@ Class PDO_MYSQL
 
          $arr = []; $orderby = '';
 
-         $this->where_combine($this->wherearr,'OR');
+         $this->where_combine($this->whereand,'AND');
 
          $this->where_combine($this->whereor,'OR');
          
@@ -327,20 +332,28 @@ Class PDO_MYSQL
 
          }
 
-         $arr = array_merge($arr,$this->where["var"],$limit["var"]);
+         if(count($this->where["var"]) > 0){
 
+             $arr = array_merge($arr,$this->where["var"]);
+
+         }
+         if(count($limit["var"]) > 0){
+
+             $arr = array_merge($arr,$limit["var"]);
+
+         } 
          return array("sql" => $this->where["sql"].' '.$orderby.' '.$limit["sql"],"var" => $arr);
      }
 
      private function select_combine($where){
 
-         return 'SELECT '.implode(',',$this->selectarr).' FROM '.$this->from.' WHERE '.$where;
+         return 'SELECT '.implode(',',$this->selectarr).' FROM '.$this->from.'  '.(empty(trim($where)) ? '':'WHERE '.$where);
 
      }
 
      private function clearQuery(){
 
-        unset($this->selectarr,$this->from,$this->where,$this->wherearr,$this->whereor,$this->limit,$this->orderby);
+        unset($this->selectarr,$this->from,$this->where,$this->whereand,$this->whereor,$this->limit,$this->orderby);
 
      }
 
@@ -355,7 +368,6 @@ Class PDO_MYSQL
      public function result_array(){ // array all
 
          $where = $this->where_combine_combine(1);
-
          $sql =  $this->select_combine($where["sql"]);
 
         return $this->pdoexec($sql,$where["var"] , 2);
@@ -377,5 +389,3 @@ Class PDO_MYSQL
         return $this->pdoexec($sql,$where["var"] , 4);
      }     
 }
-$db = new PDO_MYSQL;
-
