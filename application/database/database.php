@@ -14,7 +14,7 @@ Class PDO_MYSQL
 
      protected $orderby = [];
 
-	 protected $from = null;
+     protected $from = null;
 
      protected $where = null;
 
@@ -149,7 +149,7 @@ Class PDO_MYSQL
         $sql = '';
         $var = [];
 
-        if(count($arr) > 1){
+        if(isset($arr[1]) && $arr[1] > 0){
 
             $sql = 'LIMIT ?,?';
             $var = $arr;
@@ -157,7 +157,7 @@ Class PDO_MYSQL
         }else if(count($arr) > 0){
 
             $sql = 'LIMIT ?';
-            $var = $arr[0];
+            $var = array($arr[0]);
 
 
         }
