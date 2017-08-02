@@ -6,19 +6,19 @@ Class PDO_MYSQL
      protected $debugcss = '<style type="text/css">::selection{background-color:#E13300;color:#fff}::-moz-selection{background-color:#E13300;color:#fff}body{background-color:#fff;margin:40px;font:13px/20px normal Helvetica,Arial,sans-serif;color:#4F5155}a{color:#039;background-color:transparent;font-weight:400}h1{color:#444;background-color:transparent;border-bottom:1px solid #D0D0D0;font-size:19px;font-weight:400;margin:0 0 14px;padding:14px 15px 10px}code{font-family:Consolas,Monaco,Courier New,Courier,monospace;font-size:12px;background-color:#f9f9f9;border:1px solid #D0D0D0;color:#002166;display:block;margin:14px 0;padding:12px 10px}#container{margin:10px;border:1px solid #D0D0D0;box-shadow:0 0 8px #D0D0D0}p{margin:12px 15px}</style>';
 
 
-     protected $selectarr = [];
+     protected $selectarr = array();
      
-     protected $whereand = [];
+     protected $whereand = array();
 
-     protected $whereor = [];
+     protected $whereor = array();
 
-     protected $orderby = [];
+     protected $orderby = array();
 
 	 protected $from = null;
 
      protected $where = array("var" => [],"sql" => "");
 
-     protected $limit = [];
+     protected $limit = array();
 
      protected $prefix = '';
 
@@ -121,18 +121,20 @@ Class PDO_MYSQL
 	        $sql[] = $this->where["sql"];
 
         }
+        if(count($arr) >  0){
+            foreach((array)$arr as $key => $value){
+                
+                if(empty($key)){
 
- 		foreach((array)$arr as $key => $value){
-            
- 			if(empty($key)){
+                    continue;
+                }
 
- 				continue;
- 			}
+                $sql[] = $key.' '.$value["tur"].' ?';
+                $this->where["var"][] = $value["val"];
 
-			$sql[] = $key.' '.$value["tur"].' ?';
-            $this->where["var"][] = $value["val"];
-
- 		}    	
+            }  
+        }
+  	
 
         if(count($sql) > 0){
 
@@ -353,7 +355,13 @@ Class PDO_MYSQL
 
      private function clearQuery(){
 
-        unset($this->selectarr,$this->from,$this->where,$this->whereand,$this->whereor,$this->limit,$this->orderby);
+        $this->selectarr = array();
+        $this->from = null;
+        $this->where = array();
+        $this->whereand = array();
+        $this->whereor = array();
+        $this->limit = array();
+        $this->orderby = array();
 
      }
 
@@ -388,4 +396,14 @@ Class PDO_MYSQL
 
         return $this->pdoexec($sql,$where["var"] , 4);
      }     
+     public function isimDuzelt($str){
+
+    $basharf = $str[0];
+
+    $soncikti = (($basharf)) . substr(mb_strtolower($str),1,(strlen($str) - 1));
+
+    return $soncikti;
 }
+
+}
+$db = new PDO_MYSQL;
