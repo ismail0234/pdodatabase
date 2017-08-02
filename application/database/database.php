@@ -396,14 +396,7 @@ Class PDO_MYSQL
 
         return $this->pdoexec($sql,$where["var"] , 4);
      }     
-     public function isimDuzelt($str){
 
-    $basharf = $str[0];
-
-    $soncikti = (($basharf)) . substr(mb_strtolower($str),1,(strlen($str) - 1));
-
-    return $soncikti;
-}
 
 }
 $db = new PDO_MYSQL;
