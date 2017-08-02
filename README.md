@@ -140,6 +140,23 @@ $db->select('*')->from('users')->where(["uid" => 2 , "name" => "user"])->orderby
 $db->select('*')->from('users')->where(["uid" => 2 , "name" => "user"])->orderby('id','ASC')->limit(10);
 ```
 
+### JOIN
+
+```php
+
+Coming Soon.
+
+```
+
+### GROUP BY
+
+```php
+
+Coming Soon.
+
+```
+
+
 ### Output
 
 ```php
@@ -196,4 +213,21 @@ Array
     [id] => 1
     [1] => 1
 )
+```
+
+
+### UPDATE
+
+```php
+
+Coming Soon.
+
+```
+
+### DELETE
+
+```php
+
+Coming Soon.
+
 ```
