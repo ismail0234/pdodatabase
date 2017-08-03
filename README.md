@@ -163,6 +163,14 @@ Coming Soon.
 
 ```
 
+### NOT IN
+
+```php
+
+Coming Soon.
+
+```
+
 ### Output
 
 ```php
