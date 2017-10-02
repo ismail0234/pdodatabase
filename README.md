@@ -46,7 +46,7 @@ $db->analyze('TableName');
 
 ```
 
-### CHECKSUM Table
+### Cheksum Table
 ```php
 
 // CHECKSUM TABLE tablename
@@ -54,7 +54,7 @@ $db->checksum('TableName');
 
 ```
 
-### OPTIMIZE Table
+### Optimize Table
 ```php
 
 // OPTIMIZE FROM tablename
@@ -62,7 +62,7 @@ $db->optimize('TableName');
 
 ```
 
-### REPAIR Table
+### Repair Table
 ```php
 
 // REPAIR FROM tablename
