@@ -119,9 +119,9 @@ Class PDO_MYSQL
                 {
              
                     $this->sql["set"][] = [
-                        "field1" => $value[0],
-                        "field2" => (isset($value[2])  ? $value[1] : '?'),
-                        "val"   => (isset($value[2])  ? $value[2] : $value[1])
+                        "field1" => trim($value[0]),
+                        "field2" => (isset($value[2])  ? trim($value[1]) : '?'),
+                        "val"   => (isset($value[2])  ? trim($value[2]) : trim($value[1]))
                     ];
 
                 }
@@ -133,9 +133,9 @@ Class PDO_MYSQL
         {
 
             $this->sql["set"][] = [
-                "field1" => $one,
-                "field2" => (!empty($three) ? $two : '?'),
-                "val"    => (!empty($three) ? $three : $two),
+                "field1" => trim($one),
+                "field2" => (!empty($three) ? trim($two) : '?'),
+                "val"    => (!empty($three) ? trim($three) : trim($two)),
             ];
 
         }
@@ -147,7 +147,31 @@ Class PDO_MYSQL
     public function update($table)
     {
 
+        if(count($this->sql["set"]) > 0)
+        {
 
+            $where = '';
+            $value = $set =  [];
+
+            if(count($this->sql["set"]) > 0)
+            {
+
+                foreach($this->sql["set"] as $up)
+                {
+
+                    $set[] = $up["field1"] . ' = ' . $up["field2"];
+                    $value[] = $up["val"];
+
+                }
+
+
+            }
+
+            $sql = 'UPDATE '.$this->prefix. trim($table) .' SET '.implode(',',$set).' '.(!empty($where) ? $where:'');
+
+            return $this->pdoexec($sql,$value , 5);       
+
+        }
 
     }
 
