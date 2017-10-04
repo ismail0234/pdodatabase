@@ -70,6 +70,8 @@ $db->repair('TableName');
 
 ```
 
+## Insert
+
 
 ### Insert Data
 ```php
@@ -111,3 +113,35 @@ $val = [
 $db->multi_insert('TableName',$arr,$val);
 
 ```
+
+## Update
+
+### set
+
+```php
+
+// SET username = ismail
+$db->set('username','ismail');
+
+// SET point = point + 5
+$db->set('point', 'point + ?',5);
+
+// SET username = ismail , point = point + 5
+$db->set([
+    [ "username" , "ismail" ],
+    [ "point" , "point + ? " , 5 ],
+]);
+
+```
+
+### update
+
+```php
+
+// UPDATE test SET username = ismail
+$db->set('username','ismail')->update('users);
+
+
+```
+
+
