@@ -134,4 +134,14 @@ $db->set([
 
 ```
 
+### update
+
+```php
+
+// UPDATE test SET username = ismail
+$db->set('username','ismail')->update('users);
+
+
+```
+
 
