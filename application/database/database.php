@@ -145,59 +145,72 @@ Class PDO_MYSQL
     public function where($field,$two = '',$three = '')
     {
 
-
-        $this->where_function($field,$two,$three,'AND');
-
-        return $this;
+       return $this->where_function($field,$two,$three,'AND');
 
     }
 
     public function or_where($field,$two = '',$three = '')
     {
 
-
-        $this->where_function($field,$two,$three,'OR');
-
-        return $this;
+       return $this->where_function($field,$two,$three,'OR');
 
     }
 
     public function where_in($field,$arr = [])
     {
 
-        $this->where_in_function($field,$arr,'AND');
-
-        return $this;
+       return $this->where_in_function($field,$arr,'AND');
 
     }
 
     public function where_not_in($field,$arr = [])
     {
 
-        $this->where_in_function($field,$arr,'AND');
-
-        return $this;
+       return $this->where_in_function($field,$arr,'AND','NOT');
 
     }
 
     public function or_where_in($field,$arr = [])
     {
 
-        $this->where_in_function($field,$arr,'OR');
-
-        return $this;
+       return $this->where_in_function($field,$arr,'OR');
 
     }
 
     public function or_where_not_in($field,$arr = [])
     {
 
-        $this->where_in_function($field,$arr,'OR');
-
-        return $this;
+       return $this->where_in_function($field,$arr,'OR','NOT');
 
     }
 
+    public function between($field,$one,$two)
+    {
+
+       return $this->where_between_function($field,$one,$two,'AND');
+
+    }
+
+    public function or_between($field,$one,$two)
+    {
+
+       return $this->where_between_function($field,$one,$two,'OR');
+
+    }
+
+    public function between_not($field,$one,$two)
+    {
+
+       return $this->where_between_function($field,$one,$two,'AND','NOT');
+
+    }
+
+    public function or_between_not($field,$one,$two)
+    {
+
+       return $this->where_between_function($field,$one,$two,'OR','NOT');
+
+    }
 
     public function drop($table)
     {
@@ -227,6 +240,24 @@ Class PDO_MYSQL
 
     }
 
+    private function where_between_function($field,$one,$two,$and_or,$not = '')
+    {
+        
+        $field = trim($field);
+        $one   = trim($one);
+        $two   = trim($two);
+
+        if(!empty($field) && !empty($one) && !empty($two))
+        {
+
+            $this->sql["where"][] = trim($field) . ' ' . $not . ' BETWEEN ' . $one . ' AND ' . $two;
+            $this->sql["where"][] = $and_or;
+
+        }
+
+        return $this;
+    }
+
     private function where_in_function($field,$arr,$three,$not = '')
     {
         
@@ -248,7 +279,7 @@ Class PDO_MYSQL
 
         }
 
-
+        return $this;
     }
 
     private function where_function($field,$two,$three,$andor)
@@ -295,9 +326,8 @@ Class PDO_MYSQL
 
         }
 
+        return $this;
     }
-
-
 
     public function set($one = [],$two = '',$three = '')
     {
