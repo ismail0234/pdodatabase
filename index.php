@@ -98,8 +98,8 @@ require "application/database/database.php";
 
 */
      $db->set([
-        [ "username" , "weqew" ],
-    ])->where_in('id',[1,2,3,4,5,6,7,8,9])->update('users');
+        [ "username" , "weqewxxx" ],
+    ])->between('point',10,100)->update('users');
 
  echo "<pre>";
  print_r($db->sql["where"]);

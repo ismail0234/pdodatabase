@@ -12,6 +12,7 @@ Class PDO_MYSQL
         "where" => [],
         "value" => [],
         "set"   => [],
+        "limit" => '',
 
      ];
 
@@ -116,19 +117,7 @@ Class PDO_MYSQL
 
         $where = '';
 
-        if(count($this->sql["where"]) > 0)
-        {
-
-            $select = strtoupper(trim($this->sql["where"][count($this->sql["where"]) - 1]));
-
-            if( in_array($select, $this->and_or) )
-            {
-
-                unset($this->sql["where"][count($this->sql["where"]) - 1]);
-
-            }
-
-        }
+        $this->clearAndOr();
         
         if(count($this->sql["where"]) > 0)
         {
@@ -136,7 +125,6 @@ Class PDO_MYSQL
             $where = 'WHERE ' . implode(' ',$this->sql["where"]);
 
         }
-
 
         return $where;
 
@@ -238,6 +226,58 @@ Class PDO_MYSQL
 
         return $this->pdoexec('ANALYZE TABLE '.$this->prefix . trim($table),[],4);
 
+    }
+
+    public function like($field,$val,$type)
+    {
+
+        return $this->where_like_function($field,$val,'AND','',$type);
+
+    }
+
+    public function or_like($field,$val,$type)
+    {
+
+        return $this->where_like_function($field,$val,'OR','',$type);
+
+    }
+
+    public function like_not($field,$val,$type)
+    {
+
+        return $this->where_like_function($field,$val,'AND','NOT',$type);
+
+    }
+
+    public function or_like_not($field,$val,$type)
+    {
+
+        return $this->where_like_function($field,$val,'OR','NOT',$type);
+
+    }    
+
+    private function where_like_function($field,$value,$and_or,$not,$type = '')
+    {
+
+        $value = $this->likeEscape($value);
+
+        switch ($type)
+        {
+            case 'left' :  $value = '%'.$value;  break;
+            case 'right':  $value =  $value.'%';  break;
+            
+            default     :  $value = '%'.$value.'%'; break;
+        }
+
+        if(!empty($field) && !empty($value))
+        {
+
+            $this->sql["where"][] = trim($field) . ' ' . $not . ' LIKE ? ';
+            $this->sql["where"][] = $and_or;
+
+        }
+
+        return $this;
     }
 
     private function where_between_function($field,$one,$two,$and_or,$not = '')
@@ -558,6 +598,33 @@ Class PDO_MYSQL
         return $this->pdoexec('REPAIR TABLE ' . $tablename,[],4);
 
     }
+
+    private function clearAndOr()
+    {
+
+        if(count($this->sql["where"]) > 0)
+        {
+
+            $select = strtoupper(trim($this->sql["where"][count($this->sql["where"]) - 1]));
+
+            if( in_array($select, $this->and_or) )
+            {
+
+                unset($this->sql["where"][count($this->sql["where"]) - 1]);
+
+            }
+
+        }
+
+    }
+
+    private function likeEscape($str)
+    {
+  
+        return str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), $str);
+
+    }
+
 
 }
 
