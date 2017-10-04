@@ -8,10 +8,16 @@ Class PDO_MYSQL
      protected $prefix = '';
 
      public $sql = [
-
-        "set" => []
+        
+        "where" => [],
+        "value" => [],
+        "set"   => [],
 
      ];
+
+     private $sqlsyntax = ["=", "!=", "<", "<>" , ">", "<=", ">="];
+
+     private $and_or = ["AND", "OR"];
 
      private $pdo = null;
 
@@ -65,7 +71,7 @@ Class PDO_MYSQL
 
         return $this->pdoexec('CHECK TABLE ' . $tablename,[],6);
 
-     }
+ }
 
     private function pdoexec($sql,$array = [],$status = 0)
     {
@@ -105,6 +111,104 @@ Class PDO_MYSQL
 
     }
 
+    private function where_combine()
+    {
+
+        $where = '';
+
+        if(count($this->sql["where"]) > 0)
+        {
+
+            $select = strtoupper(trim($this->sql["where"][count($this->sql["where"]) - 1]));
+
+            if( in_array($select, $this->and_or) )
+            {
+
+                unset($this->sql["where"][count($this->sql["where"]) - 1]);
+
+            }
+
+        }
+        
+        if(count($this->sql["where"]) > 0)
+        {
+
+            $where = 'WHERE ' . implode(' ',$this->sql["where"]);
+
+        }
+
+
+        return $where;
+
+    }
+
+    public function where($field,$two = '',$three = '')
+    {
+
+
+        $this->where_function($field,$two,$three,'AND');
+
+        return $this;
+
+    }
+
+    public function or_where($field,$two = '',$three = '')
+    {
+
+
+        $this->where_function($field,$two,$three,'OR');
+
+        return $this;
+
+    }
+
+    private function where_function($field,$two,$three,$andor)
+    {
+
+        if(is_array($field))
+        {
+
+            if(count($field) > 0)
+            {
+
+                foreach($field as $key => $value)
+                {
+
+                    $this->sql["where"][] = trim($value[0]) . ' ' . ( isset($value[2]) ? $value[1]:'=') . ' ?'; 
+                    $this->sql["value"][] = ( isset($value[2]) ? $value[2]:$value[1]);
+                    $this->sql["where"][] = $andor;
+
+                }
+
+            }
+
+        }
+        else
+        {
+            
+            if(in_array($two, $this->sqlsyntax))
+            {
+
+                $this->sql["where"][] = trim($field) . ' ' . $two . ' ? '; 
+                $this->sql["value"][] = ( isset($three) ? $three:$two);
+
+            }
+            else
+            {
+
+                $this->sql["where"][] = trim($field) . ' = ? '; 
+                $this->sql["value"][] = $two;
+
+             
+            }
+
+            $this->sql["where"][] = $andor;
+
+        }
+
+    }
+
+
 
     public function set($one = [],$two = '',$three = '')
     {
@@ -121,9 +225,8 @@ Class PDO_MYSQL
                     $this->sql["set"][] = [
                         "field1" => trim($value[0]),
                         "field2" => (isset($value[2])  ? trim($value[1]) : '?'),
-                        "val"   => (isset($value[2])  ? trim($value[2]) : trim($value[1]))
                     ];
-
+                    $this->sql["value"][] = (isset($value[2])  ? trim($value[2]) : trim($value[1]));
                 }
 
             }
@@ -135,8 +238,8 @@ Class PDO_MYSQL
             $this->sql["set"][] = [
                 "field1" => trim($one),
                 "field2" => (!empty($three) ? trim($two) : '?'),
-                "val"    => (!empty($three) ? trim($three) : trim($two)),
             ];
+            $this->sql["value"][] = (!empty($three) ? trim($three) : trim($two));
 
         }
 
@@ -150,8 +253,8 @@ Class PDO_MYSQL
         if(count($this->sql["set"]) > 0)
         {
 
-            $where = '';
-            $value = $set =  [];
+            $where = $this->where_combine();
+            $set =  [];
 
             if(count($this->sql["set"]) > 0)
             {
@@ -160,16 +263,14 @@ Class PDO_MYSQL
                 {
 
                     $set[] = $up["field1"] . ' = ' . $up["field2"];
-                    $value[] = $up["val"];
 
                 }
-
 
             }
 
             $sql = 'UPDATE '.$this->prefix. trim($table) .' SET '.implode(',',$set).' '.(!empty($where) ? $where:'');
 
-            return $this->pdoexec($sql,$value , 5);       
+            return $this->pdoexec($sql,$this->sql["value"] , 5);       
 
         }
 
