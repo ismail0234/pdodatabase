@@ -12,6 +12,10 @@ Class PDO_MYSQL
         "where" => [],
         "value" => [],
         "set"   => [],
+        "special"   => [ 
+            "text"  => [] , 
+            "value" => []
+        ],
         "limit" => '',
 
      ];
@@ -126,7 +130,46 @@ Class PDO_MYSQL
 
         }
 
+        if(count($this->sql["special"]["text"]) > 0)
+        {
+
+            $where = ' ' . implode(' ',$this->sql["special"]["text"]);
+         
+            $this->sql["value"] = array_merge($this->sql["value"],$this->sql["special"]["value"]);
+        }
+
+        $this->sql["value"] = array_values($this->sql["value"]);
+
         return $where;
+
+    }
+
+
+    public function drop($table)
+    {
+
+        return $this->pdoexec('DROP TABLE '.$this->prefix . trim($table));
+
+    }
+
+    public function empty_table($table)
+    {
+
+        return $this->pdoexec('DELETE FROM '.$this->prefix . trim($table));
+
+    }
+
+    public function truncate($table)
+    {
+
+        return $this->pdoexec('TRUNCATE '.$this->prefix . trim($table));
+
+    }
+
+    public function analyze($table)
+    {
+
+        return $this->pdoexec('ANALYZE TABLE '.$this->prefix . trim($table),[],4);
 
     }
 
@@ -200,34 +243,6 @@ Class PDO_MYSQL
 
     }
 
-    public function drop($table)
-    {
-
-        return $this->pdoexec('DROP TABLE '.$this->prefix . trim($table));
-
-    }
-
-    public function empty_table($table)
-    {
-
-        return $this->pdoexec('DELETE FROM '.$this->prefix . trim($table));
-
-    }
-
-    public function truncate($table)
-    {
-
-        return $this->pdoexec('TRUNCATE '.$this->prefix . trim($table));
-
-    }
-
-    public function analyze($table)
-    {
-
-        return $this->pdoexec('ANALYZE TABLE '.$this->prefix . trim($table),[],4);
-
-    }
-
     public function like($field,$val,$type)
     {
 
@@ -255,6 +270,33 @@ Class PDO_MYSQL
         return $this->where_like_function($field,$val,'OR','NOT',$type);
 
     }    
+
+    public function limit($min,$max = 0)
+    {
+        // UPDATE FONKSIYONDA LIMIT 0,20 ŞEKLİNDE ÇALIŞMAZ
+        // BÜYÜK İHTİMAL DELETE DE AYNI
+        if($max > 0){
+
+            $sql = 'LIMIT ?,?';
+
+            $this->sql["special"]["text"]["limit"] = $sql;         
+            $this->sql["special"]["value"]["val1"] = $min;
+            $this->sql["special"]["value"]["val2"] = $max;
+
+        }else if($min > 0){
+
+            $sql = 'LIMIT ?';
+
+            $this->sql["special"]["text"]["limit"] = $sql;
+            $this->sql["special"]["value"]["val1"] = $min;
+
+        }
+
+       
+        return $this;
+
+    }
+
 
     private function where_like_function($field,$value,$and_or,$not,$type = '')
     {
@@ -453,7 +495,6 @@ Class PDO_MYSQL
             }
 
         }
-
 
         if(count($arr) > 0)
         {
