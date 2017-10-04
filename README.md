@@ -83,3 +83,31 @@ $arr = [
 $db->insert('TableName',$arr);
 
 ```
+
+### Multi Insert Data
+```php
+
+$field = [
+  'field1',
+  'field2'
+];
+
+$val = [
+  [
+    'one',
+    'two'
+  ],
+  [
+    'one',
+    'two'
+  ],
+  [
+    'one',
+    'two'
+  ]  
+];
+
+// INSERT INTO tablename (field1,field2) VALUES (one,two),(one,two),(one,two)
+$db->multi_insert('TableName',$arr,$val);
+
+```
