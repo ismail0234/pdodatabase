@@ -19,6 +19,26 @@ require "application/database/database.php";
  	'username' => 'ismail_satilmis',
  	'email' => 'ismaiil_0234@hotmail.com',
  ]);
+/*
+ * MULTI INSERT DATA
+ * @param $tablename
+ * @param array fieldone , fieldtwo ...
+ * @param array array valueone , valuetwo ...
+ */
+ $db->multi_insert('users',["username","email"],[
+ 	[
+ 		'ismail_satilmis',
+ 		'ismaiil_0234@hotmail.com',
+ 	],
+ 	[
+ 		'ismail_satilmis',
+ 		'ismaiil_0234@hotmail.com',
+ 	],
+ 	[
+ 		'ismail_satilmis',
+ 		'ismaiil_0234@hotmail.com',
+ 	], 	 	
+ ]);
 
 
 /*
@@ -41,32 +61,32 @@ require "application/database/database.php";
  * @param $tablename
  * 
  */
- echo "<pre>";
- print_r($db->analyze('users'));	
- echo "</pre>";
+// echo "<pre>";
+// print_r($db->analyze('users'));	
+// echo "</pre>";
  /*
  * CHECKSUM TABLE
  * @param $tablename
  * 
  */
- echo "<pre>";
- print_r($db->checksum('users'));	
- echo "</pre>";
+// echo "<pre>";
+// print_r($db->checksum('users'));	
+// echo "</pre>";
  /*
  * OPTIMIZE TABLE
  * @param $tablename
  * 
  */
- echo "<pre>";
- print_r($db->optimize('users'));	
- echo "</pre>";
+// echo "<pre>";
+// print_r($db->optimize('users'));	
+// echo "</pre>";
  /*
  * REPAIR TABLE
  * @param $tablename
  * 
  */
- echo "<pre>";
- print_r($db->repair('users'));	
- echo "</pre>";
+// echo "<pre>";
+// print_r($db->repair('users'));	
+// echo "</pre>";
 
 ?>

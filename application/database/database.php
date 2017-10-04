@@ -45,31 +45,6 @@ Class PDO_MYSQL
      }
 
 
-     public function insert_batch($table = '',$arr = []){
-
-     	 $sql = [];
-         $i = 0;
-     	 foreach((array)$arr as $k => $v){
-               $sql2 = [];
-     	 	   $str = '(';
-	           foreach((array)$v as $key => $value){
-
-		     	 	if(!$i){
-		     	 		$sql[0][] =  htmlspecialchars($key);
-		     	 	}
-		     	 	$sql2[] = '?';
-		     	 	$sql[2][] = htmlspecialchars($value);
-
-	           }
-	           $str .= implode(',',$sql2).')';
-	           $sql[1][] = ($str);
-               $i++;
-     	 }
-
-     	 $sqlstr = "INSERT INTO ".$this->prefix.$table." (".implode(',',$sql[0]).") VALUES ".implode(',',$sql[1])."";
-
-         $this->pdoexec($sqlstr,$sql[2]);
-     }
      public function check($table = [])
      {
 
@@ -127,33 +102,82 @@ Class PDO_MYSQL
 
 
 
+    public function multi_insert($table = '',$field = [] ,$arr = [])
+    {
 
 
+        $sql = [];
+
+        if(count($field) > 0)
+        {
+
+            foreach ($field as $value)
+            {
+            
+                $sql[0][] =  trim($value);  
+
+            }
+
+        }
 
 
-     public function insert($table = '',$arr = [])
-     {
+        if(count($arr) > 0)
+        {
 
-         $sql = [];
+            foreach ($arr as $value)
+            {
 
-         foreach((array)$arr as $key => $value){
+                $marray = [];
+            
+                foreach ($value as $val)
+                {
+                
+                    $marray[] = '?';
+                    $sql[1][] = trim($val);
+
+
+                }
+
+                $sql[2][] =  '(' . implode(',',$marray) . ')';
+
+            }
+
+        }
+
+        if(count($sql[2]) > 0 && count($sql[1]) > 0)
+        {
+
+             $sqlstr = "INSERT INTO " . $this->prefix . $table . " (".implode(',',$sql[0]).") VALUES ".implode(',',$sql[2])."";
+
+             $this->pdoexec($sqlstr,$sql[1]);
+
+        }
+
+    }
+
+    public function insert($table = '',$arr = [])
+    {
+
+        $sql = [];
+
+        foreach((array)$arr as $key => $value){
 
             $sql[0][] = trim($key);
             $sql[1][] = '?';
             $sql[2][] = trim($value);
 
-         }
+        }
 
-         $sqlstr = "INSERT INTO " . $this->prefix . $table ." (".implode(',',$sql[0]).") VALUES(".implode(',',$sql[1]).")";
+        $sqlstr = "INSERT INTO " . $this->prefix . $table ." (".implode(',',$sql[0]).") VALUES(".implode(',',$sql[1]).")";
 
-         $pre = $this->pdo->prepare($sqlstr);
+        $pre = $this->pdo->prepare($sqlstr);
 
-         $this->pdoexec($sqlstr,$sql[2]);
+        $this->pdoexec($sqlstr,$sql[2]);
 
-     }
+    }
 
-     private function array_get($table)
-     {
+    private function array_get($table)
+    {
 
         $tablename = [];
 
@@ -191,38 +215,38 @@ Class PDO_MYSQL
 
         return implode(',',$tablename);        
 
-     }
+    }
 
-     public function drop($table)
-     {
+    public function drop($table)
+    {
 
         return $this->pdoexec('DROP TABLE '.$this->prefix . trim($table));
 
-     }
+    }
 
-     public function empty_table($table)
-     {
+    public function empty_table($table)
+    {
 
         return $this->pdoexec('DELETE FROM '.$this->prefix . trim($table));
 
-     }
+    }
 
-     public function truncate($table)
-     {
+    public function truncate($table)
+    {
 
         return $this->pdoexec('TRUNCATE '.$this->prefix . trim($table));
 
-     }
+    }
 
-     public function analyze($table)
-     {
+    public function analyze($table)
+    {
 
         return $this->pdoexec('ANALYZE TABLE '.$this->prefix . trim($table),[],4);
 
-     }
+    }
 
-     public function checksum($table = [])
-     {
+    public function checksum($table = [])
+    {
 
         $tablename = $this->array_get($table);
 
@@ -235,10 +259,10 @@ Class PDO_MYSQL
 
         return $this->pdoexec('CHECKSUM TABLE ' . $tablename,[],4);
 
-     }
+    }
 
-     public function optimize($table = [])
-     {
+    public function optimize($table = [])
+    {
 
         $tablename = $this->array_get($table);
 
@@ -251,10 +275,10 @@ Class PDO_MYSQL
 
         return $this->pdoexec('OPTIMIZE TABLE ' . $tablename,[],4);
 
-     }
+    }
 
-     public function repair($table = [])
-     {
+    public function repair($table = [])
+    {
 
         $tablename = $this->array_get($table);
 
@@ -267,12 +291,10 @@ Class PDO_MYSQL
 
         return $this->pdoexec('REPAIR TABLE ' . $tablename,[],4);
 
-     }
-
-
-     //ANALYZE TABLE is_users
+    }
 
 }
+
 $db = new PDO_MYSQL([
    'ip' => 'localhost',
    'database' => 'is_test',
