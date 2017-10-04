@@ -88,5 +88,19 @@ require "application/database/database.php";
 // echo "<pre>";
 // print_r($db->repair('users'));	
 // echo "</pre>";
+/*
+    $db->set('username','ismail');
+    $db->set('point', 'point + ?',5);
+    $db->set([
+        [ "username" , "ismail" ],
+        [ "point" , "point + ? " , 5 ],
+    ]);
 
+*/
+     $db->set([
+        [ "username" , "weqew" ],
+    ])->where_in('id',[1,2,3,4,5,6,7,8,9])->update('users');
+
+ echo "<pre>";
+ print_r($db->sql["where"]);
 ?>

@@ -162,6 +162,95 @@ Class PDO_MYSQL
 
     }
 
+    public function where_in($field,$arr = [])
+    {
+
+        $this->where_in_function($field,$arr,'AND');
+
+        return $this;
+
+    }
+
+    public function where_not_in($field,$arr = [])
+    {
+
+        $this->where_in_function($field,$arr,'AND');
+
+        return $this;
+
+    }
+
+    public function or_where_in($field,$arr = [])
+    {
+
+        $this->where_in_function($field,$arr,'OR');
+
+        return $this;
+
+    }
+
+    public function or_where_not_in($field,$arr = [])
+    {
+
+        $this->where_in_function($field,$arr,'OR');
+
+        return $this;
+
+    }
+
+
+    public function drop($table)
+    {
+
+        return $this->pdoexec('DROP TABLE '.$this->prefix . trim($table));
+
+    }
+
+    public function empty_table($table)
+    {
+
+        return $this->pdoexec('DELETE FROM '.$this->prefix . trim($table));
+
+    }
+
+    public function truncate($table)
+    {
+
+        return $this->pdoexec('TRUNCATE '.$this->prefix . trim($table));
+
+    }
+
+    public function analyze($table)
+    {
+
+        return $this->pdoexec('ANALYZE TABLE '.$this->prefix . trim($table),[],4);
+
+    }
+
+    private function where_in_function($field,$arr,$three,$not = '')
+    {
+        
+        if(count($arr) > 0)
+        {
+
+            $marr = [];
+
+            foreach($arr as $ar)
+            {
+
+                $marr[] = '?';
+                $this->sql["value"][] = trim($ar);
+                
+            }
+
+            $this->sql["where"][] = trim($field) . ' ' . $not . ' IN('.implode(',',$marr).')';
+            $this->sql["where"][] = $three;
+
+        }
+
+
+    }
+
     private function where_function($field,$two,$three,$andor)
     {
 
@@ -389,34 +478,6 @@ Class PDO_MYSQL
         }
 
         return implode(',',$tablename);        
-
-    }
-
-    public function drop($table)
-    {
-
-        return $this->pdoexec('DROP TABLE '.$this->prefix . trim($table));
-
-    }
-
-    public function empty_table($table)
-    {
-
-        return $this->pdoexec('DELETE FROM '.$this->prefix . trim($table));
-
-    }
-
-    public function truncate($table)
-    {
-
-        return $this->pdoexec('TRUNCATE '.$this->prefix . trim($table));
-
-    }
-
-    public function analyze($table)
-    {
-
-        return $this->pdoexec('ANALYZE TABLE '.$this->prefix . trim($table),[],4);
 
     }
 
