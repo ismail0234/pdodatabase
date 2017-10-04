@@ -7,6 +7,12 @@ Class PDO_MYSQL
 
      protected $prefix = '';
 
+     public $sql = [
+
+        "set" => []
+
+     ];
+
      private $pdo = null;
 
      public function __construct($array = [])
@@ -61,7 +67,8 @@ Class PDO_MYSQL
 
      }
 
-     private function pdoexec($sql,$array = [],$status = 0){
+    private function pdoexec($sql,$array = [],$status = 0)
+    {
 
          $pre = $this->pdo->prepare($sql);
 
@@ -96,10 +103,53 @@ Class PDO_MYSQL
 
          return $sonuc;
 
-     }
+    }
+
+
+    public function set($one = [],$two = '',$three = '')
+    {
+
+        if(is_array($one))
+        {
+
+            if(count($one) > 0)
+            {
+
+                foreach ($one as $value)
+                {
+             
+                    $this->sql["set"][] = [
+                        "field1" => $value[0],
+                        "field2" => (isset($value[2])  ? $value[1] : '?'),
+                        "val"   => (isset($value[2])  ? $value[2] : $value[1])
+                    ];
+
+                }
+
+            }
+
+        }
+        else
+        {
+
+            $this->sql["set"][] = [
+                "field1" => $one,
+                "field2" => (!empty($three) ? $two : '?'),
+                "val"    => (!empty($three) ? $three : $two),
+            ];
+
+        }
+
+        return $this;
+
+    }
+
+    public function update($table)
+    {
 
 
 
+    }
 
 
     public function multi_insert($table = '',$field = [] ,$arr = [])
