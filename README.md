@@ -12,7 +12,23 @@ require "application/database/database.php";
 ![alt text](http://i.imgur.com/vldGpuK.png)
 
 
+### Special Function
+```php
+/*
+ * @param sql query
+ * @param sql query values
+ * @param return type
+ * 0 => DEFAULT true/false
+ * 1 => fetchAll ( Object )
+ * 2 => fetchAll ( Array )
+ * 3 => fetch ( Object )
+ * 4 => fetch ( Array )
+ * 5 => rowcount ( int )
+ * 5 => lastInsertId ( int )
+ */
+$db->query("SELECT * FROM is_users WHERE id = ?",[22],1);
 
+```
 
 ### Truncate Table 
 ```php
