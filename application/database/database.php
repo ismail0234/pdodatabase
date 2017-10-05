@@ -62,21 +62,7 @@ Class PDO_MYSQL
      }
 
 
-     public function check($table = [])
-     {
 
-        $tablename = $this->array_get($table);
-
-        if(empty($tablename))
-        {
-
-            return false;
-
-        }
-
-        return $this->pdoexec('CHECK TABLE ' . $tablename,[],6);
-
- }
 
     private function pdoexec($sql,$array = [],$status = 0)
     {
@@ -629,7 +615,7 @@ Class PDO_MYSQL
 
         }
 
-        return $this->pdoexec('CHECKSUM TABLE ' . $tablename,[],4);
+        return $this->pdoexec('CHECKSUM TABLE ' . $tablename,[],3);
 
     }
 
@@ -645,7 +631,7 @@ Class PDO_MYSQL
 
         }
 
-        return $this->pdoexec('OPTIMIZE TABLE ' . $tablename,[],4);
+        return $this->pdoexec('OPTIMIZE TABLE ' . $tablename,[],3);
 
     }
 
@@ -661,7 +647,7 @@ Class PDO_MYSQL
 
         }
 
-        return $this->pdoexec('REPAIR TABLE ' . $tablename,[],4);
+        return $this->pdoexec('REPAIR TABLE ' . $tablename,[],3);
 
     }
 
@@ -683,6 +669,23 @@ Class PDO_MYSQL
         }
 
     }
+
+     public function check($table = [])
+     {
+
+        $tablename = $this->array_get($table);
+
+        if(empty($tablename))
+        {
+
+            return false;
+
+        }
+
+        return $this->pdoexec('CHECK TABLE ' . $tablename,[],3);
+
+     }
+
 
     private function likeEscape($str)
     {

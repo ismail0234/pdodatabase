@@ -15,17 +15,18 @@ require "application/database/database.php";
  * @param array fieldone => value ...
  * 
  */
- $db->insert('users',[
+ /*$db->insert('users',[
  	'username' => 'ismail_satilmis',
  	'email' => 'ismaiil_0234@hotmail.com',
  ]);
+ */
 /*
  * MULTI INSERT DATA
  * @param $tablename
  * @param array fieldone , fieldtwo ...
  * @param array array valueone , valuetwo ...
  */
- $db->multi_insert('users',["username","email"],[
+ /*$db->multi_insert('users',["username","email"],[
  	[
  		'ismail_satilmis',
  		'ismaiil_0234@hotmail.com',
@@ -40,7 +41,7 @@ require "application/database/database.php";
  	], 	 	
  ]);
 
-
+*/
 /*
  * EMPTY TABLE
  * @param $tablename
@@ -104,6 +105,8 @@ require "application/database/database.php";
  echo "<pre>";
  print_r($db->sql["where"]);
  */
-
+ echo "<pre>";
+ print_r($db->check('users'));	
+ echo "</pre>";
 
 ?>
