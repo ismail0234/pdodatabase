@@ -285,3 +285,51 @@ $db->select('id,username,email')->from('users')->where_in('id',[1,2,3,4,5])->or_
 $db->select('*')->from('users')->where_in('id',[99])->or_where_not_in('point',[20,40,60]);
 
 ```
+
+### between
+
+```php
+
+// SELECT id , username , email FROM users WHERE id BETWEEN 20 AND 40
+$db->select('id,username,email')->from('users')->between('id',20,40);
+
+// SELECT * FROM users WHERE point BETWEEN 20 AND 100
+$db->select('*')->from('users')->between('point',20,100);
+
+```
+
+### or_between
+
+```php
+
+// SELECT id , username , email FROM users WHERE id = 30 OR id BETWEEN 20 AND 40
+$db->select('id,username,email')->from('users')->where('id',30)->or_between('id',20,40);
+
+// SELECT * FROM users WHERE id = 30 OR point BETWEEN 20 AND 100
+$db->select('*')->from('users')->where('id',30)->or_between('point',20,100);
+
+```
+
+### between_not
+
+```php
+
+// SELECT id , username , email FROM users WHERE id NOT BETWEEN 20 AND 40
+$db->select('id,username,email')->from('users')->between_not('id',20,40);
+
+// SELECT * FROM users WHERE point NOT BETWEEN 20 AND 100
+$db->select('*')->from('users')->between_not('point',20,100);
+
+```
+
+### or_between_not
+
+```php
+
+// SELECT id , username , email FROM users WHERE id = 30 OR id NOT BETWEEN 20 AND 40
+$db->select('id,username,email')->from('users')->where('id',30)->or_between_not('id',20,40);
+
+// SELECT * FROM users WHERE id = 30 OR point NOT BETWEEN 20 AND 100
+$db->select('*')->from('users')->where('id',30)->or_between_not('point',20,100);
+
+```
