@@ -448,6 +448,22 @@ Class PDO_MYSQL
 
     }
 
+    public function delete($table)
+    {
+	 $table = trim($table);
+	    
+	 if(!empty($table))
+         {
+           
+            $where = $this->where_combine();
+	
+            $sql = 'DELETE FROM '.$this->prefix. trim($table) .'   '.(!empty($where) ? $where:'');
+
+            return $this->pdoexec($sql,$this->sql["value"] , 5);     
+
+         }
+    }
+	
     public function update($table)
     {
 
