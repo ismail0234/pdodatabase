@@ -7,6 +7,25 @@ Class PDO_MYSQL
 
      protected $prefix = '';
 
+     public $sql = [
+        
+        "select" => [],
+        "from"   => [],
+        "where"  => [],
+        "value"  => [],
+        "set"    => [],
+        "special"   => [ 
+            "text"  => [] , 
+            "value" => []
+        ],
+        "limit" => '',
+
+     ];
+
+     private $sqlsyntax = ["=", "!=", "<", "<>" , ">", "<=", ">="];
+
+     private $and_or = ["AND", "OR"];
+
      private $pdo = null;
 
      public function __construct($array = [])
@@ -45,48 +64,10 @@ Class PDO_MYSQL
      }
 
 
-     public function insert_batch($table = '',$arr = []){
 
-     	 $sql = [];
-         $i = 0;
-     	 foreach((array)$arr as $k => $v){
-               $sql2 = [];
-     	 	   $str = '(';
-	           foreach((array)$v as $key => $value){
 
-		     	 	if(!$i){
-		     	 		$sql[0][] =  htmlspecialchars($key);
-		     	 	}
-		     	 	$sql2[] = '?';
-		     	 	$sql[2][] = htmlspecialchars($value);
-
-	           }
-	           $str .= implode(',',$sql2).')';
-	           $sql[1][] = ($str);
-               $i++;
-     	 }
-
-     	 $sqlstr = "INSERT INTO ".$this->prefix.$table." (".implode(',',$sql[0]).") VALUES ".implode(',',$sql[1])."";
-
-         $this->pdoexec($sqlstr,$sql[2]);
-     }
-     public function check($table = [])
-     {
-
-        $tablename = $this->array_get($table);
-
-        if(empty($tablename))
-        {
-
-            return false;
-
-        }
-
-        return $this->pdoexec('CHECK TABLE ' . $tablename,[],6);
-
-     }
-
-     private function pdoexec($sql,$array = [],$status = 0){
+    private function pdoexec($sql,$array = [],$status = 0)
+    {
 
          $pre = $this->pdo->prepare($sql);
 
@@ -121,39 +102,580 @@ Class PDO_MYSQL
 
          return $sonuc;
 
-     }
+    }
+
+    public function select($select = [])
+    {
+
+        if(is_string($select))
+        {
+
+            $select = explode(',',$select);
+
+        }
+      
+        foreach($select as $slc)
+        {
+
+           $this->sql["select"][] = $slc;
+
+        }
+
+        return $this;
+
+    }
+
+    public function from($from)
+    {
+
+        if(is_string($from))
+        {
+
+            $from = explode(',',$from);
+
+        }
+      
+        foreach($from as $frm)
+        {
+
+           $this->sql["table"][] = $this->prefix . $frm;
+
+        }
+
+        return $this;        
+
+    }
+
+    private function where_combine()
+    {
+
+        $where = '';
+
+        $this->clearAndOr();
+        
+        if(count($this->sql["where"]) > 0)
+        {
+
+            $where = 'WHERE ' . implode(' ',$this->sql["where"]);
+
+        }
+
+        if(count($this->sql["special"]["text"]) > 0)
+        {
+
+            $where .= ' ' . implode(' ',$this->sql["special"]["text"]);
+         
+            $this->sql["value"] = array_merge($this->sql["value"],$this->sql["special"]["value"]);
+
+        }
+
+        $this->sql["value"] = array_values($this->sql["value"]);
+
+        return $where;
+
+    }
+
+    private function select_combine()
+    {
+
+        $select = 'SELECT ';
+
+        if(count($this->sql["select"]) > 0)
+        {
+
+            $select .= implode(',',$this->sql["select"]);
+
+        }
+
+        $select .= ' FROM '; 
+
+        if(count($this->sql["table"]) > 0)
+        {
+
+            $select .= implode(',',$this->sql["table"]);
+
+        }
+
+        return $select;
+
+    } 
+
+    public function result()
+    {  
+
+        return $this->get_result(1);
+
+    }
+
+    public function result_array()
+    {
+
+        return $this->get_result(2);
+
+    }
+
+    public function get()
+    { 
+
+        return $this->get_result(3);
+
+    }
+
+    public function get_array()
+    { 
+
+        return $this->get_result(4);
+
+    }     
 
 
+    public function query($select , $array , $type)
+    {
+
+        return $this->pdoexec($select , $array , $type);
+
+    }
+
+    public function drop($table)
+    {
+
+        return $this->pdoexec('DROP TABLE '.$this->prefix . trim($table));
+
+    }
+
+    public function empty_table($table)
+    {
+
+        return $this->pdoexec('DELETE FROM '.$this->prefix . trim($table));
+
+    }
+
+    public function truncate($table)
+    {
+
+        return $this->pdoexec('TRUNCATE '.$this->prefix . trim($table));
+
+    }
+
+    public function analyze($table)
+    {
+
+        return $this->pdoexec('ANALYZE TABLE '.$this->prefix . trim($table),[],4);
+
+    }
+
+    public function where($field,$two = '',$three = '')
+    {
+
+       return $this->where_function($field,$two,$three,'AND');
+
+    }
+
+    public function or_where($field,$two = '',$three = '')
+    {
+
+       return $this->where_function($field,$two,$three,'OR');
+
+    }
+
+    public function where_in($field,$arr = [])
+    {
+
+       return $this->where_in_function($field,$arr,'AND');
+
+    }
+
+    public function where_not_in($field,$arr = [])
+    {
+
+       return $this->where_in_function($field,$arr,'AND','NOT');
+
+    }
+
+    public function or_where_in($field,$arr = [])
+    {
+
+       return $this->where_in_function($field,$arr,'OR');
+
+    }
+
+    public function or_where_not_in($field,$arr = [])
+    {
+
+       return $this->where_in_function($field,$arr,'OR','NOT');
+
+    }
+
+    public function between($field,$one,$two)
+    {
+
+       return $this->where_between_function($field,$one,$two,'AND');
+
+    }
+
+    public function or_between($field,$one,$two)
+    {
+
+       return $this->where_between_function($field,$one,$two,'OR');
+
+    }
+
+    public function between_not($field,$one,$two)
+    {
+
+       return $this->where_between_function($field,$one,$two,'AND','NOT');
+
+    }
+
+    public function or_between_not($field,$one,$two)
+    {
+
+       return $this->where_between_function($field,$one,$two,'OR','NOT');
+
+    }
+
+    public function like($field,$val,$type = 'center')
+    {
+
+        return $this->where_like_function($field,$val,'AND','',$type);
+
+    }
+
+    public function or_like($field,$val,$type = 'center')
+    {
+
+        return $this->where_like_function($field,$val,'OR','',$type);
+
+    }
+
+    public function like_not($field,$val,$type = 'center')
+    {
+
+        return $this->where_like_function($field,$val,'AND','NOT',$type);
+
+    }
+
+    public function or_like_not($field,$val,$type = 'center')
+    {
+
+        return $this->where_like_function($field,$val,'OR','NOT',$type);
+
+    }    
+
+    public function limit($min,$max = 0)
+    {
+        // UPDATE FONKSIYONDA LIMIT 0,20 ŞEKLİNDE ÇALIŞMAZ
+        // BÜYÜK İHTİMAL DELETE DE AYNI
+        if($max > 0){
+
+            $sql = 'LIMIT ?,?';
+
+            $this->sql["special"]["text"]["limit"] = $sql;         
+            $this->sql["special"]["value"]["val1"] = $min;
+            $this->sql["special"]["value"]["val2"] = $max;
+
+        }else if($min > 0){
+
+            $sql = 'LIMIT ?';
+
+            $this->sql["special"]["text"]["limit"] = $sql;
+            $this->sql["special"]["value"]["val1"] = $min;
+
+        }
+
+       
+        return $this;
+
+    }
+
+    private function get_result($type = 1)
+    {
+
+        $where = $this->where_combine();
+
+        $select =  $this->select_combine();
+
+        $sql = $select . ' ' . $where;
+
+        return $this->pdoexec($sql,$this->sql["value"] , $type);
+
+    }
+
+    private function where_like_function($field,$value,$and_or,$not,$type = '')
+    {
+
+        $value = $this->likeEscape($value);
+
+        switch (strtolower($type))
+        {
+            case 'left' :  $value = '%'.$value;  break;
+            case 'right':  $value =  $value.'%';  break;
+            
+            default     :  $value = '%'.$value.'%'; break;
+        }
+
+        if(!empty($field) && !empty($value))
+        {
+
+            $this->sql["where"][] = $and_or;
+            $this->sql["where"][] = trim($field) . ' ' . $not . ' LIKE ? ';
+            $this->sql["value"][] = $value;
+
+        }
+
+        return $this;
+    }
+
+    private function where_between_function($field,$one,$two,$and_or,$not = '')
+    {
+        
+        $field = trim($field);
+        $one   = trim($one);
+        $two   = trim($two);
+
+        if(!empty($field) && !empty($one) && !empty($two))
+        {
+
+            $this->sql["where"][] = $and_or;
+            $this->sql["where"][] = trim($field) . ' ' . $not . ' BETWEEN ' . $one . ' AND ' . $two;
+
+        }
+
+        return $this;
+    }
+
+    private function where_in_function($field,$arr,$three,$not = '')
+    {
+        
+        if(count($arr) > 0)
+        {
+
+            $marr = [];
+
+            $this->sql["where"][] = $three;
+
+            foreach($arr as $ar)
+            {
+
+                $marr[] = '?';
+                $this->sql["value"][] = trim($ar);
+                
+            }
+
+            $this->sql["where"][] = trim($field) . ' ' . $not . ' IN('.implode(',',$marr).')';
+
+        }
+
+        return $this;
+    }
+
+    private function where_function($field,$two,$three,$andor)
+    {
+
+        if(is_array($field))
+        {
+
+            if(count($field) > 0)
+            {
+
+                foreach($field as $key => $value)
+                {
+
+                    $this->sql["where"][] = $andor;
+                    $this->sql["where"][] = trim($value[0]) . ' ' . ( isset($value[2]) ? $value[1]:'=') . ' ?'; 
+                    $this->sql["value"][] = ( isset($value[2]) ? $value[2]:$value[1]);
+
+                }
+
+            }
+
+        }
+        else
+        {
+            
+            $this->sql["where"][] = $andor;
+
+            if(in_array($two, $this->sqlsyntax))
+            {
+
+                $this->sql["where"][] = trim($field) . ' ' . $two . ' ? '; 
+                $this->sql["value"][] = ( isset($three) ? $three:$two);
+
+            }
+            else
+            {
+
+                $this->sql["where"][] = trim($field) . ' = ? '; 
+                $this->sql["value"][] = $two;
+
+             
+            }
 
 
+        }
+
+        return $this;
+    }
+
+    public function set($one = [],$two = '',$three = '')
+    {
+
+        if(is_array($one))
+        {
+
+            if(count($one) > 0)
+            {
+
+                foreach ($one as $value)
+                {
+             
+                    $this->sql["set"][] = [
+                        "field1" => trim($value[0]),
+                        "field2" => (isset($value[2])  ? trim($value[1]) : '?'),
+                    ];
+                    $this->sql["value"][] = (isset($value[2])  ? trim($value[2]) : trim($value[1]));
+                }
+
+            }
+
+        }
+        else
+        {
+
+            $this->sql["set"][] = [
+                "field1" => trim($one),
+                "field2" => (!empty($three) ? trim($two) : '?'),
+            ];
+            $this->sql["value"][] = (!empty($three) ? trim($three) : trim($two));
+
+        }
+
+        return $this;
+
+    }
+
+    public function delete($table)
+    {
+
+    	 $table = trim($table);
+	    
+    	 if(!empty($table))
+         {
+           
+            $where = $this->where_combine();
+	
+            $sql = 'DELETE FROM '.$this->prefix. trim($table) .'   '.(!empty($where) ? $where:'');
+
+            return $this->pdoexec($sql,$this->sql["value"] , 5);     
+
+         }
+    }
+	
+    public function update($table)
+    {
+
+        if(count($this->sql["set"]) > 0)
+        {
+
+            $where = $this->where_combine();
+            $set =  [];
+
+            if(count($this->sql["set"]) > 0)
+            {
+
+                foreach($this->sql["set"] as $up)
+                {
+
+                    $set[] = $up["field1"] . ' = ' . $up["field2"];
+
+                }
+
+            }
+
+            $sql = 'UPDATE '.$this->prefix. trim($table) .' SET '.implode(',',$set).' '.(!empty($where) ? $where:'');
+
+            return $this->pdoexec($sql,$this->sql["value"] , 5);       
+
+        }
+
+    }
 
 
+    public function multi_insert($table = '',$field = [] ,$arr = [])
+    {
 
 
+        $sql = [];
 
-     public function insert($table = '',$arr = [])
-     {
+        if(count($field) > 0)
+        {
 
-         $sql = [];
+            foreach ($field as $value)
+            {
+            
+                $sql[0][] =  trim($value);  
 
-         foreach((array)$arr as $key => $value){
+            }
+
+        }
+
+        if(count($arr) > 0)
+        {
+
+            foreach ($arr as $value)
+            {
+
+                $marray = [];
+            
+                foreach ($value as $val)
+                {
+                
+                    $marray[] = '?';
+                    $sql[1][] = trim($val);
+
+
+                }
+
+                $sql[2][] =  '(' . implode(',',$marray) . ')';
+
+            }
+
+        }
+
+        if(count($sql[2]) > 0 && count($sql[1]) > 0)
+        {
+
+             $sqlstr = "INSERT INTO " . $this->prefix . $table . " (".implode(',',$sql[0]).") VALUES ".implode(',',$sql[2])."";
+
+             $this->pdoexec($sqlstr,$sql[1]);
+
+        }
+
+    }
+
+    public function insert($table = '',$arr = [])
+    {
+
+        $sql = [];
+
+        foreach((array)$arr as $key => $value){
 
             $sql[0][] = trim($key);
             $sql[1][] = '?';
             $sql[2][] = trim($value);
 
-         }
+        }
 
-         $sqlstr = "INSERT INTO " . $this->prefix . $table ." (".implode(',',$sql[0]).") VALUES(".implode(',',$sql[1]).")";
+        $sqlstr = "INSERT INTO " . $this->prefix . $table ." (".implode(',',$sql[0]).") VALUES(".implode(',',$sql[1]).")";
 
-         $pre = $this->pdo->prepare($sqlstr);
+        $pre = $this->pdo->prepare($sqlstr);
 
-         $this->pdoexec($sqlstr,$sql[2]);
+        $this->pdoexec($sqlstr,$sql[2]);
 
-     }
+    }
 
-     private function array_get($table)
-     {
+    private function array_get($table)
+    {
 
         $tablename = [];
 
@@ -191,37 +713,76 @@ Class PDO_MYSQL
 
         return implode(',',$tablename);        
 
-     }
+    }
 
-     public function drop($table)
-     {
+    public function checksum($table = [])
+    {
 
-        return $this->pdoexec('DROP TABLE '.$this->prefix . trim($table));
+        $tablename = $this->array_get($table);
 
-     }
+        if(empty($tablename))
+        {
 
-     public function empty_table($table)
-     {
+            return false;
 
-        return $this->pdoexec('DELETE FROM '.$this->prefix . trim($table));
+        }
 
-     }
+        return $this->pdoexec('CHECKSUM TABLE ' . $tablename,[],3);
 
-     public function truncate($table)
-     {
+    }
 
-        return $this->pdoexec('TRUNCATE '.$this->prefix . trim($table));
+    public function optimize($table = [])
+    {
 
-     }
+        $tablename = $this->array_get($table);
 
-     public function analyze($table)
-     {
+        if(empty($tablename))
+        {
 
-        return $this->pdoexec('ANALYZE TABLE '.$this->prefix . trim($table),[],4);
+            return false;
 
-     }
+        }
 
-     public function checksum($table = [])
+        return $this->pdoexec('OPTIMIZE TABLE ' . $tablename,[],3);
+
+    }
+
+    public function repair($table = [])
+    {
+
+        $tablename = $this->array_get($table);
+
+        if(empty($tablename))
+        {
+
+            return false;
+
+        }
+
+        return $this->pdoexec('REPAIR TABLE ' . $tablename,[],3);
+
+    }
+
+    private function clearAndOr()
+    {
+
+        if(count($this->sql["where"]) > 0)
+        {
+
+            $select = strtoupper(trim($this->sql["where"][0]));
+
+            if( in_array($select, $this->and_or) )
+            {
+
+                unset($this->sql["where"][0]);
+
+            }
+
+        }
+
+    }
+
+     public function check($table = [])
      {
 
         $tablename = $this->array_get($table);
@@ -233,46 +794,21 @@ Class PDO_MYSQL
 
         }
 
-        return $this->pdoexec('CHECKSUM TABLE ' . $tablename,[],4);
-
-     }
-
-     public function optimize($table = [])
-     {
-
-        $tablename = $this->array_get($table);
-
-        if(empty($tablename))
-        {
-
-            return false;
-
-        }
-
-        return $this->pdoexec('OPTIMIZE TABLE ' . $tablename,[],4);
-
-     }
-
-     public function repair($table = [])
-     {
-
-        $tablename = $this->array_get($table);
-
-        if(empty($tablename))
-        {
-
-            return false;
-
-        }
-
-        return $this->pdoexec('REPAIR TABLE ' . $tablename,[],4);
+        return $this->pdoexec('CHECK TABLE ' . $tablename,[],3);
 
      }
 
 
-     //ANALYZE TABLE is_users
+    private function likeEscape($str)
+    {
+  
+        return str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), $str);
+
+    }
+
 
 }
+
 $db = new PDO_MYSQL([
    'ip' => 'localhost',
    'database' => 'is_test',

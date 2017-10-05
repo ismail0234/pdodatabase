@@ -15,12 +15,33 @@ require "application/database/database.php";
  * @param array fieldone => value ...
  * 
  */
- $db->insert('users',[
+ /*$db->insert('users',[
  	'username' => 'ismail_satilmis',
  	'email' => 'ismaiil_0234@hotmail.com',
  ]);
+ */
+/*
+ * MULTI INSERT DATA
+ * @param $tablename
+ * @param array fieldone , fieldtwo ...
+ * @param array array valueone , valuetwo ...
+ */
+ /*$db->multi_insert('users',["username","email"],[
+ 	[
+ 		'ismail_satilmis',
+ 		'ismaiil_0234@hotmail.com',
+ 	],
+ 	[
+ 		'ismail_satilmis',
+ 		'ismaiil_0234@hotmail.com',
+ 	],
+ 	[
+ 		'ismail_satilmis',
+ 		'ismaiil_0234@hotmail.com',
+ 	], 	 	
+ ]);
 
-
+*/
 /*
  * EMPTY TABLE
  * @param $tablename
@@ -41,32 +62,51 @@ require "application/database/database.php";
  * @param $tablename
  * 
  */
- echo "<pre>";
- print_r($db->analyze('users'));	
- echo "</pre>";
+// echo "<pre>";
+// print_r($db->analyze('users'));	
+// echo "</pre>";
  /*
  * CHECKSUM TABLE
  * @param $tablename
  * 
  */
- echo "<pre>";
- print_r($db->checksum('users'));	
- echo "</pre>";
+// echo "<pre>";
+// print_r($db->checksum('users'));	
+// echo "</pre>";
  /*
  * OPTIMIZE TABLE
  * @param $tablename
  * 
  */
- echo "<pre>";
- print_r($db->optimize('users'));	
- echo "</pre>";
+// echo "<pre>";
+// print_r($db->optimize('users'));	
+// echo "</pre>";
  /*
  * REPAIR TABLE
  * @param $tablename
  * 
  */
- echo "<pre>";
- print_r($db->repair('users'));	
- echo "</pre>";
+// echo "<pre>";
+// print_r($db->repair('users'));	
+// echo "</pre>";
+/*
+    $db->set('username','ismail');
+    $db->set('point', 'point + ?',5);
+    $db->set([
+        [ "username" , "ismail" ],
+        [ "point" , "point + ? " , 5 ],
+    ]);
 
+*/
+  /*   $db->set([
+        [ "username" , "weqewxxx" ],
+    ])->between('point',10,100)->limit(50,100)->update('users');
+
+ echo "<pre>";
+ print_r($db->sql["where"]);
+ */
+ echo "<pre>";
+print_r(
+$db->select('*')->from('users')->where_in('id',[1,2,3,4,5,7,8,9,])->or_where('id',99)->or_like('id',1)->result_array()
+);
 ?>

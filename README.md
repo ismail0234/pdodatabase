@@ -1,18 +1,53 @@
 
-#  Documentation
 
-### Include File 
+## Install
+
 ```php
 
 require "application/database/database.php";
 
+$db = new PDO_MYSQL([
+   'ip' => 'localhost',
+   'database' => 'is_test',
+   'dbengine' => 'mysql',
+   'username' => 'root',
+   'password' => '',
+   'charset' => 'utf8',
+   'prefix' => 'is_'
+]);
+
 ```
+
 ### Debug
 
 ![alt text](http://i.imgur.com/vldGpuK.png)
 
+#  Documentation
+
+## Speed dial
+
+ * [Special Function](#specialfunction)
+ * [Truncate Table](#truncatetable)
 
 
+
+### Special Function
+```php
+/*
+ * @param sql query
+ * @param sql query values
+ * @param return type
+ * 0 => DEFAULT true/false
+ * 1 => fetchAll ( Object )
+ * 2 => fetchAll ( Array )
+ * 3 => fetch ( Object )
+ * 4 => fetch ( Array )
+ * 5 => rowcount ( int )
+ * 5 => lastInsertId ( int )
+ */
+$db->query("SELECT * FROM is_users WHERE id = ?",[22],1);
+
+```
 
 ### Truncate Table 
 ```php
@@ -38,6 +73,49 @@ $db->empty_table('TableName');
 
 ```
 
+### Analyze Table
+```php
+
+// ANALYZE TABLE tablename
+$db->analyze('TableName');
+
+```
+
+### Checksum Table
+```php
+
+// CHECKSUM TABLE tablename
+$db->checksum('TableName');
+
+```
+
+### Check Table
+```php
+
+// CHECK TABLE tablename
+$db->check('TableName');
+
+```
+
+### Optimize Table
+```php
+
+// OPTIMIZE FROM tablename
+$db->optimize('TableName');
+
+```
+
+### Repair Table
+```php
+
+// REPAIR FROM tablename
+$db->repair('TableName');
+
+```
+
+## Insert
+
+
 ### Insert Data
 ```php
 
@@ -54,193 +132,274 @@ $db->insert('TableName',$arr);
 ### Multi Insert Data
 ```php
 
-$arr = [
-  ['field1' => 'one','field2' => 'two'],
-  ['field1' => 'three','field2' => 'four'],
-  ['field1' => 'five','field2' => 'six']
+$field = [
+  'field1',
+  'field2'
 ];
 
-// INSERT INTO tablename (field1,field2...) VALUES(one,two),(three,four),(five,six)
-$db->insert_batch('TableName',$arr);
+$val = [
+  [
+    'one',
+    'two'
+  ],
+  [
+    'one',
+    'two'
+  ],
+  [
+    'one',
+    'two'
+  ]  
+];
+
+// INSERT INTO tablename (field1,field2) VALUES (one,two),(one,two),(one,two)
+$db->multi_insert('TableName',$arr,$val);
 
 ```
 
+## Update
 
-### Select Sql Query
-
-### Select
+### set
 
 ```php
 
-// SELECT id
-$db->select('id');
-// SELECT id,uid
-$db->select('id,uid');
-// SELECT id,uid
-$db->select('id')->select('uid');
+// SET username = ismail
+$db->set('username','ismail');
+
+// SET point = point + 5
+$db->set('point', 'point + ?',5);
+
+// SET username = ismail , point = point + 5
+$db->set([
+    [ "username" , "ismail" ],
+    [ "point" , "point + ? " , 5 ],
+]);
+
+```
+
+### update
+
+```php
+
+// UPDATE users SET username = ismail
+$db->set('username','ismail')->update('users);
+
+// UPDATE users SET point = point - 20 WHERE id = 9
+$db->set('point','point - ?',20)->where('id',9)->update('users');
+```
+
+## Delete
+
+```php
+
+// DELETE FROM users WHERE id = 9
+$db->where('id',9)->delete('users');
+
+// DELETE FROM users WHERE id IN(1,2,3,4) AND point = 20
+$db->where_in('id',[1,2,3,4,5])->where('point',20)->delete('users');
+```
+
+## Select
+
+### select
+
+```php
+
+// SELECT id , username , email
+$db->select('id,username,email');
+
 // SELECT *
 $db->select('*');
 
 ```
-### From
+
+### from
 
 ```php
 
-// SELECT id FROM users
-$db->select('id')->from('users');
+// SELECT id , username , email FROM users
+$db->select('id,username,email')->from('users');
+
+// SELECT * FROM users
+$db->select('*')->from('users');
 
 ```
+
 
 ### where
 
 ```php
 
-// SELECT * FROM users WHERE uid = 2 AND name = user
-$db->select('*')->from('users')->where(["uid" => 2 , "name" => "user"]);
+// SELECT id , username , email FROM users WHERE id = 99
+$db->select('id,username,email')->from('users')->where('id','99');
+
+// SELECT * FROM users WHERE id != 99 
+$db->select('*')->from('users')->where('id','!=',99);
 
 ```
 
-
-### where_or
+### or_where
 
 ```php
 
-// SELECT * FROM users WHERE uid = 2 OR name = user
-$db->select('*')->from('users')->where_or(["uid" => 2 , "name" => "user"]);
+// SELECT id , username , email FROM users WHERE id = 99 OR id = 88
+$db->select('id,username,email')->from('users')->where('id','99')->or_where('id',88);
+
+// SELECT * FROM users WHERE id != 99 OR id = 99
+$db->select('*')->from('users')->where('id','!=',99)->or_where('id',99);
 
 ```
 
-### ORDER BY
+### where_in
 
 ```php
 
-// SELECT * FROM users WHERE uid = 2 AND name = user ORDER BY id ASC
-$db->select('*')->from('users')->where(["uid" => 2 , "name" => "user"])->orderby('id','ASC');
+// SELECT id , username , email FROM users WHERE id IN(1,2,3,4,5)
+$db->select('id,username,email')->from('users')->where_in('id',[1,2,3,4,5]);
 
-// SELECT * FROM users WHERE uid = 2 AND name = user ORDER BY id ASC
-$db->select('*')->from('users')->where(["uid" => 2 , "name" => "user"])->orderby('id ASC');
+// SELECT * FROM users WHERE id IN(99) 
+$db->select('*')->from('users')->where_in('id',[99]);
 
-// SELECT * FROM users WHERE uid = 2 AND name = user ORDER BY id ASC,uid DESC
-$db->select('*')->from('users')->where(["uid" => 2 , "name" => "user"])->orderby('id ASC,uid DESC');
-
-// SELECT * FROM users WHERE uid = 2 AND name = user ORDER BY id ASC,uid DESC
-$db->select('*')->from('users')->where(["uid" => 2 , "name" => "user"])->orderby('id','ASC')->orderby('uid','DESC');
 ```
 
-
-### LIMIT
+### or_where_in
 
 ```php
 
-// SELECT * FROM users WHERE uid = 2 AND name = user ORDER BY id ASC LIMIT 0,30
-$db->select('*')->from('users')->where(["uid" => 2 , "name" => "user"])->orderby('id','ASC')->limit(0,30);
+// SELECT id , username , email FROM users WHERE id IN(1,2,3,4,5) OR point IN(20,40,60)
+$db->select('id,username,email')->from('users')->where_in('id',[1,2,3,4,5])->or_where_in('point',[20,40,60]);
 
-// SELECT * FROM users WHERE uid = 2 AND name = user ORDER BY id ASC LIMIT 10
-$db->select('*')->from('users')->where(["uid" => 2 , "name" => "user"])->orderby('id','ASC')->limit(10);
+// SELECT * FROM users WHERE id IN(99) OR point IN(20,40,60)
+$db->select('*')->from('users')->where_in('id',[99])->or_where_in('point',[20,40,60]);
+
 ```
 
-### JOIN
+### where_not_in
 
 ```php
 
-Coming Soon.
+// SELECT id , username , email FROM users WHERE id NOT IN(1,2,3,4,5)
+$db->select('id,username,email')->from('users')->where_not_in('id',[1,2,3,4,5]);
+
+// SELECT * FROM users WHERE id NOT IN(99) 
+$db->select('*')->from('users')->where_not_in('id',[99]);
 
 ```
 
-### GROUP BY
+### or_where_not_in
 
 ```php
 
-Coming Soon.
+// SELECT id , username , email FROM users WHERE id IN(1,2,3,4,5) OR point NOT IN(20,40,60)
+$db->select('id,username,email')->from('users')->where_in('id',[1,2,3,4,5])->or_where_not_in('point',[20,40,60]);
+
+// SELECT * FROM users WHERE id IN(99) OR point NOT IN(20,40,60)
+$db->select('*')->from('users')->where_in('id',[99])->or_where_not_in('point',[20,40,60]);
 
 ```
-### IN
+
+### between
 
 ```php
 
-Coming Soon.
+// SELECT id , username , email FROM users WHERE id BETWEEN 20 AND 40
+$db->select('id,username,email')->from('users')->between('id',20,40);
+
+// SELECT * FROM users WHERE point BETWEEN 20 AND 100
+$db->select('*')->from('users')->between('point',20,100);
 
 ```
 
-### NOT IN
+### or_between
 
 ```php
 
-Coming Soon.
+// SELECT id , username , email FROM users WHERE id = 30 OR id BETWEEN 20 AND 40
+$db->select('id,username,email')->from('users')->where('id',30)->or_between('id',20,40);
+
+// SELECT * FROM users WHERE id = 30 OR point BETWEEN 20 AND 100
+$db->select('*')->from('users')->where('id',30)->or_between('point',20,100);
 
 ```
 
-### Output
+### between_not
 
 ```php
 
-result(); // object all
-result_array(); // array all
-get(); // object one
-get_array(); // array one
+// SELECT id , username , email FROM users WHERE id NOT BETWEEN 20 AND 40
+$db->select('id,username,email')->from('users')->between_not('id',20,40);
 
-// SELECT uid,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
-$db->select('uid,id')->from('users')->where(["uid" => 2 ])->orderby('id','ASC')->limit(1)->result();
+// SELECT * FROM users WHERE point NOT BETWEEN 20 AND 100
+$db->select('*')->from('users')->between_not('point',20,100);
 
-Array
-(
-    [0] => stdClass Object
-        (
-            [uid] => 2
-            [id] => 1
-        )
-
-)
-
-// SELECT uid,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
-$db->select('uid,id')->from('users')->where(["uid" => 2 ])->orderby('id','ASC')->limit(1)->result_array();
-
-Array
-(
-    [0] => Array
-        (
-            [uid] => 2
-            [0] => 2
-            [id] => 1
-            [1] => 1
-        )
-
-)
-
-// SELECT uid,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
-$db->select('uid,id')->from('users')->where(["uid" => 2 ])->orderby('id','ASC')->limit(1)->get();
-
-stdClass Object
-(
-    [uid] => 2
-    [id] => 1
-)
-
-// SELECT uid,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
-$db->select('uid,id')->from('users')->where(["uid" => 2 ])->orderby('id','ASC')->limit(1)->get_array();
-
-Array
-(
-    [uid] => 2
-    [0] => 2
-    [id] => 1
-    [1] => 1
-)
 ```
 
-
-### UPDATE
+### or_between_not
 
 ```php
 
-Coming Soon.
+// SELECT id , username , email FROM users WHERE id = 30 OR id NOT BETWEEN 20 AND 40
+$db->select('id,username,email')->from('users')->where('id',30)->or_between_not('id',20,40);
+
+// SELECT * FROM users WHERE id = 30 OR point NOT BETWEEN 20 AND 100
+$db->select('*')->from('users')->where('id',30)->or_between_not('point',20,100);
 
 ```
 
-### DELETE
+
+### like
 
 ```php
 
-Coming Soon.
+// SELECT id , username , email FROM users WHERE username LIKE '%ismail%'
+$db->select('id,username,email')->from('users')->like('username','ismail','center');
+
+// SELECT * FROM users WHERE username LIKE 'ismail%'
+$db->select('*')->from('users')->like('username','ismail','right');
+
+// SELECT * FROM users WHERE username LIKE '%ismail'
+$db->select('*')->from('users')->like('username','ismail','left');
 
 ```
+
+### or_like
+
+```php
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' OR email LIKE '%ismail%'
+$db->select('*')->from('users')->like('username','ismail')->or_like('email','ismail');
+
+```
+
+### like_not
+
+```php
+
+// SELECT * FROM users WHERE username NOT LIKE '%ismail%'
+$db->select('*')->from('users')->like_not('username','ismail');
+
+```
+
+### or_like_not
+
+```php
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' OR email NOT LIKE '%ismail%'
+$db->select('*')->from('users')->like('username','ismail')->or_like_not('email','ismail');
+
+```
+
+### limit
+
+```php
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' LIMIT 20,40
+$db->select('*')->from('users')->like('username','ismail')->limit(20,40);
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' LIMIT 20
+$db->select('*')->from('users')->like('username','ismail')->limit(20);
+
+```
+
+
+
