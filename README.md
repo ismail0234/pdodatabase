@@ -205,3 +205,30 @@ $db->select('id,username,email')->from('users');
 $db->select('*')->from('users');
 
 ```
+
+
+### where
+
+```php
+
+// SELECT id , username , email FROM users WHERE id = 99
+$db->select('id,username,email')->from('users')->where('id','99');
+
+// SELECT * FROM users WHERE id != 99 
+$db->select('*')->from('users')->where('id','!=',99);
+
+```
+
+### or_where
+
+```php
+
+// SELECT id , username , email FROM users WHERE id = 99 OR id = 88
+$db->select('id,username,email')->from('users')->where('id','99')->or_where('id',88);
+
+// SELECT * FROM users WHERE id != 99 OR id = 99
+$db->select('*')->from('users')->where('id','!=',99)->or_where('id',99);
+
+```
+
+
