@@ -377,3 +377,17 @@ $db->select('*')->from('users')->like('username','ismail')->or_like_not('email',
 
 ```
 
+### limit
+
+```php
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' LIMIT 20,40
+$db->select('*')->from('users')->like('username','ismail')->limit(20,40);
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' LIMIT 20
+$db->select('*')->from('users')->like('username','ismail')->limit(20);
+
+```
+
+
+
