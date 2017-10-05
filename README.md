@@ -184,3 +184,24 @@ $db->where_in('id',[1,2,3,4,5])->where('point',20)->delete('users');
 
 ### select
 
+```php
+
+// SELECT id , username , email
+$db->select('id,username,email');
+
+// SELECT *
+$db->select('*');
+
+```
+
+### from
+
+```php
+
+// SELECT id , username , email FROM users
+$db->select('id,username,email')->from('users');
+
+// SELECT * FROM users
+$db->select('*')->from('users');
+
+```
