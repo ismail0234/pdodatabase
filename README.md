@@ -55,6 +55,7 @@ $db = new PDO_MYSQL([
  * [Select - or_like](#or_like) 
  * [Select - like_not](#like_not) 
  * [Select - or_like_not](#or_like_not) 
+ * [Select - orderby](#orderby) 
  * [Limit](#limit) 
  
 
@@ -428,5 +429,22 @@ $db->select('*')->from('users')->like('username','ismail')->limit(20);
 
 ```
 
+### orderby
+
+```php
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' ORDER BY id ASC LIMIT 20,40
+$db->select('*')->from('users')->like('username','ismail')->limit(20,40)->orderby('id','ASC');
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' ORDER BY id LIMIT 20,40
+$db->select('*')->from('users')->like('username','ismail')->limit(20,40)->orderby('id');
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' ORDER BY id ASC,email DESC LIMIT 20,40
+$db->select('*')->from('users')->like('username','ismail')->limit(20,40)->orderby(["id" => "DESC","email" => "ASC"]);
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' ORDER BY id ASC,email DESC,point LIMIT 20,40
+$db->select('*')->from('users')->like('username','ismail')->limit(20,40)->orderby(["id" => "DESC","email" => "ASC","point"]);
+
+```
 
 
