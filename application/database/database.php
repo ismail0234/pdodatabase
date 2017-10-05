@@ -441,6 +441,28 @@ Class PDO_MYSQL
 
     }
 
+    public function get_sql()
+    {
+
+        $sql = '';
+
+        if(count($this->sql["table"]) > 0 && count($this->sql["select"]) > 0)
+        {
+
+
+            $where = $this->where_combine();
+
+            $select =  $this->select_combine();
+
+            $sql = $select . ' ' . $where;
+
+
+        }
+
+        return $sql;
+
+    }
+
     private function get_result($type = 1)
     {
 

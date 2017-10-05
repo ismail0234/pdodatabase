@@ -107,6 +107,6 @@ require "application/database/database.php";
  */
  echo "<pre>";
 print_r(
-$db->select('*')->from('users')->where_in('id',[1,2,3,4,5,7,8,9,])->or_where('id',99)->or_like('id',1)->limit(6)->orderby('email')->result_array()
+$db->select('*')->from('users')->where_in('id',[1,2,3,4,5,7,8,9,])->or_where('id',99)->or_like('id',1)->limit(6)->orderby(["id" => "DESC","email"=> "ASC"])->get_sql()
 );
 ?>
