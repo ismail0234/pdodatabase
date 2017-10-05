@@ -153,7 +153,7 @@ $db->set('point','point - ?',20)->where('id',9)->update('users');
 $db->where('id',9)->delete('users');
 
 // DELETE FROM users WHERE id IN(1,2,3,4) AND point = 20
-$db->where_in('id',[1,2,3,4,5])->where('id',20)->delete('users');
+$db->where_in('id',[1,2,3,4,5])->where('point',20)->delete('users');
 ```
 
 
