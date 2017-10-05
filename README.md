@@ -138,14 +138,22 @@ $db->set([
 
 ```php
 
-// UPDATE test SET username = ismail
+// UPDATE users SET username = ismail
 $db->set('username','ismail')->update('users);
 
-// UPDATE test SET point = point - 20 WHERE id = 9
+// UPDATE users SET point = point - 20 WHERE id = 9
 $db->set('point','point - ?',20)->where('id',9)->update('users');
 ```
 
 ## Delete
 
+```php
+
+// DELETE FROM users WHERE id = 9
+$db->where('id',9)->delete('users');
+
+// DELETE FROM users WHERE id IN(1,2,3,4) AND point = 20
+$db->where_in('id',[1,2,3,4,5])->where('id',20)->delete('users');
+```
 
 
