@@ -26,9 +26,16 @@ $db = new PDO_MYSQL([
 
 ## Speed dial
 
- * [Special Function](#specialfunction)
- * [Truncate Table](#truncatetable)
-
+ * [Special Function](#special-function)
+ * [Truncate Table](#truncate-table)
+ * [Drop Table](#drop-table)
+ * [Empty Table](#empty-table) 
+ * [Analyze Table](#analyze-table) 
+ * [Checksum Table](#checksum-table) 
+ * [Check Table](#check-table) 
+ * [Repair Table](#repair-table) 
+ * [Insert Data](#insert-data) 
+ * [Multi Insert Data](#multi-insert-data) 
 
 
 ### Special Function
