@@ -36,7 +36,27 @@ $db = new PDO_MYSQL([
  * [Repair Table](#repair-table) 
  * [Insert Data](#insert-data) 
  * [Multi Insert Data](#multi-insert-data) 
-
+ * [Update - set](#set) 
+ * [Update - update](#update) 
+ * [Delete](#delete) 
+ * [Select - select](#select) 
+ * [Select - from](#from) 
+ * [Select - where](#where) 
+ * [Select - or_where](#or_where) 
+ * [Select - where_in](#where_in) 
+ * [Select - or_where_in](#or_where_in) 
+ * [Select - where_not_in](#where_not_in) 
+ * [Select - or_where_not_in](#or_where_not_in) 
+ * [Select - between](#between) 
+ * [Select - or_between](#or_between) 
+ * [Select - between_not](#between_not) 
+ * [Select - or_between_not](#or_between_not) 
+ * [Select - like](#like) 
+ * [Select - or_like](#or_like) 
+ * [Select - like_not](#like_not) 
+ * [Select - or_like_not](#or_like_not) 
+ * [Limit](#limit) 
+ 
 
 ### Special Function
 ```php
