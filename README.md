@@ -62,11 +62,19 @@ $db->analyze('TableName');
 
 ```
 
-### Cheksum Table
+### Checksum Table
 ```php
 
 // CHECKSUM TABLE tablename
 $db->checksum('TableName');
+
+```
+
+### Check Table
+```php
+
+// CHECK TABLE tablename
+$db->check('TableName');
 
 ```
 
