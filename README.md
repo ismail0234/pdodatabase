@@ -231,4 +231,50 @@ $db->select('*')->from('users')->where('id','!=',99)->or_where('id',99);
 
 ```
 
+### where_in
 
+```php
+
+// SELECT id , username , email FROM users WHERE id IN(1,2,3,4,5)
+$db->select('id,username,email')->from('users')->where_in('id',[1,2,3,4,5]);
+
+// SELECT * FROM users WHERE id IN(99) 
+$db->select('*')->from('users')->where_in('id',[99]);
+
+```
+
+### or_where_in
+
+```php
+
+// SELECT id , username , email FROM users WHERE id IN(1,2,3,4,5) OR point IN(20,40,60)
+$db->select('id,username,email')->from('users')->where_in('id',[1,2,3,4,5])->or_where_in('point',[20,40,60]);
+
+// SELECT * FROM users WHERE id IN(99) OR point IN(20,40,60)
+$db->select('*')->from('users')->where_in('id',[99])->or_where_in('point',[20,40,60]);
+
+```
+
+### where_not_in
+
+```php
+
+// SELECT id , username , email FROM users WHERE id NOT IN(1,2,3,4,5)
+$db->select('id,username,email')->from('users')->where_not_in('id',[1,2,3,4,5]);
+
+// SELECT * FROM users WHERE id NOT IN(99) 
+$db->select('*')->from('users')->where_not_in('id',[99]);
+
+```
+
+### or_where_not_in
+
+```php
+
+// SELECT id , username , email FROM users WHERE id IN(1,2,3,4,5) OR point NOT IN(20,40,60)
+$db->select('id,username,email')->from('users')->where_in('id',[1,2,3,4,5])->or_where_not_in('point',[20,40,60]);
+
+// SELECT * FROM users WHERE id IN(99) OR point NOT IN(20,40,60)
+$db->select('*')->from('users')->where_in('id',[99])->or_where_not_in('point',[20,40,60]);
+
+```
