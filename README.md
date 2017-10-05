@@ -156,4 +156,7 @@ $db->where('id',9)->delete('users');
 $db->where_in('id',[1,2,3,4,5])->where('point',20)->delete('users');
 ```
 
+## Select
+
+### select
 
