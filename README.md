@@ -333,3 +333,47 @@ $db->select('id,username,email')->from('users')->where('id',30)->or_between_not(
 $db->select('*')->from('users')->where('id',30)->or_between_not('point',20,100);
 
 ```
+
+
+### like
+
+```php
+
+// SELECT id , username , email FROM users WHERE username LIKE '%ismail%'
+$db->select('id,username,email')->from('users')->like('username','ismail','center');
+
+// SELECT * FROM users WHERE username LIKE 'ismail%'
+$db->select('*')->from('users')->like('username','ismail','right');
+
+// SELECT * FROM users WHERE username LIKE '%ismail'
+$db->select('*')->from('users')->like('username','ismail','left');
+
+```
+
+### or_like
+
+```php
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' OR email LIKE '%ismail%'
+$db->select('*')->from('users')->like('username','ismail')->or_like('email','ismail');
+
+```
+
+### like_not
+
+```php
+
+// SELECT * FROM users WHERE username NOT LIKE '%ismail%'
+$db->select('*')->from('users')->like_not('username','ismail');
+
+```
+
+### or_like_not
+
+```php
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' OR email NOT LIKE '%ismail%'
+$db->select('*')->from('users')->like('username','ismail')->or_like_not('email','ismail');
+
+```
+
