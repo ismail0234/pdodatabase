@@ -520,16 +520,17 @@ $db->select('*')->from('users')->where('id',99)->or_like('id',1)->limit(6)->orde
  */
 
 ```
-### Output 
 
-```php
+### Output
  
+```php
+
 result(); // object all
 result_array(); // array all
 get(); // object one
 get_array(); // array one
- 
-// SELECT username,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
+
+// SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
 $db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->result();
 
 Array
@@ -542,7 +543,7 @@ Array
 
 )
 
-// SELECT username,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
+// SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
 $db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->result_array();
 
 Array
@@ -557,7 +558,7 @@ Array
 
 )
 
-// SELECT username,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
+// SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
 $db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->get();
 
 stdClass Object
@@ -566,7 +567,7 @@ stdClass Object
     [id] => 1
 )
 
-// SELECT username,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
+// SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
 $db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->get_array();
 
 Array
