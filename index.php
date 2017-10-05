@@ -97,10 +97,13 @@ require "application/database/database.php";
     ]);
 
 */
-     $db->set([
+  /*   $db->set([
         [ "username" , "weqewxxx" ],
     ])->between('point',10,100)->limit(50,100)->update('users');
 
  echo "<pre>";
  print_r($db->sql["where"]);
+ */
+
+
 ?>

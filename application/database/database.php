@@ -136,6 +136,7 @@ Class PDO_MYSQL
             $where = ' ' . implode(' ',$this->sql["special"]["text"]);
          
             $this->sql["value"] = array_merge($this->sql["value"],$this->sql["special"]["value"]);
+
         }
 
         $this->sql["value"] = array_values($this->sql["value"]);
@@ -144,6 +145,13 @@ Class PDO_MYSQL
 
     }
 
+
+    public function query($select , $array , $type)
+    {
+
+        return $this->pdoexec($select , $array , $type);
+
+    }
 
     public function drop($table)
     {
@@ -450,9 +458,10 @@ Class PDO_MYSQL
 
     public function delete($table)
     {
-	 $table = trim($table);
+
+    	 $table = trim($table);
 	    
-	 if(!empty($table))
+    	 if(!empty($table))
          {
            
             $where = $this->where_combine();
