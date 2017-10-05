@@ -145,4 +145,7 @@ $db->set('username','ismail')->update('users);
 $db->set('point','point - ?',20)->where('id',9)->update('users');
 ```
 
+## Delete
+
+
 
