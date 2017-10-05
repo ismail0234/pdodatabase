@@ -9,11 +9,12 @@ Class PDO_MYSQL
 
      public $sql = [
         
-        "select" => [],
-        "from"   => [],
-        "where"  => [],
-        "value"  => [],
-        "set"    => [],
+        "select"  => [],
+        "from"    => [],
+        "where"   => [],
+        "value"   => [],
+        "set"     => [],
+        "orderby" => [],
         "special"   => [ 
             "text"  => [] , 
             "value" => []
@@ -31,26 +32,26 @@ Class PDO_MYSQL
      public function __construct($array = [])
      {
 
-         $connstring = $array["dbengine"].":host=".$array["ip"].";dbname=".$array["database"].";charset=".$array["charset"];
+        $connstring = $array["dbengine"].":host=".$array["ip"].";dbname=".$array["database"].";charset=".$array["charset"];
 
-		 try{
+		try{
 
 
-			 $this->pdo = new PDO($connstring,$array["username"],$array["password"]);
+			$this->pdo = new PDO($connstring,$array["username"],$array["password"]);
 
-			 $this->pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
-			 $this->prefix = $array["prefix"];
+			$this->pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
+			$this->prefix = $array["prefix"];
 
-		 }catch(Exception $e){
+		}catch(Exception $e){
 
-              $this->debug('Database Connection Failed',array(0 => "1049",2 => $e->getMessage()),$connstring);
+            $this->debug('Database Connection Failed',array(0 => "1049",2 => $e->getMessage()),$connstring);
 
-		 }
+		}
 
-	 }
+	}
 
-     private function debug($name,$arr = [],$sql)
-     {
+    private function debug($name,$arr = [],$sql)
+    {
 
        echo $this->debugcss;
 
@@ -61,10 +62,7 @@ Class PDO_MYSQL
        echo '</div>';
 
        exit;
-     }
-
-
-
+    }
 
     private function pdoexec($sql,$array = [],$status = 0)
     {
@@ -99,6 +97,8 @@ Class PDO_MYSQL
             case 6: $sonuc = $this->pdo->lastInsertId();  break;
 
          }
+
+         $this->clearQuery();
 
          return $sonuc;
 
@@ -146,6 +146,52 @@ Class PDO_MYSQL
 
     }
 
+    public function orderby($array = [],$desc = '')
+    {
+
+        $desc = trim($desc);
+
+        if(!empty($desc))
+        {
+
+            $array = [$array => $desc];
+
+        }
+        else if(empty($desc) && is_string($array))
+        {
+
+            $array = [$array => ''];
+
+        }
+
+        if(is_array($array) && count($array) > 0)
+        {
+
+            foreach ($array as $key => $value)
+            {
+
+                if(is_int($key))
+                {
+
+                    $key   = $value;
+                    $value = '';
+
+                }
+
+                $this->sql["orderby"][]  = trim($key) . ' '. trim($value);
+ 
+            }
+
+        }
+
+        return $this;
+        //ORDER BY Country ASC, CustomerName DESC;
+        //ORDER BY Country, CustomerName;
+        //ORDER BY Country DESC;
+        //ORDER BY Country;
+
+    }
+
     private function where_combine()
     {
 
@@ -160,12 +206,19 @@ Class PDO_MYSQL
 
         }
 
-        if(count($this->sql["special"]["text"]) > 0)
+        if(count($this->sql["orderby"]) > 0)
         {
 
-            $where .= ' ' . implode(' ',$this->sql["special"]["text"]);
+            $where .= 'ORDER BY ' . implode(',',$this->sql["orderby"]);
          
-            $this->sql["value"] = array_merge($this->sql["value"],$this->sql["special"]["value"]);
+        }
+
+        if(count($this->sql["limit"]["text"]) > 0)
+        {
+
+            $where .= ' ' . implode(' ',$this->sql["limit"]["text"]);
+         
+            $this->sql["value"] = array_merge($this->sql["value"],$this->sql["limit"]["value"]);
 
         }
 
@@ -370,21 +423,43 @@ Class PDO_MYSQL
 
             $sql = 'LIMIT ?,?';
 
-            $this->sql["special"]["text"]["limit"] = $sql;         
-            $this->sql["special"]["value"]["val1"] = $min;
-            $this->sql["special"]["value"]["val2"] = $max;
+            $this->sql["limit"]["text"]["limit"] = $sql;         
+            $this->sql["limit"]["value"]["val1"] = $min;
+            $this->sql["limit"]["value"]["val2"] = $max;
 
         }else if($min > 0){
 
             $sql = 'LIMIT ?';
 
-            $this->sql["special"]["text"]["limit"] = $sql;
-            $this->sql["special"]["value"]["val1"] = $min;
+            $this->sql["limit"]["text"]["limit"] = $sql;
+            $this->sql["limit"]["value"]["val1"] = $min;
 
         }
 
        
         return $this;
+
+    }
+
+    public function get_sql_select()
+    {
+
+        $sql = '';
+
+        if(count($this->sql["table"]) > 0 && count($this->sql["select"]) > 0)
+        {
+
+
+            $where = $this->where_combine();
+
+            $select =  $this->select_combine();
+
+            $sql = $select . ' ' . $where;
+
+
+        }
+
+        return $sql;
 
     }
 
@@ -782,8 +857,8 @@ Class PDO_MYSQL
 
     }
 
-     public function check($table = [])
-     {
+    public function check($table = [])
+    {
 
         $tablename = $this->array_get($table);
 
@@ -796,8 +871,25 @@ Class PDO_MYSQL
 
         return $this->pdoexec('CHECK TABLE ' . $tablename,[],3);
 
-     }
+    }
 
+    private function clearQuery()
+    {
+
+        $this->sql = [
+            "select" => [],
+            "from"   => [],
+            "where"  => [],
+            "value"  => [],
+            "set"    => [],
+            "special"   => [ 
+                "text"  => [] , 
+                "value" => []
+            ],
+            "limit" => '',
+         ];
+
+    }
 
     private function likeEscape($str)
     {

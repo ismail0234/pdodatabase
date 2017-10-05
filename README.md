@@ -1,4 +1,63 @@
+# Feature
 
+### Coming Soon
+
+- [ ] join Function
+- [ ] Having Function
+- [ ] or_Having Function
+- [ ] groupby Function
+- [ ] distinct Function
+- [ ] max function
+- [ ] min function
+- [ ] avg function
+- [ ] sum function
+- [ ] count function
+- [ ] group_start function 
+- [ ] or_group_start function
+- [ ] not_group_start function
+- [ ] or_not_group_start function
+- [ ] group_end function
+- [ ] replace into function
+
+### Completed
+
+- [x] Repair Function
+- [x] Optimize Function
+- [x] Checksum Function
+- [x] Analyze Function
+- [x] Insert Function
+- [x] Multi Insert Function
+- [x] Drop Function
+- [x] Empty Table Function
+- [x] Truncate Function
+- [x] Set function
+- [x] where Function
+- [x] or_where Function
+- [x] Update Function
+- [x] where_not_in Function
+- [x] where_in Function
+- [x] where_or_not_in Function
+- [x] where_or_in Function
+- [x] between Function
+- [x] or_between Function
+- [x] not_between Function
+- [x] or_not_between Function
+- [x] like Function
+- [x] or_like Function
+- [x] not_like function
+- [x] or_not_like function
+- [x] Delete Function
+- [x] query Function
+- [x] Check Function
+- [x] get_sql_select
+- [x] limit Function
+- [x] Select Function
+- [x] From Function
+- [x] orderby Function
+- [x] result_array Function
+- [x] result Function
+- [x] get_array Function
+- [x] get Function
 
 ## Install
 
@@ -26,10 +85,39 @@ $db = new PDO_MYSQL([
 
 ## Speed dial
 
- * [Special Function](#specialfunction)
- * [Truncate Table](#truncatetable)
-
-
+ * [Special Function](#special-function)
+ * [Truncate Table](#truncate-table)
+ * [Drop Table](#drop-table)
+ * [Empty Table](#empty-table) 
+ * [Analyze Table](#analyze-table) 
+ * [Checksum Table](#checksum-table) 
+ * [Check Table](#check-table) 
+ * [Repair Table](#repair-table) 
+ * [Insert Data](#insert-data) 
+ * [Multi Insert Data](#multi-insert-data) 
+ * [Update - set](#set) 
+ * [Update - update](#update) 
+ * [Delete](#delete) 
+ * [Select - select](#select) 
+ * [Select - from](#from) 
+ * [Select - where](#where) 
+ * [Select - or_where](#or_where) 
+ * [Select - where_in](#where_in) 
+ * [Select - or_where_in](#or_where_in) 
+ * [Select - where_not_in](#where_not_in) 
+ * [Select - or_where_not_in](#or_where_not_in) 
+ * [Select - between](#between) 
+ * [Select - or_between](#or_between) 
+ * [Select - between_not](#between_not) 
+ * [Select - or_between_not](#or_between_not) 
+ * [Select - like](#like) 
+ * [Select - or_like](#or_like) 
+ * [Select - like_not](#like_not) 
+ * [Select - or_like_not](#or_like_not) 
+ * [Select - orderby](#orderby) 
+ * [Select - get_sql_select](#get_sql_select) 
+ * [Limit](#limit) 
+ 
 
 ### Special Function
 ```php
@@ -401,5 +489,93 @@ $db->select('*')->from('users')->like('username','ismail')->limit(20);
 
 ```
 
+### orderby
 
+```php
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' ORDER BY id ASC LIMIT 20,40
+$db->select('*')->from('users')->like('username','ismail')->limit(20,40)->orderby('id','ASC');
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' ORDER BY id LIMIT 20,40
+$db->select('*')->from('users')->like('username','ismail')->limit(20,40)->orderby('id');
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' ORDER BY id ASC,email DESC LIMIT 20,40
+$db->select('*')->from('users')->like('username','ismail')->limit(20,40)->orderby(["id" => "DESC","email" => "ASC"]);
+
+// SELECT * FROM users WHERE username LIKE '%ismail%' ORDER BY id ASC,email DESC,point LIMIT 20,40
+$db->select('*')->from('users')->like('username','ismail')->limit(20,40)->orderby(["id" => "DESC","email" => "ASC","point"]);
+
+```
+
+### get_sql_select
+
+```php
+
+
+$db->select('*')->from('users')->where('id',99)->or_like('id',1)->limit(6)->orderby('id')->get_sql_select();
+
+/*
+ * PRINT
+ * SELECT * FROM is_users WHERE id = ?  OR id  LIKE ? ORDER BY id  LIMIT ?
+ */
+
+```
+
+### Output
+ 
+```php
+
+result(); // object all
+result_array(); // array all
+get(); // object one
+get_array(); // array one
+
+// SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
+$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->result();
+
+Array
+(
+    [0] => stdClass Object
+        (
+            [username] => ismail
+            [id] => 1
+        )
+
+)
+
+// SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
+$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->result_array();
+
+Array
+(
+    [0] => Array
+        (
+            [username] => ismail
+            [0] => ismail
+            [id] => 1
+            [1] => 1
+        )
+
+)
+
+// SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
+$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->get();
+
+stdClass Object
+(
+    [username] => ismail
+    [id] => 1
+)
+
+// SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
+$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->get_array();
+
+Array
+(
+    [username] => ismail
+    [0] => ismail
+    [id] => 1
+    [1] => 1
+)
+```
 
