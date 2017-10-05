@@ -1,4 +1,57 @@
+# Feature
 
+### Coming Soon
+
+- [ ] join Function
+- [ ] Having Function
+- [ ] groupby Function
+- [ ] distinct Function
+- [ ] max function
+- [ ] min function
+- [ ] avg function
+- [ ] sum function
+- [ ] count function
+- [ ] group_start function 
+- [ ] or_group_start function
+- [ ] not_group_start function
+- [ ] or_not_group_start function
+- [ ] group_end function
+
+### Completed
+
+- [x] Repair Function
+- [x] Optimize Function
+- [x] Checksum Function
+- [x] Analyze Function
+- [x] Insert Function
+- [x] Multi Insert Function
+- [x] Drop Function
+- [x] Empty Table Function
+- [x] Truncate Function
+- [x] Set function
+- [x] where Function
+- [x] or_where Function
+- [x] Update Function
+- [x] where_not_in Function
+- [x] where_in Function
+- [x] where_or_not_in Function
+- [x] where_or_in Function
+- [x] between Function
+- [x] or_between Function
+- [x] not_between Function
+- [x] or_not_between Function
+- [x] like Function
+- [x] or_like Function
+- [x] not_like function
+- [x] or_not_like function
+- [x] Delete Function
+- [x] query Function
+- [x] Check Function
+- [x] get_sql
+- [x] limit Function
+- [x] Select Function
+- [x] From Function
+- [x] orderby Function
 
 ## Install
 
