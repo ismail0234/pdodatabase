@@ -1,16 +1,28 @@
 
-#  Documentation
 
-### Include File 
+## Install
+
 ```php
 
 require "application/database/database.php";
 
+$db = new PDO_MYSQL([
+   'ip' => 'localhost',
+   'database' => 'is_test',
+   'dbengine' => 'mysql',
+   'username' => 'root',
+   'password' => '',
+   'charset' => 'utf8',
+   'prefix' => 'is_'
+]);
+
 ```
+
 ### Debug
 
 ![alt text](http://i.imgur.com/vldGpuK.png)
 
+#  Documentation
 
 ## Speed dial
 
