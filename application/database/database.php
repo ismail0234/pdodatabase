@@ -31,26 +31,26 @@ Class PDO_MYSQL
      public function __construct($array = [])
      {
 
-         $connstring = $array["dbengine"].":host=".$array["ip"].";dbname=".$array["database"].";charset=".$array["charset"];
+        $connstring = $array["dbengine"].":host=".$array["ip"].";dbname=".$array["database"].";charset=".$array["charset"];
 
-		 try{
+		try{
 
 
-			 $this->pdo = new PDO($connstring,$array["username"],$array["password"]);
+			$this->pdo = new PDO($connstring,$array["username"],$array["password"]);
 
-			 $this->pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
-			 $this->prefix = $array["prefix"];
+			$this->pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
+			$this->prefix = $array["prefix"];
 
-		 }catch(Exception $e){
+		}catch(Exception $e){
 
-              $this->debug('Database Connection Failed',array(0 => "1049",2 => $e->getMessage()),$connstring);
+            $this->debug('Database Connection Failed',array(0 => "1049",2 => $e->getMessage()),$connstring);
 
-		 }
+		}
 
-	 }
+	}
 
-     private function debug($name,$arr = [],$sql)
-     {
+    private function debug($name,$arr = [],$sql)
+    {
 
        echo $this->debugcss;
 
@@ -61,10 +61,7 @@ Class PDO_MYSQL
        echo '</div>';
 
        exit;
-     }
-
-
-
+    }
 
     private function pdoexec($sql,$array = [],$status = 0)
     {
@@ -99,6 +96,8 @@ Class PDO_MYSQL
             case 6: $sonuc = $this->pdo->lastInsertId();  break;
 
          }
+
+         $this->clearQuery();
 
          return $sonuc;
 
@@ -782,8 +781,8 @@ Class PDO_MYSQL
 
     }
 
-     public function check($table = [])
-     {
+    public function check($table = [])
+    {
 
         $tablename = $this->array_get($table);
 
@@ -796,8 +795,25 @@ Class PDO_MYSQL
 
         return $this->pdoexec('CHECK TABLE ' . $tablename,[],3);
 
-     }
+    }
 
+    private function clearQuery()
+    {
+
+        $this->sql = [
+            "select" => [],
+            "from"   => [],
+            "where"  => [],
+            "value"  => [],
+            "set"    => [],
+            "special"   => [ 
+                "text"  => [] , 
+                "value" => []
+            ],
+            "limit" => '',
+         ];
+
+    }
 
     private function likeEscape($str)
     {
