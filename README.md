@@ -17,7 +17,7 @@
 - [ ] not_group_start function
 - [ ] or_not_group_start function
 - [ ] group_end function
-- [ ] get_sql_insert function
+- [ ] replace into function
 
 ### Completed
 
@@ -54,6 +54,10 @@
 - [x] Select Function
 - [x] From Function
 - [x] orderby Function
+- [x] result_array Function
+- [x] result Function
+- [x] get_array Function
+- [x] get Function
 
 ## Install
 
@@ -516,5 +520,61 @@ $db->select('*')->from('users')->where('id',99)->or_like('id',1)->limit(6)->orde
  */
 
 ```
+### Output 
 
+```php
+ 
+result(); // object all
+result_array(); // array all
+get(); // object one
+get_array(); // array one
+ 
+// SELECT username,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
+$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->result();
+
+Array
+(
+    [0] => stdClass Object
+        (
+            [username] => ismail
+            [id] => 1
+        )
+
+)
+
+// SELECT username,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
+$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->result_array();
+
+Array
+(
+    [0] => Array
+        (
+            [username] => ismail
+            [0] => ismail
+            [id] => 1
+            [1] => 1
+        )
+
+)
+
+// SELECT username,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
+$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->get();
+
+stdClass Object
+(
+    [username] => ismail
+    [id] => 1
+)
+
+// SELECT username,id FROM users WHERE uid = 2  ORDER BY id ASC LIMIT 1
+$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->get_array();
+
+Array
+(
+    [username] => ismail
+    [0] => ismail
+    [id] => 1
+    [1] => 1
+)
+```
 
