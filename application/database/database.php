@@ -441,7 +441,7 @@ Class PDO_MYSQL
 
     }
 
-    public function get_sql()
+    public function get_sql_select()
     {
 
         $sql = '';
