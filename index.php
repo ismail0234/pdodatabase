@@ -106,7 +106,7 @@ require "application/database/database.php";
  print_r($db->sql["where"]);
  */
  echo "<pre>";
- print_r($db->check('users'));	
- echo "</pre>";
-
+print_r(
+$db->select('*')->from('users')->where_in('id',[1,2,3,4,5,7,8,9,])->or_where('id',99)->or_like('id',1)->result_array()
+);
 ?>

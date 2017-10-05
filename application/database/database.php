@@ -9,9 +9,11 @@ Class PDO_MYSQL
 
      public $sql = [
         
-        "where" => [],
-        "value" => [],
-        "set"   => [],
+        "select" => [],
+        "from"   => [],
+        "where"  => [],
+        "value"  => [],
+        "set"    => [],
         "special"   => [ 
             "text"  => [] , 
             "value" => []
@@ -102,6 +104,48 @@ Class PDO_MYSQL
 
     }
 
+    public function select($select = [])
+    {
+
+        if(is_string($select))
+        {
+
+            $select = explode(',',$select);
+
+        }
+      
+        foreach($select as $slc)
+        {
+
+           $this->sql["select"][] = $slc;
+
+        }
+
+        return $this;
+
+    }
+
+    public function from($from)
+    {
+
+        if(is_string($from))
+        {
+
+            $from = explode(',',$from);
+
+        }
+      
+        foreach($from as $frm)
+        {
+
+           $this->sql["table"][] = $this->prefix . $frm;
+
+        }
+
+        return $this;        
+
+    }
+
     private function where_combine()
     {
 
@@ -119,7 +163,7 @@ Class PDO_MYSQL
         if(count($this->sql["special"]["text"]) > 0)
         {
 
-            $where = ' ' . implode(' ',$this->sql["special"]["text"]);
+            $where .= ' ' . implode(' ',$this->sql["special"]["text"]);
          
             $this->sql["value"] = array_merge($this->sql["value"],$this->sql["special"]["value"]);
 
@@ -130,6 +174,59 @@ Class PDO_MYSQL
         return $where;
 
     }
+
+    private function select_combine()
+    {
+
+        $select = 'SELECT ';
+
+        if(count($this->sql["select"]) > 0)
+        {
+
+            $select .= implode(',',$this->sql["select"]);
+
+        }
+
+        $select .= ' FROM '; 
+
+        if(count($this->sql["table"]) > 0)
+        {
+
+            $select .= implode(',',$this->sql["table"]);
+
+        }
+
+        return $select;
+
+    } 
+
+    public function result()
+    {  
+
+        return $this->get_result(1);
+
+    }
+
+    public function result_array()
+    {
+
+        return $this->get_result(2);
+
+    }
+
+    public function get()
+    { 
+
+        return $this->get_result(3);
+
+    }
+
+    public function get_array()
+    { 
+
+        return $this->get_result(4);
+
+    }     
 
 
     public function query($select , $array , $type)
@@ -237,28 +334,28 @@ Class PDO_MYSQL
 
     }
 
-    public function like($field,$val,$type)
+    public function like($field,$val,$type = 'center')
     {
 
         return $this->where_like_function($field,$val,'AND','',$type);
 
     }
 
-    public function or_like($field,$val,$type)
+    public function or_like($field,$val,$type = 'center')
     {
 
         return $this->where_like_function($field,$val,'OR','',$type);
 
     }
 
-    public function like_not($field,$val,$type)
+    public function like_not($field,$val,$type = 'center')
     {
 
         return $this->where_like_function($field,$val,'AND','NOT',$type);
 
     }
 
-    public function or_like_not($field,$val,$type)
+    public function or_like_not($field,$val,$type = 'center')
     {
 
         return $this->where_like_function($field,$val,'OR','NOT',$type);
@@ -291,13 +388,25 @@ Class PDO_MYSQL
 
     }
 
+    private function get_result($type = 1)
+    {
+
+        $where = $this->where_combine();
+
+        $select =  $this->select_combine();
+
+        $sql = $select . ' ' . $where;
+
+        return $this->pdoexec($sql,$this->sql["value"] , $type);
+
+    }
 
     private function where_like_function($field,$value,$and_or,$not,$type = '')
     {
 
         $value = $this->likeEscape($value);
 
-        switch ($type)
+        switch (strtolower($type))
         {
             case 'left' :  $value = '%'.$value;  break;
             case 'right':  $value =  $value.'%';  break;
@@ -308,8 +417,9 @@ Class PDO_MYSQL
         if(!empty($field) && !empty($value))
         {
 
-            $this->sql["where"][] = trim($field) . ' ' . $not . ' LIKE ? ';
             $this->sql["where"][] = $and_or;
+            $this->sql["where"][] = trim($field) . ' ' . $not . ' LIKE ? ';
+            $this->sql["value"][] = $value;
 
         }
 
@@ -326,8 +436,8 @@ Class PDO_MYSQL
         if(!empty($field) && !empty($one) && !empty($two))
         {
 
-            $this->sql["where"][] = trim($field) . ' ' . $not . ' BETWEEN ' . $one . ' AND ' . $two;
             $this->sql["where"][] = $and_or;
+            $this->sql["where"][] = trim($field) . ' ' . $not . ' BETWEEN ' . $one . ' AND ' . $two;
 
         }
 
@@ -342,6 +452,8 @@ Class PDO_MYSQL
 
             $marr = [];
 
+            $this->sql["where"][] = $three;
+
             foreach($arr as $ar)
             {
 
@@ -351,7 +463,6 @@ Class PDO_MYSQL
             }
 
             $this->sql["where"][] = trim($field) . ' ' . $not . ' IN('.implode(',',$marr).')';
-            $this->sql["where"][] = $three;
 
         }
 
@@ -370,9 +481,9 @@ Class PDO_MYSQL
                 foreach($field as $key => $value)
                 {
 
+                    $this->sql["where"][] = $andor;
                     $this->sql["where"][] = trim($value[0]) . ' ' . ( isset($value[2]) ? $value[1]:'=') . ' ?'; 
                     $this->sql["value"][] = ( isset($value[2]) ? $value[2]:$value[1]);
-                    $this->sql["where"][] = $andor;
 
                 }
 
@@ -382,6 +493,8 @@ Class PDO_MYSQL
         else
         {
             
+            $this->sql["where"][] = $andor;
+
             if(in_array($two, $this->sqlsyntax))
             {
 
@@ -398,7 +511,6 @@ Class PDO_MYSQL
              
             }
 
-            $this->sql["where"][] = $andor;
 
         }
 
@@ -657,12 +769,12 @@ Class PDO_MYSQL
         if(count($this->sql["where"]) > 0)
         {
 
-            $select = strtoupper(trim($this->sql["where"][count($this->sql["where"]) - 1]));
+            $select = strtoupper(trim($this->sql["where"][0]));
 
             if( in_array($select, $this->and_or) )
             {
 
-                unset($this->sql["where"][count($this->sql["where"]) - 1]);
+                unset($this->sql["where"][0]);
 
             }
 
