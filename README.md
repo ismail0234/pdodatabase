@@ -12,6 +12,13 @@ require "application/database/database.php";
 ![alt text](http://i.imgur.com/vldGpuK.png)
 
 
+## Speed dial
+
+ * [Special Function](#specialfunction)
+ * [Truncate Table](#truncatetable)
+
+
+
 ### Special Function
 ```php
 /*
