@@ -4,6 +4,7 @@
 
 - [ ] join Function
 - [ ] Having Function
+- [ ] or_Having Function
 - [ ] groupby Function
 - [ ] distinct Function
 - [ ] max function
@@ -16,6 +17,7 @@
 - [ ] not_group_start function
 - [ ] or_not_group_start function
 - [ ] group_end function
+- [ ] get_sql_insert function
 
 ### Completed
 
@@ -47,7 +49,7 @@
 - [x] Delete Function
 - [x] query Function
 - [x] Check Function
-- [x] get_sql
+- [x] get_sql_select
 - [x] limit Function
 - [x] Select Function
 - [x] From Function
@@ -109,7 +111,7 @@ $db = new PDO_MYSQL([
  * [Select - like_not](#like_not) 
  * [Select - or_like_not](#or_like_not) 
  * [Select - orderby](#orderby) 
- * [Select - get_sql](#get_sql) 
+ * [Select - get_sql_select](#get_sql_select) 
  * [Limit](#limit) 
  
 
@@ -501,12 +503,12 @@ $db->select('*')->from('users')->like('username','ismail')->limit(20,40)->orderb
 
 ```
 
-### get_sql
+### get_sql_select
 
 ```php
 
 
-$db->select('*')->from('users')->where('id',99)->or_like('id',1)->limit(6)->orderby('id')->get_sql();
+$db->select('*')->from('users')->where('id',99)->or_like('id',1)->limit(6)->orderby('id')->get_sql_select();
 
 /*
  * PRINT
