@@ -141,7 +141,8 @@ $db->set([
 // UPDATE test SET username = ismail
 $db->set('username','ismail')->update('users);
 
-
+// UPDATE test SET point = point - 20 WHERE id = 9
+$db->set('point','point - ?',20)->where('id',9)->update('users');
 ```
 
 
