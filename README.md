@@ -98,6 +98,26 @@ echo "<pre>";
 print_r($db->debug);
 echo "</pre>";
 
+Output:
+
+Array
+(
+    [0] => Array
+        (
+            [sql] => INSERT INTO is_users (username,email) VALUES (?,?),(?,?),(?,?)
+            [value] => Array
+                (
+                    [0] => ismail_satilmis
+                    [1] => ismaiil_0234@hotmail.com
+                    [2] => ismail_satilmis
+                    [3] => ismaiil_0234@hotmail.com
+                    [4] => ismail_satilmis
+                    [5] => ismaiil_0234@hotmail.com
+                )
+
+            [speed] => 0.0016200542449951
+        )
+)
 	
 ```
 
