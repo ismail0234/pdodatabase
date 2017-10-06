@@ -3,8 +3,6 @@
 ### Coming Soon
 
 - [ ] join Function
-- [ ] Having Function
-- [ ] or_Having Function
 - [ ] distinct Function
 - [ ] replace into function
 
@@ -56,6 +54,7 @@
 - [x] or_group_start function
 - [x] group_end function
 - [x] groupby Function
+- [x] Having Function
 
 ## Install
 
@@ -122,6 +121,7 @@ $db = new PDO_MYSQL([
  * [Select - group_start](#group_start---or_group_start---group_end) 
  * [Select - or_group_start](#group_start---or_group_start---group_end) 
  * [Select - group_end](#group_start---or_group_start---group_end) 
+ * [Select - having](#having) 
  * [Limit](#limit) 
  * [Output](#output) 
  
@@ -613,8 +613,17 @@ $db->count('id','toplam')->from('users')
 
 ```php
 
-//SELECT COUNT(id) AS toplam FROM is_users GROUP BY id,test
+// SELECT COUNT(id) AS toplam FROM is_users GROUP BY id,test
 $db->select('*')->from('users')->groupby('id')->get_result()
+
+```
+
+### having
+
+```php
+
+// SELECT * FROM is_users  GROUP BY id HAVING id = ? 
+$db->select('*')->from('users')->groupby('id')->having('id',1)->get_result()
 
 ```
 
