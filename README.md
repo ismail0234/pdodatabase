@@ -59,7 +59,7 @@
 - [x] sql query log
 - [x] speed sql query
 
-Note: requires ext-pdo: *
+## Note: requires ext-pdo: *
 
 ## Install
 
