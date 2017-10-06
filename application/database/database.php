@@ -131,6 +131,14 @@ Class PDO_MYSQL
         return $this->group_function();
 
     }
+
+    /*public function not_group_start()
+    {
+
+        return $this->group_function('(','NOT');
+
+    }
+    */
     
     public function or_group_start()
     {
@@ -138,6 +146,14 @@ Class PDO_MYSQL
         return $this->group_function('(','OR');
 
     }
+    
+    /*public function or_not_group_start()
+    {
+
+        return $this->group_function('(','OR NOT');
+
+    }
+    */
 
     public function group_end()
     {
