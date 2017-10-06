@@ -363,6 +363,13 @@ Class PDO_MYSQL
 
     }    
 
+    public function having($array = [],$sec = '')
+    {
+
+        return $this->having_function($array,$sec);
+
+    }
+    
     public function groupby($array = [])
     {
 
@@ -381,13 +388,6 @@ Class PDO_MYSQL
         }
 
         return $this;
-
-    }
-
-    public function having($array = [],$sec = '')
-    {
-
-        return $this->having_function($array,$sec);
 
     }
 
