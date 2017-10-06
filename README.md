@@ -5,6 +5,8 @@
 - [ ] join Function
 - [ ] distinct Function
 - [ ] replace into function
+- [ ] sql query log
+- [ ] speed sql query
 
 ### Completed
 
