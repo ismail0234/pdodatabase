@@ -86,6 +86,22 @@ $db = new PDO_MYSQL([
 
 ```
 
+## Query Log
+```php
+
+// query log on
+'querylog' => 1
+
+// print query log 
+// $db->debug returning all sql query ( speed , query , values )
+echo "<pre>";
+print_r($db->debug);
+echo "</pre>";
+
+	
+```
+
+
 ### Debug
 
 ![alt text](http://i.imgur.com/vldGpuK.png)
