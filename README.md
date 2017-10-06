@@ -5,7 +5,6 @@
 - [ ] join Function
 - [ ] Having Function
 - [ ] or_Having Function
-- [ ] groupby Function
 - [ ] distinct Function
 - [ ] replace into function
 
@@ -56,6 +55,7 @@
 - [x] group_start function 
 - [x] or_group_start function
 - [x] group_end function
+- [x] groupby Function
 
 ## Install
 
@@ -606,6 +606,15 @@ $db->count('id','toplam')->from('users')
                     ->group_end()
                 ->where('point', 0)->get_array()
 
+
+```
+
+### sum
+
+```php
+
+//SELECT COUNT(id) AS toplam FROM is_users GROUP BY id,test
+$db->select('*')->from('users')->groupby('id')->get_result()
 
 ```
 
