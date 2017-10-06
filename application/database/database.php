@@ -7,11 +7,11 @@ Class PDO_MYSQL
 
      protected $prefix = '';
      /*
-      * DEBUG MODE 
+      * Query Log 
       * 0 => CLOSE
-      * 1 => error output 
+      * 1 => Open 
       */
-     protected $debugmode = 1;
+     protected $querylog = 1;
 
      public $debug = [];
 
@@ -46,6 +46,8 @@ Class PDO_MYSQL
      public function __construct($array = [])
      {
 
+        $array = $this->install($array);
+
         $connstring = $array["dbengine"].":host=".$array["ip"].";dbname=".$array["database"].";charset=".$array["charset"];
 
 		try{
@@ -63,6 +65,22 @@ Class PDO_MYSQL
 		}
 
 	}
+
+    private function install($array)
+    {
+
+        $array["ip"]       = isset($array["ip"])       && !empty(trim($array["ip"]))       ? $array["ip"]       : 'localhost';
+        $array["dbengine"] = isset($array["dbengine"]) && !empty(trim($array["dbengine"])) ? $array["dbengine"] : 'mysql';
+        $array["charset"]  = isset($array["charset"])  && !empty(trim($array["charset"]))  ? $array["charset"]  : 'utf8';
+        $array["database"] = isset($array["database"]) && !empty(trim($array["database"])) ? $array["database"] : '';
+        $array["username"] = isset($array["username"]) && !empty(trim($array["username"])) ? $array["username"] : '';
+        $array["password"] = isset($array["password"]) && !empty(trim($array["password"])) ? $array["password"] : '';
+        $array["prefix"]   = isset($array["prefix"])   && !empty(trim($array["prefix"]))   ? $array["prefix"]   : '';
+        $this->querylog    = isset($array["querylog"]) && !empty(trim($array["querylog"])) ? $array["querylog"] : 1;
+
+        return $array;
+
+    }
 
     private function debug($name,$arr = [],$sql)
     {
@@ -90,32 +108,32 @@ Class PDO_MYSQL
     }
 
 
-    private function pdoexec($sql,$array = [],$status = 0)
+    private function pdoexec($sql,$array = [],$status = 1)
     {
 
-        if($this->debugmode !== 0)
+        if($this->querylog !== 0)
         {
 
             $start = microtime(1);
 
         }
 
-
         $pre = $this->pdo->prepare($sql);
 
         $errorCode = $this->pdo->errorInfo();
 
-        if($errorCode[0] > 0){
+        if($errorCode[0] > 0)
+        {
 
             $this->debug('SQL Prepare Error',$errorCode,$sql);
-            return false;
+
         }
 
         if(!$pre->execute($array))
         {
 
             $this->debug('SQL Execute Error',$pre->errorInfo(),$sql);
-            return false;
+
         }
 
         $sonuc = true;
@@ -133,7 +151,7 @@ Class PDO_MYSQL
         }
 
 
-        if($this->debugmode !== 0)
+        if($this->querylog !== 0)
         {
 
             $finish = microtime(1);
