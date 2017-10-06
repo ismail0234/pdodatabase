@@ -5,8 +5,7 @@
 - [ ] join Function
 - [ ] distinct Function
 - [ ] replace into function
-- [ ] sql query log
-- [ ] speed sql query
+
 
 ### Completed
 
@@ -57,6 +56,8 @@
 - [x] group_end function
 - [x] groupby Function
 - [x] Having Function
+- [x] sql query log
+- [x] speed sql query
 
 ## Install
 
@@ -65,13 +66,22 @@
 require "application/database/database.php";
 
 $db = new PDO_MYSQL([
-   'ip' => 'localhost',
-   'database' => 'is_test',
-   'dbengine' => 'mysql',
-   'username' => 'root',
-   'password' => '',
-   'charset' => 'utf8',
-   'prefix' => 'is_'
+	// Server Ip Default: localhost
+	'ip'       => 'localhost',
+	// Database Name
+	'database' => 'is_test',
+	// Database Engine Name oracle,mysql ...
+	'dbengine' => 'mysql',
+	// Database Username
+	'username' => 'root',
+	// Database Password
+	'password' => '',
+	// Database Charset Default: utf8
+	'charset'  => 'utf8',
+	// Database table prefix Default: null
+	'prefix'   => 'is_',
+	// Database query log Default: on
+	'querylog' => 1,
 ]);
 
 ```
