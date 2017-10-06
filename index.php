@@ -26,7 +26,7 @@ require "application/database/database.php";
  * @param array fieldone , fieldtwo ...
  * @param array array valueone , valuetwo ...
  */
- /*$db->multi_insert('users',["username","email"],[
+ $db->multi_insert('users',["username","email"],[
  	[
  		'ismail_satilmis',
  		'ismaiil_0234@hotmail.com',
@@ -41,7 +41,6 @@ require "application/database/database.php";
  	], 	 	
  ]);
 
-*/
 /*
  * EMPTY TABLE
  * @param $tablename
@@ -63,7 +62,7 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
-// print_r($db->analyze('users'));	
+ ($db->analyze('users'));	
 // echo "</pre>";
  /*
  * CHECKSUM TABLE
@@ -71,7 +70,7 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
-// print_r($db->checksum('users'));	
+ ($db->checksum('users'));	
 // echo "</pre>";
  /*
  * OPTIMIZE TABLE
@@ -79,7 +78,7 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
-// print_r($db->optimize('users'));	
+ ($db->optimize('users'));	
 // echo "</pre>";
  /*
  * REPAIR TABLE
@@ -87,31 +86,32 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
-// print_r($db->repair('users'));	
+ ($db->repair('users'));	
 // echo "</pre>";
-/*
+
     $db->set('username','ismail');
-    $db->set('point', 'point + ?',5);
+    $db->set('point', 'point + ?',99);
     $db->set([
         [ "username" , "ismail" ],
-        [ "point" , "point + ? " , 5 ],
+        [ "point" , "point + ? " , 99 ],
     ]);
 
-*/
-  /*   $db->set([
-        [ "username" , "weqewxxx" ],
-    ])->between('point',10,100)->limit(50,100)->update('users');
 
+     $db->set([
+        [ "username" , "weqewxxx" ],
+    ])->between('point',10,100)->limit(100)->update('users');
+     /*
  echo "<pre>";
  print_r($db->sql["where"]);
  */
   $bas = microtime(1);
 echo "<pre>";
-print_r(
 
-$db->distinct('id')->from('users')->get_sql_select()
-
-) ;
 echo "<br>";
+
+echo "<pre>";
+
+print_r($db->debug);
+
 echo number_format((microtime(1) - $bas),25,".","");
 ?>
