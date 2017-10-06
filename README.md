@@ -119,9 +119,9 @@ $db = new PDO_MYSQL([
  * [Select - count](#count) 
  * [Select - avg](#avg) 
  * [Select - sum](#sum) 
- * [Select - group_start](#group_start) 
- * [Select - or_group_start](#or_group_start) 
- * [Select - group_end](#group_end) 
+ * [Select - group_start](#group_start---or_group_start---group_end) 
+ * [Select - or_group_start](#group_start---or_group_start---group_end) 
+ * [Select - group_end](#group_start---or_group_start---group_end) 
  * [Limit](#limit) 
  * [Output](#output) 
  
@@ -608,13 +608,6 @@ $db->count('id','toplam')->from('users')
 
 
 ```
-
- * [Select - group_start](#group_start) 
- * [Select - or_group_start](#or_group_start) 
- * [Select - not_group_start](#not_group_start) 
- * [Select - or_not_group_start](#or_not_group_start) 
- * [Select - group_end](#group_end) 
-
 
 ### Output
  
