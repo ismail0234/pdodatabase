@@ -109,7 +109,8 @@ require "application/database/database.php";
 echo "<pre>";
 print_r(
 
-$db->count('id','toplam')->from('users')->groupby('id')->get_sql_select()
+$db->select('*')->from('users')->groupby('id')->having('id',1)->get_sql_select()
+
 ) ;
 echo "<br>";
 echo number_format((microtime(1) - $bas),25,".","");

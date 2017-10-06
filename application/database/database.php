@@ -16,7 +16,10 @@ Class PDO_MYSQL
         "set"     => [],
         "orderby" => [],
         "groupby" => [],
-        "having"  => [],
+        "having"  => [
+            "text"  => [] , 
+            "value" => []
+        ],
         "special"   => [ 
             "text"  => [] , 
             "value" => []
@@ -363,7 +366,6 @@ Class PDO_MYSQL
     public function groupby($array = [])
     {
 
-
         if(is_string($array))
         {
 
@@ -374,12 +376,69 @@ Class PDO_MYSQL
         foreach($array as $frm)
         {
 
-           $this->sql["groupby"][] = $frm;
+           $this->sql['groupby'][] = $frm;
 
         }
 
         return $this;
 
+    }
+
+    public function having($array = [],$sec = '')
+    {
+
+        return $this->having_function($array,$sec);
+
+    }
+
+    public function having_function($array,$sec)
+    {
+
+        $sec = trim($sec);
+
+        if(!empty($sec))
+        {
+
+            $array = [$array => $sec];
+
+        }
+        else if(empty($sec) && is_string($array))
+        {
+
+            $array = [$array => ''];
+
+        }
+
+        if(is_array($array) && count($array) > 0)
+        {
+
+            foreach ($array as $key => $value)
+            {
+
+                if(is_int($key))
+                {
+
+                    $key   = $value;
+
+                }
+
+                $regex = implode("",$this->sqlsyntax);
+                $ayrac = '';
+                if(!strpbrk($regex,$key))
+                {
+
+                    $ayrac = ' = ';
+
+                }
+
+                $this->sql["having"]["text"][] = $key .  $ayrac . '? ';
+                $this->sql["having"]["value"][] = $value;
+
+            }
+
+        }
+
+        return $this;
     }
 
     private function select_multiple($select = [],$sec,$mm)
@@ -520,21 +579,22 @@ Class PDO_MYSQL
         if(count($this->sql["groupby"]) > 0)
         {
 
-            $where .= 'GROUP BY ' . implode(',',$this->sql["groupby"]);
+            $where .= ' GROUP BY ' . implode(',',$this->sql["groupby"]);
          
         }
 
-        if(count($this->sql["having"]) > 0)
+        if(count($this->sql["having"]["text"]) > 0)
         {
 
-//            $where .= 'ORDER BY ' . implode(',',$this->sql["groupby"]);
-         
+            $where .= ' HAVING ' . implode(',',$this->sql["having"]["text"]);
+            $this->sql["value"] = array_merge($this->sql["value"],$this->sql["having"]["value"]);
+       
         }
 
         if(count($this->sql["orderby"]) > 0)
         {
 
-            $where .= 'ORDER BY ' . implode(',',$this->sql["orderby"]);
+            $where .= ' ORDER BY ' . implode(',',$this->sql["orderby"]);
          
         }
 
