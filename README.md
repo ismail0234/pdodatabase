@@ -7,11 +7,6 @@
 - [ ] or_Having Function
 - [ ] groupby Function
 - [ ] distinct Function
-- [ ] max function
-- [ ] min function
-- [ ] avg function
-- [ ] sum function
-- [ ] count function
 - [ ] group_start function 
 - [ ] or_group_start function
 - [ ] not_group_start function
@@ -58,6 +53,11 @@
 - [x] result Function
 - [x] get_array Function
 - [x] get Function
+- [x] max function
+- [x] min function
+- [x] avg function
+- [x] sum function
+- [x] count function
 
 ## Install
 
@@ -116,7 +116,13 @@ $db = new PDO_MYSQL([
  * [Select - or_like_not](#or_like_not) 
  * [Select - orderby](#orderby) 
  * [Select - get_sql_select](#get_sql_select) 
+ * [Select - min](#min) 
+ * [Select - max](#max) 
+ * [Select - count](#count) 
+ * [Select - avg](#avg) 
+ * [Select - sum](#sum) 
  * [Limit](#limit) 
+ * [Output](#output) 
  
 
 ### Special Function
@@ -518,6 +524,66 @@ $db->select('*')->from('users')->where('id',99)->or_like('id',1)->limit(6)->orde
  * PRINT
  * SELECT * FROM is_users WHERE id = ?  OR id  LIKE ? ORDER BY id  LIMIT ?
  */
+
+```
+
+### min
+
+```php
+
+// SELECT MIN(id) AS variable FROM users WHERE id LIKE '%1%'
+$db->min('id','variable')->from('users')->like('id',1)->get_array()
+
+// SELECT MIN(id) AS id FROM users WHERE id LIKE '%1%'
+$db->min('id')->from('users')->like('id',1)->get_array()
+
+```
+
+### max
+
+```php
+
+// SELECT MAX(id) AS variable FROM users WHERE id LIKE '%1%'
+$db->max('id','variable')->from('users')->like('id',1)->get_array()
+
+// SELECT MAX(id) AS id FROM users WHERE id LIKE '%1%'
+$db->max('id')->from('users')->like('id',1)->get_array()
+
+```
+
+### count
+
+```php
+
+// SELECT COUNT(id) AS variable FROM users WHERE id LIKE '%1%'
+$db->count('id','variable')->from('users')->like('id',1)->get_array()
+
+// SELECT COUNT(id) AS id FROM users WHERE id LIKE '%1%'
+$db->count('id')->from('users')->like('id',1)->get_array()
+
+```
+
+### avg
+
+```php
+
+// SELECT AVG(id) AS variable FROM users WHERE id LIKE '%1%'
+$db->avg('id','variable')->from('users')->like('id',1)->get_array()
+
+// SELECT AVG(id) AS id FROM users WHERE id LIKE '%1%'
+$db->avg('id')->from('users')->like('id',1)->get_array()
+
+```
+
+### sum
+
+```php
+
+// SELECT SUM(id) AS variable FROM users WHERE id LIKE '%1%'
+$db->sum('id','variable')->from('users')->like('id',1)->get_array()
+
+// SELECT SUM(id) AS id FROM users WHERE id LIKE '%1%'
+$db->sum('id')->from('users')->like('id',1)->get_array()
 
 ```
 
