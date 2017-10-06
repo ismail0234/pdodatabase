@@ -681,7 +681,7 @@ Class PDO_MYSQL
             
             $this->sql["where"][] = $andor;
 
-            if(in_array($two, $this->sqlsyntax))
+            if(in_array($two, $this->sqlsyntax,true))
             {
 
                 $this->sql["where"][] = trim($field) . ' ' . $two . ' ? '; 
