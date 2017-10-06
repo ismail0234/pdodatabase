@@ -7,11 +7,6 @@
 - [ ] or_Having Function
 - [ ] groupby Function
 - [ ] distinct Function
-- [ ] group_start function 
-- [ ] or_group_start function
-- [ ] not_group_start function
-- [ ] or_not_group_start function
-- [ ] group_end function
 - [ ] replace into function
 
 ### Completed
@@ -58,6 +53,9 @@
 - [x] avg function
 - [x] sum function
 - [x] count function
+- [x] group_start function 
+- [x] or_group_start function
+- [x] group_end function
 
 ## Install
 
@@ -121,6 +119,9 @@ $db = new PDO_MYSQL([
  * [Select - count](#count) 
  * [Select - avg](#avg) 
  * [Select - sum](#sum) 
+ * [Select - group_start](#group_start) 
+ * [Select - or_group_start](#or_group_start) 
+ * [Select - group_end](#group_end) 
  * [Limit](#limit) 
  * [Output](#output) 
  
@@ -586,6 +587,34 @@ $db->sum('id','variable')->from('users')->like('id',1)->get_array()
 $db->sum('id')->from('users')->like('id',1)->get_array()
 
 ```
+
+### group_start - or_group_start - group_end 
+
+```php
+
+//SELECT COUNT(id) AS toplam FROM is_users WHERE id = ?  AND ( id = ?  OR ( email = ?  AND ( username = ?  ) ) ) AND point = ? 
+$db->count('id','toplam')->from('users')
+                ->where('id', 1)
+					->group_start()
+	                ->where('id', 1)
+		                ->or_group_start()
+                        ->where('email', 'ismaiil_0234@hotmail.com')
+		                	->group_start()
+	                        ->where('username', 'ismail_satilmis')
+		                    ->group_end()
+                        ->group_end()
+                    ->group_end()
+                ->where('point', 0)->get_array()
+
+
+```
+
+ * [Select - group_start](#group_start) 
+ * [Select - or_group_start](#or_group_start) 
+ * [Select - not_group_start](#not_group_start) 
+ * [Select - or_not_group_start](#or_not_group_start) 
+ * [Select - group_end](#group_end) 
+
 
 ### Output
  
