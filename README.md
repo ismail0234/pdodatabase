@@ -137,7 +137,7 @@ $db = new PDO_MYSQL([
  * 3 => fetch ( Object )
  * 4 => fetch ( Array )
  * 5 => rowcount ( int )
- * 5 => lastInsertId ( int )
+ * 6 => lastInsertId ( int )
  */
 $db->query("SELECT * FROM is_users WHERE id = ?",[22],1);
 
