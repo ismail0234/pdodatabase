@@ -111,7 +111,7 @@ echo "<br>";
 
 echo "<pre>";
 
-print_r($db->debug);
+print_r($db->select('*')->from('user')->join('users','users.id = users.name')->get_sql_select());
 
 echo number_format((microtime(1) - $bas),25,".","");
 ?>

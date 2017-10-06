@@ -25,6 +25,7 @@ Class PDO_MYSQL
         "orderby"  => [],
         "groupby"  => [],
         "distinct" => [],
+        "join"     => [],
         "having"   => [
             "text"  => [] , 
             "value" => []
@@ -128,8 +129,7 @@ Class PDO_MYSQL
             $this->debug('SQL Prepare Error',$errorCode,$sql);
 
         }
-
-        if(!$pre->execute($array))
+        else if(!$pre->execute($array))
         {
 
             $this->debug('SQL Execute Error',$pre->errorInfo(),$sql);
@@ -437,6 +437,23 @@ Class PDO_MYSQL
 
     }
     */
+
+    public function join($table,$query,$join = '')
+    {
+
+        $this->sql["join"][] = trim($join) . ' JOIN ' . $this->prefix . $table.' ON '.$this->addPrefix($query);
+
+        return $this;
+    }
+
+    private function addPrefix($name)
+    {
+        $pattern = '@\w+.\w+@si';
+
+        return preg_replace($pattern, $this->prefix . '$0',$name);
+  
+    }
+
     public function groupby($array = [])
     {
 
@@ -718,6 +735,13 @@ Class PDO_MYSQL
         {
 
             $select .= implode(',',$this->sql["table"]);
+
+        }
+
+        if(count($this->sql["join"]) > 0)
+        {
+
+            $select .= implode(',',$this->sql["join"]);
 
         }
 
@@ -1197,6 +1221,7 @@ Class PDO_MYSQL
                 "orderby"  => [],
                 "groupby"  => [],
                 "distinct" => [],
+                "join"     => [],
                 "having"   => [
                     "text"  => [] , 
                     "value" => []
