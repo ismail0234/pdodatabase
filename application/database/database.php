@@ -19,7 +19,7 @@ Class PDO_MYSQL
             "text"  => [] , 
             "value" => []
         ],
-        "limit" => [],
+        "limit" => ["text" => []],
 
      ];
 
@@ -122,6 +122,27 @@ Class PDO_MYSQL
         }
 
         return $this;
+
+    }
+
+    public function group_start()
+    {
+
+        return $this->group_function();
+
+    }
+    
+    public function or_group_start()
+    {
+
+        return $this->group_function('(','OR');
+
+    }
+
+    public function group_end()
+    {
+
+        return $this->group_function(')');
 
     }
 
@@ -429,6 +450,16 @@ Class PDO_MYSQL
 
     }
 
+    private function group_function($bas = '(' ,$and_or = 'AND')
+    {
+
+        $this->sql["where"][] = $and_or;
+        $this->sql["where"][] = $bas;
+
+        return $this;
+
+    }
+
     private function where_combine()
     {
 
@@ -440,6 +471,9 @@ Class PDO_MYSQL
         {
 
             $where = 'WHERE ' . implode(' ',$this->sql["where"]);
+
+            $where = preg_replace('@\( AND|\( OR@si','(',$where);
+            $where = preg_replace('@AND \)|OR \)@si',')',$where);
 
         }
 
@@ -623,6 +657,7 @@ Class PDO_MYSQL
     private function where_function($field,$two,$three,$andor)
     {
 
+
         if(is_array($field))
         {
 
@@ -659,9 +694,7 @@ Class PDO_MYSQL
                 $this->sql["where"][] = trim($field) . ' = ? '; 
                 $this->sql["value"][] = $two;
 
-             
             }
-
 
         }
 
@@ -920,12 +953,14 @@ Class PDO_MYSQL
         if(count($this->sql["where"]) > 0)
         {
 
-            $select = strtoupper(trim($this->sql["where"][0]));
+            $minimum = min(array_keys($this->sql["where"]));
+
+            $select = strtoupper(trim($this->sql["where"][$minimum]));
 
             if( in_array($select, $this->and_or) )
             {
 
-                unset($this->sql["where"][0]);
+                unset($this->sql["where"][$minimum]);
 
             }
 
@@ -952,17 +987,18 @@ Class PDO_MYSQL
     private function clearQuery()
     {
 
-        $this->sql = [
-            "select" => [],
-            "from"   => [],
-            "where"  => [],
-            "value"  => [],
-            "set"    => [],
+        $this->sql = [       
+            "select"  => [],
+            "from"    => [],
+            "where"   => [],
+            "value"   => [],
+            "set"     => [],
+            "orderby" => [],
             "special"   => [ 
                 "text"  => [] , 
                 "value" => []
             ],
-            "limit" => '',
+            "limit" => ["text" => []],
          ];
 
     }

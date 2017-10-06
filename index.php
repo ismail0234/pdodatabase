@@ -105,8 +105,23 @@ require "application/database/database.php";
  echo "<pre>";
  print_r($db->sql["where"]);
  */
- echo "<pre>";
+  $bas = microtime(1);
+echo "<pre>";
 print_r(
-$db->count('id','toplam')->from('users')->or_like('id',1)->limit(6)->orderby('id')->get_sql_select()
-);
+
+$db->count('id','toplam')->from('users')
+                ->where('id', 1)
+->group_start()
+                ->where('id', 1)
+                ->or_group_start()
+                        ->where('email', 'ismaiil_0234@hotmail.com')
+		                 ->group_start()
+	                       ->where('username', 'ismail_satilmis')
+		                 ->group_end()
+               ->group_end()
+        ->group_end()
+        ->where('point', 0)->get_array()
+) ;
+echo "<br>";
+echo number_format((microtime(1) - $bas),25,".","");
 ?>
