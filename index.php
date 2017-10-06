@@ -107,6 +107,6 @@ require "application/database/database.php";
  */
  echo "<pre>";
 print_r(
-$db->select('*')->from('users')->where('id',99)->or_like('id',1)->limit(6)->orderby('id')->get_sql_select()
+$db->count('id','toplam')->from('users')->or_like('id',1)->limit(6)->orderby('id')->get_sql_select()
 );
 ?>

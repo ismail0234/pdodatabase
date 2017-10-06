@@ -19,7 +19,7 @@ Class PDO_MYSQL
             "text"  => [] , 
             "value" => []
         ],
-        "limit" => '',
+        "limit" => [],
 
      ];
 
@@ -125,133 +125,40 @@ Class PDO_MYSQL
 
     }
 
-    public function from($from)
+    public function min($select = [],$sec= '')
     {
 
-        if(is_string($from))
-        {
-
-            $from = explode(',',$from);
-
-        }
-      
-        foreach($from as $frm)
-        {
-
-           $this->sql["table"][] = $this->prefix . $frm;
-
-        }
-
-        return $this;        
+       return $this->select_multiple($select,$sec,$mm = 'MIN');
 
     }
 
-    public function orderby($array = [],$desc = '')
+    public function max($select = [],$sec= '')
     {
 
-        $desc = trim($desc);
-
-        if(!empty($desc))
-        {
-
-            $array = [$array => $desc];
-
-        }
-        else if(empty($desc) && is_string($array))
-        {
-
-            $array = [$array => ''];
-
-        }
-
-        if(is_array($array) && count($array) > 0)
-        {
-
-            foreach ($array as $key => $value)
-            {
-
-                if(is_int($key))
-                {
-
-                    $key   = $value;
-                    $value = '';
-
-                }
-
-                $this->sql["orderby"][]  = trim($key) . ' '. trim($value);
- 
-            }
-
-        }
-
-        return $this;
-        //ORDER BY Country ASC, CustomerName DESC;
-        //ORDER BY Country, CustomerName;
-        //ORDER BY Country DESC;
-        //ORDER BY Country;
+       return $this->select_multiple($select,$sec,$mm = 'MAX');
 
     }
 
-    private function where_combine()
+    public function avg($select = [],$sec= '')
     {
 
-        $where = '';
+       return $this->select_multiple($select,$sec,$mm = 'AVG');
 
-        $this->clearAndOr();
-        
-        if(count($this->sql["where"]) > 0)
-        {
+    }    
 
-            $where = 'WHERE ' . implode(' ',$this->sql["where"]);
+    public function sum($select = [],$sec= '')
+    {
 
-        }
-
-        if(count($this->sql["orderby"]) > 0)
-        {
-
-            $where .= 'ORDER BY ' . implode(',',$this->sql["orderby"]);
-         
-        }
-
-        if(count($this->sql["limit"]["text"]) > 0)
-        {
-
-            $where .= ' ' . implode(' ',$this->sql["limit"]["text"]);
-         
-            $this->sql["value"] = array_merge($this->sql["value"],$this->sql["limit"]["value"]);
-
-        }
-
-        $this->sql["value"] = array_values($this->sql["value"]);
-
-        return $where;
+       return $this->select_multiple($select,$sec,$mm = 'SUM');
 
     }
 
-    private function select_combine()
+    public function count($select = [],$sec= '')
     {
 
-        $select = 'SELECT ';
+       return $this->select_multiple($select,$sec,$mm = 'COUNT');
 
-        if(count($this->sql["select"]) > 0)
-        {
-
-            $select .= implode(',',$this->sql["select"]);
-
-        }
-
-        $select .= ' FROM '; 
-
-        if(count($this->sql["table"]) > 0)
-        {
-
-            $select .= implode(',',$this->sql["table"]);
-
-        }
-
-        return $select;
-
-    } 
+    }        
 
     public function result()
     {  
@@ -280,7 +187,6 @@ Class PDO_MYSQL
         return $this->get_result(4);
 
     }     
-
 
     public function query($select , $array , $type)
     {
@@ -415,10 +321,180 @@ Class PDO_MYSQL
 
     }    
 
+    private function select_multiple($select = [],$sec,$mm)
+    {
+
+        $sec = trim($sec);
+
+        if(!empty($sec))
+        {
+
+            $select = [$select => $sec];
+
+        }
+        else if(empty($sec) && is_string($select))
+        {
+
+            $select = [$select => $select];
+
+        }
+
+        if(is_array($select) && count($select) > 0)
+        {
+
+            foreach ($select as $key => $value)
+            {
+
+                if(is_int($key))
+                {
+
+                    $key   = $value;
+
+                }
+
+                $this->sql["select"][] = $mm . '(' . $key .') AS '.$value;
+
+            }
+
+        }
+
+        return $this;
+
+    }
+
+    public function from($from)
+    {
+
+        if(is_string($from))
+        {
+
+            $from = explode(',',$from);
+
+        }
+      
+        foreach($from as $frm)
+        {
+
+           $this->sql["table"][] = $this->prefix . $frm;
+
+        }
+
+        return $this;        
+
+    }
+
+    public function orderby($array = [],$desc = '')
+    {
+
+        $desc = trim($desc);
+
+        if(!empty($desc))
+        {
+
+            $array = [$array => $desc];
+
+        }
+        else if(empty($desc) && is_string($array))
+        {
+
+            $array = [$array => ''];
+
+        }
+
+        if(is_array($array) && count($array) > 0)
+        {
+
+            foreach ($array as $key => $value)
+            {
+
+                if(is_int($key))
+                {
+
+                    $key   = $value;
+                    $value = '';
+
+                }
+
+                $this->sql["orderby"][]  = trim($key) . ' '. trim($value);
+ 
+            }
+
+        }
+
+        return $this;
+        //ORDER BY Country ASC, CustomerName DESC;
+        //ORDER BY Country, CustomerName;
+        //ORDER BY Country DESC;
+        //ORDER BY Country;
+
+    }
+
+    private function where_combine()
+    {
+
+        $where = '';
+
+        $this->clearAndOr();
+        
+        if(count($this->sql["where"]) > 0)
+        {
+
+            $where = 'WHERE ' . implode(' ',$this->sql["where"]);
+
+        }
+
+        if(count($this->sql["orderby"]) > 0)
+        {
+
+            $where .= 'ORDER BY ' . implode(',',$this->sql["orderby"]);
+         
+        }
+
+        if(count($this->sql["limit"]["text"]) > 0)
+        {
+
+            $where .= ' ' . implode(' ',$this->sql["limit"]["text"]);
+         
+            $this->sql["value"] = array_merge($this->sql["value"],$this->sql["limit"]["value"]);
+
+        }
+
+        $this->sql["value"] = array_values($this->sql["value"]);
+
+        return $where;
+
+    }
+
+    private function select_combine()
+    {
+
+        $select = 'SELECT ';
+
+        if(count($this->sql["select"]) > 0)
+        {
+
+            $select .= implode(',',$this->sql["select"]);
+
+        }
+
+        $select .= ' FROM '; 
+
+        if(count($this->sql["table"]) > 0)
+        {
+
+            $select .= implode(',',$this->sql["table"]);
+
+        }
+
+        return $select;
+
+    }     
+
     public function limit($min,$max = 0)
     {
         // UPDATE FONKSIYONDA LIMIT 0,20 ŞEKLİNDE ÇALIŞMAZ
         // BÜYÜK İHTİMAL DELETE DE AYNI
+
         if($max > 0){
 
             $sql = 'LIMIT ?,?';
