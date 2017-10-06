@@ -3,21 +3,10 @@
 ### Coming Soon
 
 - [ ] join Function
-- [ ] Having Function
-- [ ] or_Having Function
-- [ ] groupby Function
 - [ ] distinct Function
-- [ ] max function
-- [ ] min function
-- [ ] avg function
-- [ ] sum function
-- [ ] count function
-- [ ] group_start function 
-- [ ] or_group_start function
-- [ ] not_group_start function
-- [ ] or_not_group_start function
-- [ ] group_end function
 - [ ] replace into function
+- [ ] sql query log
+- [ ] speed sql query
 
 ### Completed
 
@@ -58,6 +47,16 @@
 - [x] result Function
 - [x] get_array Function
 - [x] get Function
+- [x] max function
+- [x] min function
+- [x] avg function
+- [x] sum function
+- [x] count function
+- [x] group_start function 
+- [x] or_group_start function
+- [x] group_end function
+- [x] groupby Function
+- [x] Having Function
 
 ## Install
 
@@ -116,7 +115,17 @@ $db = new PDO_MYSQL([
  * [Select - or_like_not](#or_like_not) 
  * [Select - orderby](#orderby) 
  * [Select - get_sql_select](#get_sql_select) 
+ * [Select - min](#min) 
+ * [Select - max](#max) 
+ * [Select - count](#count) 
+ * [Select - avg](#avg) 
+ * [Select - sum](#sum) 
+ * [Select - group_start](#group_start---or_group_start---group_end) 
+ * [Select - or_group_start](#group_start---or_group_start---group_end) 
+ * [Select - group_end](#group_start---or_group_start---group_end) 
+ * [Select - having](#having) 
  * [Limit](#limit) 
+ * [Output](#output) 
  
 
 ### Special Function
@@ -131,7 +140,7 @@ $db = new PDO_MYSQL([
  * 3 => fetch ( Object )
  * 4 => fetch ( Array )
  * 5 => rowcount ( int )
- * 5 => lastInsertId ( int )
+ * 6 => lastInsertId ( int )
  */
 $db->query("SELECT * FROM is_users WHERE id = ?",[22],1);
 
@@ -521,6 +530,105 @@ $db->select('*')->from('users')->where('id',99)->or_like('id',1)->limit(6)->orde
 
 ```
 
+### min
+
+```php
+
+// SELECT MIN(id) AS variable FROM users WHERE id LIKE '%1%'
+$db->min('id','variable')->from('users')->like('id',1)->get_array()
+
+// SELECT MIN(id) AS id FROM users WHERE id LIKE '%1%'
+$db->min('id')->from('users')->like('id',1)->get_array()
+
+```
+
+### max
+
+```php
+
+// SELECT MAX(id) AS variable FROM users WHERE id LIKE '%1%'
+$db->max('id','variable')->from('users')->like('id',1)->get_array()
+
+// SELECT MAX(id) AS id FROM users WHERE id LIKE '%1%'
+$db->max('id')->from('users')->like('id',1)->get_array()
+
+```
+
+### count
+
+```php
+
+// SELECT COUNT(id) AS variable FROM users WHERE id LIKE '%1%'
+$db->count('id','variable')->from('users')->like('id',1)->get_array()
+
+// SELECT COUNT(id) AS id FROM users WHERE id LIKE '%1%'
+$db->count('id')->from('users')->like('id',1)->get_array()
+
+```
+
+### avg
+
+```php
+
+// SELECT AVG(id) AS variable FROM users WHERE id LIKE '%1%'
+$db->avg('id','variable')->from('users')->like('id',1)->get_array()
+
+// SELECT AVG(id) AS id FROM users WHERE id LIKE '%1%'
+$db->avg('id')->from('users')->like('id',1)->get_array()
+
+```
+
+### sum
+
+```php
+
+// SELECT SUM(id) AS variable FROM users WHERE id LIKE '%1%'
+$db->sum('id','variable')->from('users')->like('id',1)->get_array()
+
+// SELECT SUM(id) AS id FROM users WHERE id LIKE '%1%'
+$db->sum('id')->from('users')->like('id',1)->get_array()
+
+```
+
+### group_start - or_group_start - group_end 
+
+```php
+
+//SELECT COUNT(id) AS toplam FROM is_users WHERE id = ?  AND ( id = ?  OR ( email = ?  AND ( username = ?  ) ) ) AND point = ? 
+$db->count('id','toplam')->from('users')
+                ->where('id', 1)
+			->group_start()
+	                        ->where('id', 1)
+		                ->or_group_start()
+                                        ->where('email', 'ismaiil_0234@hotmail.com')
+		                	->group_start()
+	                        ->where('username', 'ismail_satilmis')
+		                    ->group_end()
+                        ->group_end()
+                    ->group_end()
+                ->where('point', 0)->get_array()
+
+
+```
+
+### groupby
+
+```php
+
+// SELECT COUNT(id) AS toplam FROM is_users GROUP BY id,test
+$db->select('*')->from('users')->groupby('id')->get_result()
+
+```
+
+### having
+
+```php
+
+// SELECT * FROM is_users  GROUP BY id HAVING id = ? 
+$db->select('*')->from('users')->groupby('id')->having('id',1)->get_result()
+
+```
+
 ### Output
  
 ```php
@@ -538,8 +646,8 @@ Array
     [0] => stdClass Object
         (
             [username] => ismail
-            [id] => 1
-        )
+            [id] => 2
+        )
 
 )
 
@@ -552,9 +660,9 @@ Array
         (
             [username] => ismail
             [0] => ismail
-            [id] => 1
-            [1] => 1
-        )
+            [id] => 2
+            [1] => 2
+        )
 
 )
 
@@ -564,7 +672,7 @@ $db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->l
 stdClass Object
 (
     [username] => ismail
-    [id] => 1
+    [id] => 2
 )
 
 // SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
@@ -574,8 +682,8 @@ Array
 (
     [username] => ismail
     [0] => ismail
-    [id] => 1
-    [1] => 1
+    [id] => 2
+    [1] => 2
 )
 ```
 

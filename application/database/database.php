@@ -15,11 +15,16 @@ Class PDO_MYSQL
         "value"   => [],
         "set"     => [],
         "orderby" => [],
+        "groupby" => [],
+        "having"  => [
+            "text"  => [] , 
+            "value" => []
+        ],
         "special"   => [ 
             "text"  => [] , 
             "value" => []
         ],
-        "limit" => '',
+        "limit" => ["text" => []],
 
      ];
 
@@ -125,133 +130,77 @@ Class PDO_MYSQL
 
     }
 
-    public function from($from)
+    public function group_start()
     {
 
-        if(is_string($from))
-        {
-
-            $from = explode(',',$from);
-
-        }
-      
-        foreach($from as $frm)
-        {
-
-           $this->sql["table"][] = $this->prefix . $frm;
-
-        }
-
-        return $this;        
+        return $this->group_function();
 
     }
 
-    public function orderby($array = [],$desc = '')
+    /*public function not_group_start()
     {
 
-        $desc = trim($desc);
+        return $this->group_function('(','NOT');
 
-        if(!empty($desc))
-        {
+    }
+    */
+    
+    public function or_group_start()
+    {
 
-            $array = [$array => $desc];
+        return $this->group_function('(','OR');
 
-        }
-        else if(empty($desc) && is_string($array))
-        {
+    }
+    
+    /*public function or_not_group_start()
+    {
 
-            $array = [$array => ''];
+        return $this->group_function('(','OR NOT');
 
-        }
+    }
+    */
 
-        if(is_array($array) && count($array) > 0)
-        {
+    public function group_end()
+    {
 
-            foreach ($array as $key => $value)
-            {
-
-                if(is_int($key))
-                {
-
-                    $key   = $value;
-                    $value = '';
-
-                }
-
-                $this->sql["orderby"][]  = trim($key) . ' '. trim($value);
- 
-            }
-
-        }
-
-        return $this;
-        //ORDER BY Country ASC, CustomerName DESC;
-        //ORDER BY Country, CustomerName;
-        //ORDER BY Country DESC;
-        //ORDER BY Country;
+        return $this->group_function(')');
 
     }
 
-    private function where_combine()
+    public function min($select = [],$sec= '')
     {
 
-        $where = '';
-
-        $this->clearAndOr();
-        
-        if(count($this->sql["where"]) > 0)
-        {
-
-            $where = 'WHERE ' . implode(' ',$this->sql["where"]);
-
-        }
-
-        if(count($this->sql["orderby"]) > 0)
-        {
-
-            $where .= 'ORDER BY ' . implode(',',$this->sql["orderby"]);
-         
-        }
-
-        if(count($this->sql["limit"]["text"]) > 0)
-        {
-
-            $where .= ' ' . implode(' ',$this->sql["limit"]["text"]);
-         
-            $this->sql["value"] = array_merge($this->sql["value"],$this->sql["limit"]["value"]);
-
-        }
-
-        $this->sql["value"] = array_values($this->sql["value"]);
-
-        return $where;
+       return $this->select_multiple($select,$sec,$mm = 'MIN');
 
     }
 
-    private function select_combine()
+    public function max($select = [],$sec= '')
     {
 
-        $select = 'SELECT ';
+       return $this->select_multiple($select,$sec,$mm = 'MAX');
 
-        if(count($this->sql["select"]) > 0)
-        {
+    }
 
-            $select .= implode(',',$this->sql["select"]);
+    public function avg($select = [],$sec= '')
+    {
 
-        }
+       return $this->select_multiple($select,$sec,$mm = 'AVG');
 
-        $select .= ' FROM '; 
+    }    
 
-        if(count($this->sql["table"]) > 0)
-        {
+    public function sum($select = [],$sec= '')
+    {
 
-            $select .= implode(',',$this->sql["table"]);
+       return $this->select_multiple($select,$sec,$mm = 'SUM');
 
-        }
+    }
 
-        return $select;
+    public function count($select = [],$sec= '')
+    {
 
-    } 
+       return $this->select_multiple($select,$sec,$mm = 'COUNT');
+
+    }        
 
     public function result()
     {  
@@ -280,7 +229,6 @@ Class PDO_MYSQL
         return $this->get_result(4);
 
     }     
-
 
     public function query($select , $array , $type)
     {
@@ -415,10 +363,286 @@ Class PDO_MYSQL
 
     }    
 
+    public function having($array = [],$sec = '')
+    {
+
+        return $this->having_function($array,$sec);
+
+    }
+    
+    public function groupby($array = [])
+    {
+
+        if(is_string($array))
+        {
+
+            $array = explode(',',$array);
+
+        }
+      
+        foreach($array as $frm)
+        {
+
+           $this->sql['groupby'][] = $frm;
+
+        }
+
+        return $this;
+
+    }
+
+    public function having_function($array,$sec)
+    {
+
+        $sec = trim($sec);
+
+        if(!empty($sec))
+        {
+
+            $array = [$array => $sec];
+
+        }
+        else if(empty($sec) && is_string($array))
+        {
+
+            $array = [$array => ''];
+
+        }
+
+        if(is_array($array) && count($array) > 0)
+        {
+
+            foreach ($array as $key => $value)
+            {
+
+                if(is_int($key))
+                {
+
+                    $key   = $value;
+
+                }
+
+                $regex = implode("",$this->sqlsyntax);
+                $ayrac = '';
+                if(!strpbrk($regex,$key))
+                {
+
+                    $ayrac = ' = ';
+
+                }
+
+                $this->sql["having"]["text"][] = $key .  $ayrac . '? ';
+                $this->sql["having"]["value"][] = $value;
+
+            }
+
+        }
+
+        return $this;
+    }
+
+    private function select_multiple($select = [],$sec,$mm)
+    {
+
+        $sec = trim($sec);
+
+        if(!empty($sec))
+        {
+
+            $select = [$select => $sec];
+
+        }
+        else if(empty($sec) && is_string($select))
+        {
+
+            $select = [$select => $select];
+
+        }
+
+        if(is_array($select) && count($select) > 0)
+        {
+
+            foreach ($select as $key => $value)
+            {
+
+                if(is_int($key))
+                {
+
+                    $key   = $value;
+
+                }
+
+                $this->sql["select"][] = $mm . '(' . $key .') AS '.$value;
+
+            }
+
+        }
+
+        return $this;
+
+    }
+
+    public function from($from)
+    {
+
+        if(is_string($from))
+        {
+
+            $from = explode(',',$from);
+
+        }
+      
+        foreach($from as $frm)
+        {
+
+           $this->sql["table"][] = $this->prefix . $frm;
+
+        }
+
+        return $this;        
+
+    }
+
+    public function orderby($array = [],$desc = '')
+    {
+
+        $desc = trim($desc);
+
+        if(!empty($desc))
+        {
+
+            $array = [$array => $desc];
+
+        }
+        else if(empty($desc) && is_string($array))
+        {
+
+            $array = [$array => ''];
+
+        }
+
+        if(is_array($array) && count($array) > 0)
+        {
+
+            foreach ($array as $key => $value)
+            {
+
+                if(is_int($key))
+                {
+
+                    $key   = $value;
+                    $value = '';
+
+                }
+
+                $this->sql["orderby"][]  = trim($key) . ' '. trim($value);
+ 
+            }
+
+        }
+
+        return $this;
+        //ORDER BY Country ASC, CustomerName DESC;
+        //ORDER BY Country, CustomerName;
+        //ORDER BY Country DESC;
+        //ORDER BY Country;
+
+    }
+
+    private function group_function($bas = '(' ,$and_or = 'AND')
+    {
+
+        $this->sql["where"][] = $and_or;
+        $this->sql["where"][] = $bas;
+
+        return $this;
+
+    }
+
+    private function where_combine()
+    {
+
+        $where = '';
+
+        $this->clearAndOr();
+        
+        if(count($this->sql["where"]) > 0)
+        {
+
+            $where = 'WHERE ' . implode(' ',$this->sql["where"]);
+
+            $where = preg_replace('@\( AND|\( OR@si','(',$where);
+            $where = preg_replace('@AND \)|OR \)@si',')',$where);
+
+        }
+
+        if(count($this->sql["groupby"]) > 0)
+        {
+
+            $where .= ' GROUP BY ' . implode(',',$this->sql["groupby"]);
+         
+        }
+
+        if(count($this->sql["having"]["text"]) > 0)
+        {
+
+            $where .= ' HAVING ' . implode(',',$this->sql["having"]["text"]);
+            $this->sql["value"] = array_merge($this->sql["value"],$this->sql["having"]["value"]);
+       
+        }
+
+        if(count($this->sql["orderby"]) > 0)
+        {
+
+            $where .= ' ORDER BY ' . implode(',',$this->sql["orderby"]);
+         
+        }
+
+        if(count($this->sql["limit"]["text"]) > 0)
+        {
+
+            $where .= ' ' . implode(' ',$this->sql["limit"]["text"]);
+         
+            $this->sql["value"] = array_merge($this->sql["value"],$this->sql["limit"]["value"]);
+
+        }
+
+        $this->sql["value"] = array_values($this->sql["value"]);
+
+        return $where;
+
+    }
+
+    private function select_combine()
+    {
+
+        $select = 'SELECT ';
+
+        if(count($this->sql["select"]) > 0)
+        {
+
+            $select .= implode(',',$this->sql["select"]);
+
+        }
+
+        $select .= ' FROM '; 
+
+        if(count($this->sql["table"]) > 0)
+        {
+
+            $select .= implode(',',$this->sql["table"]);
+
+        }
+
+        return $select;
+
+    }     
+
     public function limit($min,$max = 0)
     {
         // UPDATE FONKSIYONDA LIMIT 0,20 ŞEKLİNDE ÇALIŞMAZ
         // BÜYÜK İHTİMAL DELETE DE AYNI
+
         if($max > 0){
 
             $sql = 'LIMIT ?,?';
@@ -547,6 +771,7 @@ Class PDO_MYSQL
     private function where_function($field,$two,$three,$andor)
     {
 
+
         if(is_array($field))
         {
 
@@ -570,7 +795,7 @@ Class PDO_MYSQL
             
             $this->sql["where"][] = $andor;
 
-            if(in_array($two, $this->sqlsyntax))
+            if(in_array($two, $this->sqlsyntax,true))
             {
 
                 $this->sql["where"][] = trim($field) . ' ' . $two . ' ? '; 
@@ -583,9 +808,7 @@ Class PDO_MYSQL
                 $this->sql["where"][] = trim($field) . ' = ? '; 
                 $this->sql["value"][] = $two;
 
-             
             }
-
 
         }
 
@@ -844,12 +1067,14 @@ Class PDO_MYSQL
         if(count($this->sql["where"]) > 0)
         {
 
-            $select = strtoupper(trim($this->sql["where"][0]));
+            $minimum = min(array_keys($this->sql["where"]));
+
+            $select = strtoupper(trim($this->sql["where"][$minimum]));
 
             if( in_array($select, $this->and_or) )
             {
 
-                unset($this->sql["where"][0]);
+                unset($this->sql["where"][$minimum]);
 
             }
 
@@ -876,17 +1101,18 @@ Class PDO_MYSQL
     private function clearQuery()
     {
 
-        $this->sql = [
-            "select" => [],
-            "from"   => [],
-            "where"  => [],
-            "value"  => [],
-            "set"    => [],
+        $this->sql = [       
+            "select"  => [],
+            "from"    => [],
+            "where"   => [],
+            "value"   => [],
+            "set"     => [],
+            "orderby" => [],
             "special"   => [ 
                 "text"  => [] , 
                 "value" => []
             ],
-            "limit" => '',
+            "limit" => ["text" => []],
          ];
 
     }

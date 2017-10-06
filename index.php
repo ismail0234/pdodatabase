@@ -105,8 +105,13 @@ require "application/database/database.php";
  echo "<pre>";
  print_r($db->sql["where"]);
  */
- echo "<pre>";
+  $bas = microtime(1);
+echo "<pre>";
 print_r(
-$db->select('*')->from('users')->where('id',99)->or_like('id',1)->limit(6)->orderby('id')->get_sql_select()
-);
+
+$db->distinct()->from('users')->groupby('id')->having('id',1)->get_sql_select()
+
+) ;
+echo "<br>";
+echo number_format((microtime(1) - $bas),25,".","");
 ?>
