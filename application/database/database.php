@@ -15,6 +15,8 @@ Class PDO_MYSQL
         "value"   => [],
         "set"     => [],
         "orderby" => [],
+        "groupby" => [],
+        "having"  => [],
         "special"   => [ 
             "text"  => [] , 
             "value" => []
@@ -358,6 +360,28 @@ Class PDO_MYSQL
 
     }    
 
+    public function groupby($array = [])
+    {
+
+
+        if(is_string($array))
+        {
+
+            $array = explode(',',$array);
+
+        }
+      
+        foreach($array as $frm)
+        {
+
+           $this->sql["groupby"][] = $frm;
+
+        }
+
+        return $this;
+
+    }
+
     private function select_multiple($select = [],$sec,$mm)
     {
 
@@ -491,6 +515,20 @@ Class PDO_MYSQL
             $where = preg_replace('@\( AND|\( OR@si','(',$where);
             $where = preg_replace('@AND \)|OR \)@si',')',$where);
 
+        }
+
+        if(count($this->sql["groupby"]) > 0)
+        {
+
+            $where .= 'GROUP BY ' . implode(',',$this->sql["groupby"]);
+         
+        }
+
+        if(count($this->sql["having"]) > 0)
+        {
+
+//            $where .= 'ORDER BY ' . implode(',',$this->sql["groupby"]);
+         
         }
 
         if(count($this->sql["orderby"]) > 0)
