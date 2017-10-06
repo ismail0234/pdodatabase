@@ -538,8 +538,8 @@ Array
     [0] => stdClass Object
         (
             [username] => ismail
-            [id] => 1
-        )
+            [id] => 2
+        )
 
 )
 
@@ -552,9 +552,9 @@ Array
         (
             [username] => ismail
             [0] => ismail
-            [id] => 1
-            [1] => 1
-        )
+            [id] => 2
+            [1] => 2
+        )
 
 )
 
@@ -564,7 +564,7 @@ $db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->l
 stdClass Object
 (
     [username] => ismail
-    [id] => 1
+    [id] => 2
 )
 
 // SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
@@ -574,8 +574,8 @@ Array
 (
     [username] => ismail
     [0] => ismail
-    [id] => 1
-    [1] => 1
+    [id] => 2
+    [1] => 2
 )
 ```
 
