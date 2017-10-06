@@ -9,14 +9,15 @@ Class PDO_MYSQL
 
      public $sql = [
         
-        "select"  => [],
-        "from"    => [],
-        "where"   => [],
-        "value"   => [],
-        "set"     => [],
-        "orderby" => [],
-        "groupby" => [],
-        "having"  => [
+        "select"   => [],
+        "from"     => [],
+        "where"    => [],
+        "value"    => [],
+        "set"      => [],
+        "orderby"  => [],
+        "groupby"  => [],
+        "distinct" => [],
+        "having"   => [
             "text"  => [] , 
             "value" => []
         ],
@@ -136,29 +137,13 @@ Class PDO_MYSQL
         return $this->group_function();
 
     }
-
-    /*public function not_group_start()
-    {
-
-        return $this->group_function('(','NOT');
-
-    }
-    */
-    
+ 
     public function or_group_start()
     {
 
         return $this->group_function('(','OR');
 
     }
-    
-    /*public function or_not_group_start()
-    {
-
-        return $this->group_function('(','OR NOT');
-
-    }
-    */
 
     public function group_end()
     {
@@ -369,7 +354,33 @@ Class PDO_MYSQL
         return $this->having_function($array,$sec);
 
     }
-    
+   /* 
+    public function distinct($select = '')
+    {
+
+        if(is_string($select))
+        {
+
+            $select = explode(',',$select);
+
+        }
+      
+        if(is_array($select) && count($select) > 0)
+        {
+
+            foreach($select as $slc)
+            {
+
+               $this->sql["distinct"][] = $slc;
+
+            }
+
+        }
+
+        return $this;
+
+    }
+    */
     public function groupby($array = [])
     {
 
@@ -618,10 +629,30 @@ Class PDO_MYSQL
 
         $select = 'SELECT ';
 
+        if(count($this->sql["distinct"]) > 0)
+        {
+
+
+           // $select .= 'DISTINCT ';
+
+        }
+
+
         if(count($this->sql["select"]) > 0)
         {
 
+            /*if(count($this->sql["distinct"]) > 0)
+            {
+
+                $dis = implode(',',$this->sql["distinct"]);
+
+                $select .= (empty($dis) ? '*':$dis) .',';
+
+            }
+            */
+
             $select .= implode(',',$this->sql["select"]);
+
 
         }
 
@@ -670,7 +701,7 @@ Class PDO_MYSQL
 
         $sql = '';
 
-        if(count($this->sql["table"]) > 0 && count($this->sql["select"]) > 0)
+        if(count($this->sql["table"]) > 0 && ( count($this->sql["select"]) > 0 || count($this->sql["distinct"]) > 0) )
         {
 
 
@@ -1136,3 +1167,20 @@ $db = new PDO_MYSQL([
    'charset' => 'utf8',
    'prefix' => 'is_'
 ]);
+
+
+/*public function not_group_start()
+{
+
+    return $this->group_function('(','NOT');
+
+}
+*/
+  
+/*public function or_not_group_start()
+{
+
+    return $this->group_function('(','OR NOT');
+
+}
+*/

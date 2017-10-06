@@ -109,7 +109,7 @@ require "application/database/database.php";
 echo "<pre>";
 print_r(
 
-$db->distinct()->from('users')->groupby('id')->having('id',1)->get_sql_select()
+$db->distinct('id')->from('users')->get_sql_select()
 
 ) ;
 echo "<br>";
