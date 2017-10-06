@@ -609,7 +609,7 @@ $db->count('id','toplam')->from('users')
 
 ```
 
-### sum
+### groupby
 
 ```php
 
