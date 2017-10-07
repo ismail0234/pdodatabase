@@ -2,7 +2,6 @@
 
 ### Coming Soon
 
-- [ ] join Function
 - [ ] distinct Function
 - [ ] replace into function
 
@@ -58,6 +57,7 @@
 - [x] Having Function
 - [x] sql query log
 - [x] speed sql query
+- [x] join Function
 
 ## Note: requires ext-pdo: *
 
@@ -171,7 +171,8 @@ Array
  * [Select - group_start](#group_start---or_group_start---group_end) 
  * [Select - or_group_start](#group_start---or_group_start---group_end) 
  * [Select - group_end](#group_start---or_group_start---group_end) 
- * [Select - having](#having) 
+ * [Select - having](#having)
+ * [Select - join](#join)
  * [Limit](#limit) 
  * [Output](#output) 
  
@@ -674,6 +675,21 @@ $db->select('*')->from('users')->groupby('id')->get_result()
 
 // SELECT * FROM is_users  GROUP BY id HAVING id = ? 
 $db->select('*')->from('users')->groupby('id')->having('id',1)->get_result()
+
+```
+
+### join
+
+```php
+
+// SELECT is_users.id FROM is_users INNER JOIN is_orders ON is_orders.uid = is_users.id WHERE is_users.id = ?
+$db->select('users.id')->from('users')->join('orders','orders.uid = users.id','INNER')->where('users.id',1)->get_array()
+
+// SELECT is_users.id FROM is_users LEFT JOIN is_orders ON is_orders.uid = is_users.id WHERE is_users.id = ?
+$db->select('users.id')->from('users')->join('orders','orders.uid = users.id','LEFT')->where('users.id',1)->get_array()
+
+// SELECT is_users.id FROM is_users RIGHT JOIN is_orders ON is_orders.uid = is_users.id WHERE is_users.id = ?
+$db->select('users.id')->from('users')->join('orders','orders.uid = users.id','RIGHT')->where('users.id',1)->get_array()
 
 ```
 
