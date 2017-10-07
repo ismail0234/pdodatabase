@@ -441,14 +441,15 @@ Class PDO_MYSQL
     public function join($table,$query,$join = '')
     {
 
-        $this->sql["join"][] = trim($join) . ' JOIN ' . $this->prefix . $table.' ON '.$this->addPrefix($query);
+        $this->sql["join"][] = ' '. trim($join) . ' JOIN ' . $this->prefix . $table.' ON '.$query;
 
         return $this;
     }
 
     private function addPrefix($name)
     {
-        $pattern = '@\w+.\w+@si';
+
+        $pattern = '@(\w+)\.(\w+)@si'; 
 
         return preg_replace($pattern, $this->prefix . '$0',$name);
   
@@ -645,10 +646,11 @@ Class PDO_MYSQL
 
     private function where_combine()
     {
-
+    
         $where = '';
 
         $this->clearAndOr();
+
         
         if(count($this->sql["where"]) > 0)
         {
@@ -681,6 +683,9 @@ Class PDO_MYSQL
             $where .= ' ORDER BY ' . implode(',',$this->sql["orderby"]);
          
         }
+
+        $where = $this->addPrefix($where);
+
 
         if(count($this->sql["limit"]["text"]) > 0)
         {
@@ -745,6 +750,8 @@ Class PDO_MYSQL
 
         }
 
+        $select = $this->addPrefix($select);
+
         return $select;
 
     }     
@@ -784,13 +791,11 @@ Class PDO_MYSQL
         if(count($this->sql["table"]) > 0 && ( count($this->sql["select"]) > 0 || count($this->sql["distinct"]) > 0) )
         {
 
-
             $where = $this->where_combine();
 
             $select =  $this->select_combine();
 
             $sql = $select . ' ' . $where;
-
 
         }
 
@@ -801,11 +806,11 @@ Class PDO_MYSQL
     private function get_result($type = 1)
     {
 
-        $where = $this->where_combine();
-
+        $where  = $this->where_combine();
+        
         $select =  $this->select_combine();
-
-        $sql = $select . ' ' . $where;
+        
+        $sql    = $select . ' ' . $where;
 
         return $this->pdoexec($sql,$this->sql["value"] , $type);
 
@@ -1007,12 +1012,13 @@ Class PDO_MYSQL
 
         }
 
+        return false;
+
     }
 
 
     public function multi_insert($table = '',$field = [] ,$arr = [])
     {
-
 
         $sql = [];
 
@@ -1179,7 +1185,6 @@ Class PDO_MYSQL
         {
 
             $minimum = min(array_keys($this->sql["where"]));
-
             $select = strtoupper(trim($this->sql["where"][$minimum]));
 
             if( in_array($select, $this->and_or) )

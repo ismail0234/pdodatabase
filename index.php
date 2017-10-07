@@ -15,7 +15,9 @@ require "application/database/database.php";
  * @param array fieldone => value ...
  * 
  */
- /*$db->insert('users',[
+ //$db->truncate('users');
+/*
+ $db->insert('users',[
  	'username' => 'ismail_satilmis',
  	'email' => 'ismaiil_0234@hotmail.com',
  ]);
@@ -26,7 +28,7 @@ require "application/database/database.php";
  * @param array fieldone , fieldtwo ...
  * @param array array valueone , valuetwo ...
  */
- $db->multi_insert('users',["username","email"],[
+ /*$db->multi_insert('users',["username","email"],[
  	[
  		'ismail_satilmis',
  		'ismaiil_0234@hotmail.com',
@@ -40,7 +42,7 @@ require "application/database/database.php";
  		'ismaiil_0234@hotmail.com',
  	], 	 	
  ]);
-
+*/
 /*
  * EMPTY TABLE
  * @param $tablename
@@ -62,7 +64,7 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
- ($db->analyze('users'));	
+// ($db->analyze('users'));	
 // echo "</pre>";
  /*
  * CHECKSUM TABLE
@@ -70,7 +72,7 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
- ($db->checksum('users'));	
+// ($db->checksum('users'));	
 // echo "</pre>";
  /*
  * OPTIMIZE TABLE
@@ -78,7 +80,7 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
- ($db->optimize('users'));	
+// ($db->optimize('users'));	
 // echo "</pre>";
  /*
  * REPAIR TABLE
@@ -86,9 +88,9 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
- ($db->repair('users'));	
+// ($db->repair('users'));	
 // echo "</pre>";
-
+/*
     $db->set('username','ismail');
     $db->set('point', 'point + ?',99);
     $db->set([
@@ -100,18 +102,18 @@ require "application/database/database.php";
      $db->set([
         [ "username" , "weqewxxx" ],
     ])->between('point',10,100)->limit(100)->update('users');
+     */
      /*
  echo "<pre>";
- print_r($db->sql["where"]);
  */
-  $bas = microtime(1);
+
+
 echo "<pre>";
+  $bas = microtime(1);
+
+print_r($db->select('users.id')->from('users')->join('orders','orders.uid = users.id','RIGHT')->where('users.id',1)->get_array());
+echo number_format((microtime(1) - $bas),25,".","");
+ print_r($db->debug);
 
 echo "<br>";
-
-echo "<pre>";
-
-print_r($db->select('*')->from('user')->join('users','users.id = users.name')->get_sql_select());
-
-echo number_format((microtime(1) - $bas),25,".","");
 ?>
