@@ -746,7 +746,7 @@ Class PDO_MYSQL
         if(count($this->sql["join"]) > 0)
         {
 
-            $select .= implode(',',$this->sql["join"]);
+            $select .= implode(' ',$this->sql["join"]);
 
         }
 

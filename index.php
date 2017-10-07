@@ -111,7 +111,7 @@ require "application/database/database.php";
 echo "<pre>";
   $bas = microtime(1);
 
-print_r($db->select('users.id')->from('users')->join('orders','orders.uid = users.id','RIGHT')->where('users.id',1)->get_array());
+print_r($db->select('users.id')->from('users')->join('orders','orders.uid = users.id','RIGHT')->where('users.id',1)->get_sql_select());
 echo number_format((microtime(1) - $bas),25,".","");
  print_r($db->debug);
 
