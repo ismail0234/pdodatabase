@@ -1,3 +1,8 @@
+[![Latest Stable Version](https://poser.pugx.org/ismail0234/pdodatabase/v/stable)](https://packagist.org/packages/ismail0234/pdodatabase)
+[![Total Downloads](https://poser.pugx.org/ismail0234/pdodatabase/downloads)](https://packagist.org/packages/ismail0234/pdodatabase)
+[![Latest Unstable Version](https://poser.pugx.org/ismail0234/pdodatabase/v/unstable)](https://packagist.org/packages/ismail0234/pdodatabase)
+[![License](https://poser.pugx.org/ismail0234/pdodatabase/license)](https://packagist.org/packages/ismail0234/pdodatabase)
+
 # Feature
 
 ### Coming Soon
@@ -61,13 +66,35 @@
 
 ## Note: requires ext-pdo: *
 
+## Composer Install
+
+```php
+{
+    "require": {
+        "ismail0234/pdodatabase": "^1"
+    }
+}
+
+```
+
+after run the install command.
+
+```php
+$ composer require ismail0234/pdodatabase
+
+```
+
 ## Install
 
 ```php
 
-require "application/database/database.php";
+// Manual require
+require "application/pdo_database.php";
 
-$db = new PDO_MYSQL([
+// Vendor require
+require  "vendor/autoload.php";
+
+$db = new pdo_mysql([
 	// Server Ip Default: localhost
 	'ip'       => 'localhost',
 	// Database Name

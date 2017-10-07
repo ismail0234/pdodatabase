@@ -18,7 +18,9 @@
         "ext-pdo": "*"        
     },
     "autoload": {
-        "files": ["application/pdo_database.php"]
+        "psr-0": {
+            "pdodatabase": "application/database"
+        }
     },
     "minimum-stability": "stable"    
 }
