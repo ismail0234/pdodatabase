@@ -61,6 +61,24 @@
 
 ## Note: requires ext-pdo: *
 
+## Composer Install
+
+```php
+{
+    "require": {
+        "ismail0234/pdodatabase": "^1"
+    }
+}
+
+```
+
+after run the install command.
+
+```php
+$ composer require ismail0234/pdodatabase
+
+```
+
 ## Install
 
 ```php
