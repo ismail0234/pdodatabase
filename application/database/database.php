@@ -1,6 +1,6 @@
 <?php 
 
-namespace PdoDatabase;
+namespace pdodatabase;
 
 Class PDO_MYSQL
 {
