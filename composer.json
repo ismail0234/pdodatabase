@@ -22,5 +22,5 @@
             "PdoDatabase": "src"
         }
     },
-    "minimum-stability": "dev"    
+    "minimum-stability": "stable"    
 }
