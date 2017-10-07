@@ -1,0 +1,26 @@
+{
+    "name": "ismail0234/pdodatabase",
+    "type": "library",
+    "description": "pdo easy and fast speed framework strong database class.",
+    "keywords": ["pdo database","database class","pdo strong database class"],
+    "homepage": "https://github.com/ismail0234/pdodatabase",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ismail Satilmis",
+            "email": "ismaiil_0234@hotmail.com",
+            "homepage": "https://github.com/ismail0234/pdodatabase",
+            "role": "Owner and Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.0.0",
+        "ext-pdo": "*"        
+    },
+    "autoload": {
+        "psr-0": {
+            "PdoDatabase": "src"
+        }
+    },
+    "minimum-stability": "dev"    
+}
