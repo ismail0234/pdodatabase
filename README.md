@@ -66,7 +66,7 @@
 ```php
 {
     "require": {
-        "izniburak/pdox": "^1"
+        "ismail0234/pdodatabase": "^1"
     }
 }
 
