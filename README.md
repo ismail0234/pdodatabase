@@ -61,13 +61,35 @@
 
 ## Note: requires ext-pdo: *
 
+## Composer Install
+
+```php
+{
+    "require": {
+        "izniburak/pdox": "^1"
+    }
+}
+
+```
+
+after run the install command.
+
+```php
+$ composer require ismail0234/pdodatabase
+
+```
+
 ## Install
 
 ```php
 
-require "application/database/database.php";
+// Manual require
+require "application/pdo_database.php";
 
-$db = new PDO_MYSQL([
+// Vendor require
+require  "vendor/autoload.php";
+
+$db = new pdo_mysql([
 	// Server Ip Default: localhost
 	'ip'       => 'localhost',
 	// Database Name
