@@ -3,20 +3,30 @@
 Class PDO_MYSQL
 {
 
-     protected $debugcss = '<style type="text/css">::selection{background-color:#E13300;color:#fff}::-moz-selection{background-color:#E13300;color:#fff}body{background-color:#fff;margin:40px;font:13px/20px normal Helvetica,Arial,sans-serif;color:#4F5155}a{color:#039;background-color:transparent;font-weight:400}h1{color:#444;background-color:transparent;border-bottom:1px solid #D0D0D0;font-size:19px;font-weight:400;margin:0 0 14px;padding:14px 15px 10px}code{font-family:Consolas,Monaco,Courier New,Courier,monospace;font-size:12px;background-color:#f9f9f9;border:1px solid #D0D0D0;color:#002166;display:block;margin:14px 0;padding:12px 10px}#container{margin:10px;border:1px solid #D0D0D0;box-shadow:0 0 8px #D0D0D0}p{margin:12px 15px}</style>';
+     protected $debugcss = '<style type="text/css">body{margin:40px;font:13px/20px normal Helvetica,Arial,sans-serif;color:#4F5155}h1{border-bottom:1px solid #D0D0D0;font-size:19px;font-weight:400;margin:0 0 14px;padding:14px 15px 10px}#container{margin:10px;border:1px solid #D0D0D0;box-shadow:0 0 8px #D0D0D0}p{margin:12px 15px}</style>';
 
      protected $prefix = '';
+     /*
+      * Query Log 
+      * 0 => CLOSE
+      * 1 => Open 
+      */
+     protected $querylog = 1;
+
+     public $debug = [];
 
      public $sql = [
         
-        "select"  => [],
-        "from"    => [],
-        "where"   => [],
-        "value"   => [],
-        "set"     => [],
-        "orderby" => [],
-        "groupby" => [],
-        "having"  => [
+        "select"   => [],
+        "from"     => [],
+        "where"    => [],
+        "value"    => [],
+        "set"      => [],
+        "orderby"  => [],
+        "groupby"  => [],
+        "distinct" => [],
+        "join"     => [],
+        "having"   => [
             "text"  => [] , 
             "value" => []
         ],
@@ -37,6 +47,8 @@ Class PDO_MYSQL
      public function __construct($array = [])
      {
 
+        $array = $this->install($array);
+
         $connstring = $array["dbengine"].":host=".$array["ip"].";dbname=".$array["database"].";charset=".$array["charset"];
 
 		try{
@@ -55,6 +67,22 @@ Class PDO_MYSQL
 
 	}
 
+    private function install($array)
+    {
+
+        $array["ip"]       = isset($array["ip"])       && !empty(trim($array["ip"]))       ? $array["ip"]       : 'localhost';
+        $array["dbengine"] = isset($array["dbengine"]) && !empty(trim($array["dbengine"])) ? $array["dbengine"] : 'mysql';
+        $array["charset"]  = isset($array["charset"])  && !empty(trim($array["charset"]))  ? $array["charset"]  : 'utf8';
+        $array["database"] = isset($array["database"]) && !empty(trim($array["database"])) ? $array["database"] : '';
+        $array["username"] = isset($array["username"]) && !empty(trim($array["username"])) ? $array["username"] : '';
+        $array["password"] = isset($array["password"]) && !empty(trim($array["password"])) ? $array["password"] : '';
+        $array["prefix"]   = isset($array["prefix"])   && !empty(trim($array["prefix"]))   ? $array["prefix"]   : '';
+        $this->querylog    = isset($array["querylog"]) && !empty(trim($array["querylog"])) ? $array["querylog"] : 1;
+
+        return $array;
+
+    }
+
     private function debug($name,$arr = [],$sql)
     {
 
@@ -69,30 +97,49 @@ Class PDO_MYSQL
        exit;
     }
 
-    private function pdoexec($sql,$array = [],$status = 0)
+    private function debugAdd($sql,$array,$speed)
     {
 
-         $pre = $this->pdo->prepare($sql);
+        $this->debug[] = [
+            "sql"     => $sql,
+            "value"   => $array,
+            "speed" => $speed,
+        ];
 
-         $errorCode = $this->pdo->errorInfo();
+    }
 
-         if($errorCode[0] > 0){
+
+    private function pdoexec($sql,$array = [],$status = 1)
+    {
+
+        if($this->querylog !== 0)
+        {
+
+            $start = microtime(1);
+
+        }
+
+        $pre = $this->pdo->prepare($sql);
+
+        $errorCode = $this->pdo->errorInfo();
+
+        if($errorCode[0] > 0)
+        {
 
             $this->debug('SQL Prepare Error',$errorCode,$sql);
-            return false;
-         }
 
-         if(!$pre->execute($array))
-         {
+        }
+        else if(!$pre->execute($array))
+        {
 
             $this->debug('SQL Execute Error',$pre->errorInfo(),$sql);
-            return false;
-         }
 
-         $sonuc = true;
+        }
 
-         switch($status)
-         {
+        $sonuc = true;
+
+        switch($status)
+        {
 
             case 1: $sonuc = $pre->fetchAll(PDO::FETCH_OBJ);  break;
             case 2: $sonuc = $pre->fetchAll();  break;
@@ -101,11 +148,21 @@ Class PDO_MYSQL
             case 5: $sonuc = $pre->rowcount();  break;
             case 6: $sonuc = $this->pdo->lastInsertId();  break;
 
-         }
+        }
 
-         $this->clearQuery();
 
-         return $sonuc;
+        if($this->querylog !== 0)
+        {
+
+            $finish = microtime(1);
+
+            $this->debugAdd($sql,$array,($finish - $start));
+
+        }
+
+        $this->clearQuery();
+
+        return $sonuc;
 
     }
 
@@ -136,29 +193,13 @@ Class PDO_MYSQL
         return $this->group_function();
 
     }
-
-    /*public function not_group_start()
-    {
-
-        return $this->group_function('(','NOT');
-
-    }
-    */
-    
+ 
     public function or_group_start()
     {
 
         return $this->group_function('(','OR');
 
     }
-    
-    /*public function or_not_group_start()
-    {
-
-        return $this->group_function('(','OR NOT');
-
-    }
-    */
 
     public function group_end()
     {
@@ -369,7 +410,51 @@ Class PDO_MYSQL
         return $this->having_function($array,$sec);
 
     }
-    
+   /* 
+    public function distinct($select = '')
+    {
+
+        if(is_string($select))
+        {
+
+            $select = explode(',',$select);
+
+        }
+      
+        if(is_array($select) && count($select) > 0)
+        {
+
+            foreach($select as $slc)
+            {
+
+               $this->sql["distinct"][] = $slc;
+
+            }
+
+        }
+
+        return $this;
+
+    }
+    */
+
+    public function join($table,$query,$join = '')
+    {
+
+        $this->sql["join"][] = ' '. trim($join) . ' JOIN ' . $this->prefix . $table.' ON '.$query;
+
+        return $this;
+    }
+
+    private function addPrefix($name)
+    {
+
+        $pattern = '@(\w+)\.(\w+)@si'; 
+
+        return preg_replace($pattern, $this->prefix . '$0',$name);
+  
+    }
+
     public function groupby($array = [])
     {
 
@@ -561,10 +646,11 @@ Class PDO_MYSQL
 
     private function where_combine()
     {
-
+    
         $where = '';
 
         $this->clearAndOr();
+
         
         if(count($this->sql["where"]) > 0)
         {
@@ -598,6 +684,9 @@ Class PDO_MYSQL
          
         }
 
+        $where = $this->addPrefix($where);
+
+
         if(count($this->sql["limit"]["text"]) > 0)
         {
 
@@ -618,10 +707,30 @@ Class PDO_MYSQL
 
         $select = 'SELECT ';
 
+        if(count($this->sql["distinct"]) > 0)
+        {
+
+
+           // $select .= 'DISTINCT ';
+
+        }
+
+
         if(count($this->sql["select"]) > 0)
         {
 
+            /*if(count($this->sql["distinct"]) > 0)
+            {
+
+                $dis = implode(',',$this->sql["distinct"]);
+
+                $select .= (empty($dis) ? '*':$dis) .',';
+
+            }
+            */
+
             $select .= implode(',',$this->sql["select"]);
+
 
         }
 
@@ -633,6 +742,15 @@ Class PDO_MYSQL
             $select .= implode(',',$this->sql["table"]);
 
         }
+
+        if(count($this->sql["join"]) > 0)
+        {
+
+            $select .= implode(' ',$this->sql["join"]);
+
+        }
+
+        $select = $this->addPrefix($select);
 
         return $select;
 
@@ -670,16 +788,14 @@ Class PDO_MYSQL
 
         $sql = '';
 
-        if(count($this->sql["table"]) > 0 && count($this->sql["select"]) > 0)
+        if(count($this->sql["table"]) > 0 && ( count($this->sql["select"]) > 0 || count($this->sql["distinct"]) > 0) )
         {
-
 
             $where = $this->where_combine();
 
             $select =  $this->select_combine();
 
             $sql = $select . ' ' . $where;
-
 
         }
 
@@ -690,11 +806,11 @@ Class PDO_MYSQL
     private function get_result($type = 1)
     {
 
-        $where = $this->where_combine();
-
+        $where  = $this->where_combine();
+        
         $select =  $this->select_combine();
-
-        $sql = $select . ' ' . $where;
+        
+        $sql    = $select . ' ' . $where;
 
         return $this->pdoexec($sql,$this->sql["value"] , $type);
 
@@ -896,12 +1012,13 @@ Class PDO_MYSQL
 
         }
 
+        return false;
+
     }
 
 
     public function multi_insert($table = '',$field = [] ,$arr = [])
     {
-
 
         $sql = [];
 
@@ -1068,7 +1185,6 @@ Class PDO_MYSQL
         {
 
             $minimum = min(array_keys($this->sql["where"]));
-
             $select = strtoupper(trim($this->sql["where"][$minimum]));
 
             if( in_array($select, $this->and_or) )
@@ -1102,17 +1218,24 @@ Class PDO_MYSQL
     {
 
         $this->sql = [       
-            "select"  => [],
-            "from"    => [],
-            "where"   => [],
-            "value"   => [],
-            "set"     => [],
-            "orderby" => [],
-            "special"   => [ 
-                "text"  => [] , 
-                "value" => []
-            ],
-            "limit" => ["text" => []],
+                "select"   => [],
+                "from"     => [],
+                "where"    => [],
+                "value"    => [],
+                "set"      => [],
+                "orderby"  => [],
+                "groupby"  => [],
+                "distinct" => [],
+                "join"     => [],
+                "having"   => [
+                    "text"  => [] , 
+                    "value" => []
+                ],
+                "special"   => [ 
+                    "text"  => [] , 
+                    "value" => []
+                ],
+                "limit" => ["text" => []],
          ];
 
     }
@@ -1136,3 +1259,20 @@ $db = new PDO_MYSQL([
    'charset' => 'utf8',
    'prefix' => 'is_'
 ]);
+
+
+/*public function not_group_start()
+{
+
+    return $this->group_function('(','NOT');
+
+}
+*/
+  
+/*public function or_not_group_start()
+{
+
+    return $this->group_function('(','OR NOT');
+
+}
+*/

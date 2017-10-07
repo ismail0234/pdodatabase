@@ -2,11 +2,9 @@
 
 ### Coming Soon
 
-- [ ] join Function
 - [ ] distinct Function
 - [ ] replace into function
-- [ ] sql query log
-- [ ] speed sql query
+
 
 ### Completed
 
@@ -57,6 +55,11 @@
 - [x] group_end function
 - [x] groupby Function
 - [x] Having Function
+- [x] sql query log
+- [x] speed sql query
+- [x] join Function
+
+## Note: requires ext-pdo: *
 
 ## Install
 
@@ -65,16 +68,61 @@
 require "application/database/database.php";
 
 $db = new PDO_MYSQL([
-   'ip' => 'localhost',
-   'database' => 'is_test',
-   'dbengine' => 'mysql',
-   'username' => 'root',
-   'password' => '',
-   'charset' => 'utf8',
-   'prefix' => 'is_'
+	// Server Ip Default: localhost
+	'ip'       => 'localhost',
+	// Database Name
+	'database' => 'is_test',
+	// Database Engine Name oracle,mysql ...
+	'dbengine' => 'mysql',
+	// Database Username
+	'username' => 'root',
+	// Database Password
+	'password' => '',
+	// Database Charset Default: utf8
+	'charset'  => 'utf8',
+	// Database table prefix Default: null
+	'prefix'   => 'is_',
+	// Database query log Default: on
+	'querylog' => 1,
 ]);
 
 ```
+
+## Query Log
+```php
+
+// query log on
+'querylog' => 1
+
+// print query log 
+// $db->debug returning all sql query ( speed , query , values )
+echo "<pre>";
+print_r($db->debug);
+echo "</pre>";
+
+Output:
+
+Array
+(
+    [0] => Array
+        (
+            [sql] => INSERT INTO is_users (username,email) VALUES (?,?),(?,?),(?,?)
+            [value] => Array
+                (
+                    [0] => ismail_satilmis
+                    [1] => ismaiil_0234@hotmail.com
+                    [2] => ismail_satilmis
+                    [3] => ismaiil_0234@hotmail.com
+                    [4] => ismail_satilmis
+                    [5] => ismaiil_0234@hotmail.com
+                )
+
+            [speed] => 0.0016200542449951
+        )
+)
+	
+```
+
 
 ### Debug
 
@@ -123,7 +171,8 @@ $db = new PDO_MYSQL([
  * [Select - group_start](#group_start---or_group_start---group_end) 
  * [Select - or_group_start](#group_start---or_group_start---group_end) 
  * [Select - group_end](#group_start---or_group_start---group_end) 
- * [Select - having](#having) 
+ * [Select - having](#having)
+ * [Select - join](#join)
  * [Limit](#limit) 
  * [Output](#output) 
  
@@ -598,14 +647,14 @@ $db->sum('id')->from('users')->like('id',1)->get_array()
 $db->count('id','toplam')->from('users')
                 ->where('id', 1)
 			->group_start()
-	                        ->where('id', 1)
+	                ->where('id', 1)
 		                ->or_group_start()
-                                        ->where('email', 'ismaiil_0234@hotmail.com')
+                                ->where('email', 'ismaiil_0234@hotmail.com')
 		                	->group_start()
-	                        ->where('username', 'ismail_satilmis')
-		                    ->group_end()
-                        ->group_end()
-                    ->group_end()
+	                        	->where('username', 'ismail_satilmis')
+		                   	 ->group_end()
+                        	->group_end()
+                  	 ->group_end()
                 ->where('point', 0)->get_array()
 
 
@@ -626,6 +675,21 @@ $db->select('*')->from('users')->groupby('id')->get_result()
 
 // SELECT * FROM is_users  GROUP BY id HAVING id = ? 
 $db->select('*')->from('users')->groupby('id')->having('id',1)->get_result()
+
+```
+
+### join
+
+```php
+
+// SELECT is_users.id FROM is_users INNER JOIN is_orders ON is_orders.uid = is_users.id WHERE is_users.id = ?
+$db->select('users.id')->from('users')->join('orders','orders.uid = users.id','INNER')->where('users.id',1)->get_array()
+
+// SELECT is_users.id FROM is_users LEFT JOIN is_orders ON is_orders.uid = is_users.id WHERE is_users.id = ?
+$db->select('users.id')->from('users')->join('orders','orders.uid = users.id','LEFT')->where('users.id',1)->get_array()
+
+// SELECT is_users.id FROM is_users RIGHT JOIN is_orders ON is_orders.uid = is_users.id WHERE is_users.id = ?
+$db->select('users.id')->from('users')->join('orders','orders.uid = users.id','RIGHT')->where('users.id',1)->get_array()
 
 ```
 

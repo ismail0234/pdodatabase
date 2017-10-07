@@ -15,7 +15,9 @@ require "application/database/database.php";
  * @param array fieldone => value ...
  * 
  */
- /*$db->insert('users',[
+ //$db->truncate('users');
+/*
+ $db->insert('users',[
  	'username' => 'ismail_satilmis',
  	'email' => 'ismaiil_0234@hotmail.com',
  ]);
@@ -40,7 +42,6 @@ require "application/database/database.php";
  		'ismaiil_0234@hotmail.com',
  	], 	 	
  ]);
-
 */
 /*
  * EMPTY TABLE
@@ -63,7 +64,7 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
-// print_r($db->analyze('users'));	
+// ($db->analyze('users'));	
 // echo "</pre>";
  /*
  * CHECKSUM TABLE
@@ -71,7 +72,7 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
-// print_r($db->checksum('users'));	
+// ($db->checksum('users'));	
 // echo "</pre>";
  /*
  * OPTIMIZE TABLE
@@ -79,7 +80,7 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
-// print_r($db->optimize('users'));	
+// ($db->optimize('users'));	
 // echo "</pre>";
  /*
  * REPAIR TABLE
@@ -87,31 +88,32 @@ require "application/database/database.php";
  * 
  */
 // echo "<pre>";
-// print_r($db->repair('users'));	
+// ($db->repair('users'));	
 // echo "</pre>";
 /*
     $db->set('username','ismail');
-    $db->set('point', 'point + ?',5);
+    $db->set('point', 'point + ?',99);
     $db->set([
         [ "username" , "ismail" ],
-        [ "point" , "point + ? " , 5 ],
+        [ "point" , "point + ? " , 99 ],
     ]);
 
-*/
-  /*   $db->set([
+
+     $db->set([
         [ "username" , "weqewxxx" ],
-    ])->between('point',10,100)->limit(50,100)->update('users');
-
+    ])->between('point',10,100)->limit(100)->update('users');
+     */
+     /*
  echo "<pre>";
- print_r($db->sql["where"]);
  */
-  $bas = microtime(1);
+
+
 echo "<pre>";
-print_r(
+  $bas = microtime(1);
 
-$db->distinct()->from('users')->groupby('id')->having('id',1)->get_sql_select()
-
-) ;
-echo "<br>";
+print_r($db->select('users.id')->from('users')->join('orders','orders.uid = users.id','RIGHT')->where('users.id',1)->get_sql_select());
 echo number_format((microtime(1) - $bas),25,".","");
+ print_r($db->debug);
+
+echo "<br>";
 ?>
