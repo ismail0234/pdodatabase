@@ -83,9 +83,13 @@ $ composer require ismail0234/pdodatabase
 
 ```php
 
-require "application/database/database.php";
+// Manual require
+require "application/pdo_database.php";
 
-$db = new PDO_MYSQL([
+// Vendor require
+require  "vendor/autoload.php";
+
+$db = new pdo_mysql([
 	// Server Ip Default: localhost
 	'ip'       => 'localhost',
 	// Database Name
