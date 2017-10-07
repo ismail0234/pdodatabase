@@ -2,7 +2,7 @@
 
 namespace pdodatabase;
 
-Class PDO_MYSQL
+Class pdo_mysql
 {
 
      protected $debugcss = '<style type="text/css">body{margin:40px;font:13px/20px normal Helvetica,Arial,sans-serif;color:#4F5155}h1{border-bottom:1px solid #D0D0D0;font-size:19px;font-weight:400;margin:0 0 14px;padding:14px 15px 10px}#container{margin:10px;border:1px solid #D0D0D0;box-shadow:0 0 8px #D0D0D0}p{margin:12px 15px}</style>';
@@ -1251,30 +1251,3 @@ Class PDO_MYSQL
 
 
 }
-
-$db = new PDO_MYSQL([
-   'ip' => 'localhost',
-   'database' => 'is_test',
-   'dbengine' => 'mysql',
-   'username' => 'root',
-   'password' => '',
-   'charset' => 'utf8',
-   'prefix' => 'is_'
-]);
-
-
-/*public function not_group_start()
-{
-
-    return $this->group_function('(','NOT');
-
-}
-*/
-  
-/*public function or_not_group_start()
-{
-
-    return $this->group_function('(','OR NOT');
-
-}
-*/
