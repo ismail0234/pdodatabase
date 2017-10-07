@@ -4,7 +4,7 @@
     "description": "pdo easy and fast speed framework strong database class.",
     "keywords": ["pdo database","database class","pdo strong database class"],
     "homepage": "https://github.com/ismail0234/pdodatabase",
-    "license": "MIT",
+    "license": "GNU",
     "authors": [
         {
             "name": "Ismail Satilmis",
@@ -19,8 +19,8 @@
     },
     "autoload": {
         "psr-0": {
-            "PdoDatabase": "src"
+            "pdodatabase": "application/database/"
         }
     },
-    "minimum-stability": "dev"    
+    "minimum-stability": "stable"    
 }
