@@ -52,21 +52,21 @@ Class pdo_mysql
 
         $connstring = $array["dbengine"].":host=".$array["ip"].";dbname=".$array["database"].";charset=".$array["charset"];
 
-		try{
+        try{
 
 
-			$this->pdo = new PDO($connstring,$array["username"],$array["password"]);
+            $this->pdo = new PDO($connstring,$array["username"],$array["password"]);
 
-			$this->pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
-			$this->prefix = $array["prefix"];
+            $this->pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
+            $this->prefix = $array["prefix"];
 
-		}catch(Exception $e){
+        }catch(Exception $e){
 
             $this->debug('Database Connection Failed',array(0 => "1049",2 => $e->getMessage()),$connstring);
 
-		}
+        }
 
-	}
+    }
 
     private function install($array)
     {
@@ -895,12 +895,23 @@ Class pdo_mysql
             if(count($field) > 0)
             {
 
+                $regex = implode("",$this->sqlsyntax);
+
                 foreach($field as $key => $value)
                 {
 
+                    $ayrac = ' = ';
+
+                    if(strpbrk($regex,$key))
+                    {
+
+                        $ayrac = '';
+
+                    }
+
                     $this->sql["where"][] = $andor;
-                    $this->sql["where"][] = trim($value[0]) . ' ' . ( isset($value[2]) ? $value[1]:'=') . ' ?'; 
-                    $this->sql["value"][] = ( isset($value[2]) ? $value[2]:$value[1]);
+                    $this->sql["where"][] = trim($key) . ' ' . $ayrac . ' ?'; 
+                    $this->sql["value"][] = $value;
 
                 }
 
@@ -972,20 +983,20 @@ Class pdo_mysql
     public function delete($table)
     {
 
-    	 $table = trim($table);
-	    
-    	 if(!empty($table))
+         $table = trim($table);
+        
+         if(!empty($table))
          {
            
             $where = $this->where_combine();
-	
+    
             $sql = 'DELETE FROM '.$this->prefix. trim($table) .'   '.(!empty($where) ? $where:'');
 
             return $this->pdoexec($sql,$this->sql["value"] , 5);     
 
          }
     }
-	
+    
     public function update($table)
     {
 
@@ -1086,7 +1097,7 @@ Class pdo_mysql
 
         $pre = $this->pdo->prepare($sqlstr);
 
-        $this->pdoexec($sqlstr,$sql[2]);
+        return $this->pdoexec($sqlstr,$sql[2],6);
 
     }
 
