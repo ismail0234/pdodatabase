@@ -19,7 +19,7 @@ Class pdo_mysql
      public $sql = [
         
         "select"   => [],
-        "from"     => [],
+        "table"    => [],
         "where"    => [],
         "value"    => [],
         "set"      => [],
@@ -1231,7 +1231,7 @@ Class pdo_mysql
 
         $this->sql = [       
                 "select"   => [],
-                "from"     => [],
+                "table"    => [],
                 "where"    => [],
                 "value"    => [],
                 "set"      => [],
