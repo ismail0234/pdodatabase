@@ -1097,7 +1097,7 @@ Class pdo_mysql
 
         $pre = $this->pdo->prepare($sqlstr);
 
-        $this->pdoexec($sqlstr,$sql[2]);
+        return $this->pdoexec($sqlstr,$sql[2],6);
 
     }
 
