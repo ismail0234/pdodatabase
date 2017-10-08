@@ -19,7 +19,7 @@ Class pdo_mysql
      public $sql = [
         
         "select"   => [],
-        "from"     => [],
+        "table"    => [],
         "where"    => [],
         "value"    => [],
         "set"      => [],
@@ -970,9 +970,9 @@ Class pdo_mysql
 
             $this->sql["set"][] = [
                 "field1" => trim($one),
-                "field2" => (!empty($three) ? trim($two) : '?'),
+                "field2" => (strlen($three) > 0 ? trim($two) : '?'),
             ];
-            $this->sql["value"][] = (!empty($three) ? trim($three) : trim($two));
+            $this->sql["value"][] = (strlen($three) > 0 ? trim($three) : trim($two));
 
         }
 
@@ -1231,7 +1231,7 @@ Class pdo_mysql
 
         $this->sql = [       
                 "select"   => [],
-                "from"     => [],
+                "table"    => [],
                 "where"    => [],
                 "value"    => [],
                 "set"      => [],
