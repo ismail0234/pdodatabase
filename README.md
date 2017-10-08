@@ -3,6 +3,10 @@
 [![Latest Unstable Version](https://poser.pugx.org/ismail0234/pdodatabase/v/unstable)](https://packagist.org/packages/ismail0234/pdodatabase)
 [![License](https://poser.pugx.org/ismail0234/pdodatabase/license)](https://packagist.org/packages/ismail0234/pdodatabase)
 
+# Change Log
+- [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/CHANGELOG.md)
+
+
 # Feature
 
 ### Coming Soon
