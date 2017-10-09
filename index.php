@@ -81,7 +81,7 @@ $db = new pdo_mysql([
  * 
  */
 // echo "<pre>";
-// ($db->analyze('users'));	
+print_r($db->analyze('users'));	
 // echo "</pre>";
  /*
  * CHECKSUM TABLE
@@ -89,7 +89,7 @@ $db = new pdo_mysql([
  * 
  */
 // echo "<pre>";
-// ($db->checksum('users'));	
+print_r($db->checksum('users'));	
 // echo "</pre>";
  /*
  * OPTIMIZE TABLE
