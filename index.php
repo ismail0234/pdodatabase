@@ -1,7 +1,24 @@
 <?php 
 
-require "application/database/database.php";
-
+require "application/pdo_database.php";
+$db = new pdo_mysql([
+    // Server Ip Default: localhost
+    'ip'       => 'localhost',
+    // Database Name
+    'database' => 'is_test',
+    // Database Engine Name oracle,mysql ...
+    'dbengine' => 'mysql',
+    // Database Username
+    'username' => 'root',
+    // Database Password
+    'password' => '',
+    // Database Charset Default: utf8
+    'charset'  => 'utf8',
+    // Database table prefix Default: null
+    'prefix'   => 'is_',
+    // Database query log Default: on
+    'querylog' => 1,
+]);
 /*
  * DROP TABLE
  * @param $tablename
@@ -111,7 +128,7 @@ require "application/database/database.php";
 echo "<pre>";
   $bas = microtime(1);
 
-print_r($db->select('users.id')->from('users')->join('orders','orders.uid = users.id','RIGHT')->where('users.id',1)->get_sql_select());
+print_r($db->from('users')->where('users.id','";TRUNCATE is_users;')->get_array());
 echo number_format((microtime(1) - $bas),25,".","");
  print_r($db->debug);
 
