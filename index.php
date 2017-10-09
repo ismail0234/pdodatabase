@@ -45,7 +45,7 @@ $db = new pdo_mysql([
  * @param array fieldone , fieldtwo ...
  * @param array array valueone , valuetwo ...
  */
- /*$db->multi_insert('users',["username","email"],[
+echo $db->multi_insert('users',["username","email"],[
  	[
  		'ismail_satilmis',
  		'ismaiil_0234@hotmail.com',
@@ -59,7 +59,7 @@ $db = new pdo_mysql([
  		'ismaiil_0234@hotmail.com',
  	], 	 	
  ]);
-*/
+
 /*
  * EMPTY TABLE
  * @param $tablename

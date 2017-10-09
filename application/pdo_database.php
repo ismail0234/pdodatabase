@@ -1024,11 +1024,12 @@ Class pdo_mysql
            
             $where = $this->where_combine();
     
-            $sql = 'DELETE FROM '.$this->prefix. trim($table) .'   '.(!empty($where) ? $where:'');
+            $sql = 'DELETE FROM '.$this->prefix. trim($table) .' '.(!empty($where) ? $where:'');
 
             return $this->pdoexec($sql,$this->sql["value"] , 5);     
 
          }
+
     }
     
     public function update($table)
@@ -1108,9 +1109,11 @@ Class pdo_mysql
 
              $sqlstr = "INSERT INTO " . $this->prefix . $table . " (".implode(',',$sql[0]).") VALUES ".implode(',',$sql[2])."";
 
-             $this->pdoexec($sqlstr,$sql[1]);
+             return $this->pdoexec($sqlstr,$sql[1],5);
 
         }
+
+        return false;
 
     }
 
