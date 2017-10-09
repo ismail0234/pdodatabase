@@ -450,7 +450,7 @@ Class pdo_mysql
     private function addPrefix($name)
     {
 
-        $pattern = '@(\w+)\.(\w+)@si'; 
+        $pattern = '@(\w+)\.(\w*)@si'; 
 
         return preg_replace($pattern, $this->prefix . '$0',$name);
   
