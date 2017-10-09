@@ -734,6 +734,12 @@ Class pdo_mysql
 
 
         }
+        else
+        {
+
+              $select .= '*';
+          
+        }
 
         $select .= ' FROM '; 
 
