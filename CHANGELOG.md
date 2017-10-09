@@ -1,4 +1,7 @@
 
+#### Version 1.2.4
+
+  * added default select joker
 
 #### Version 1.2.3
 
