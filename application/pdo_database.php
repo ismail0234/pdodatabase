@@ -296,7 +296,7 @@ Class pdo_mysql
     public function truncate($table)
     {
 
-        return $this->pdoexec('TRUNCATE '.$this->prefix . trim($table));
+        return $this->pdoexec('TRUNCATE TABLE '.$this->prefix . trim($table));
 
     }
 
