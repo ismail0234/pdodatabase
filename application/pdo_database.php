@@ -98,6 +98,28 @@ Class pdo_mysql
        exit;
     }
 
+    public function debugOutput()
+    {
+
+        $table = "border='1' bordercolor='gray' cellspacing='5' cellpadding='5' style='margin:0 auto;'";
+
+        echo "<table ".$table."><tr><td>#</td><td>SQL</td><td>Speed MS</td><td>Speed</td></tr>";
+        $i = 0;
+        foreach($this->debug as $db)
+        {
+
+            echo '<tr>';
+            echo '<td>'.$i.'</td>';
+            echo '<td>'.$db["sql"].'</td>';
+            echo '<td>'.number_format(($db["speed"]),3,'.','').' MS</td>';
+            echo '<td>'.$db["speed"].'</td>';
+            echo '</tr>';
+            $i++;
+        }
+        exit;
+
+    }
+
     private function debugAdd($sql,$array,$speed)
     {
 
