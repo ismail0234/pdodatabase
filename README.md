@@ -154,6 +154,10 @@ Array
 	
 ```
 
+### Query Log Output 
+
+![alt text](https://i.imgur.com/gUypSkn.png)
+
 
 ### Debug
 
@@ -162,7 +166,7 @@ Array
 #  Documentation
 
 ## Speed dial
-
+ * [debugOutput Function](#debugoutput-function)
  * [Special Function](#special-function)
  * [Truncate Table](#truncate-table)
  * [Drop Table](#drop-table)
@@ -207,6 +211,17 @@ Array
  * [Limit](#limit) 
  * [Output](#output) 
  
+
+### debugOutput Function
+
+```php
+/*
+ * return all sql query html table details speed , query , ms speed
+ *
+ */	
+$db->debugOutput();
+
+```
 
 ### Special Function
 ```php

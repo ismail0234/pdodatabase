@@ -98,6 +98,28 @@ Class pdo_mysql
        exit;
     }
 
+    public function debugOutput()
+    {
+
+        $table = "border='1' bordercolor='gray' cellspacing='5' cellpadding='5' style='margin:0 auto;'";
+
+        echo "<table ".$table."><tr><td>#</td><td>SQL</td><td>Speed MS</td><td>Speed</td></tr>";
+        $i = 0;
+        foreach($this->debug as $db)
+        {
+
+            echo '<tr>';
+            echo '<td>'.$i.'</td>';
+            echo '<td>'.$db["sql"].'</td>';
+            echo '<td>'.number_format(($db["speed"]),3,'.','').' MS</td>';
+            echo '<td>'.$db["speed"].'</td>';
+            echo '</tr>';
+            $i++;
+        }
+        exit;
+
+    }
+
     private function debugAdd($sql,$array,$speed)
     {
 
@@ -306,6 +328,34 @@ Class pdo_mysql
         return $this->pdoexec('ANALYZE TABLE '.$this->prefix . trim($table),[],4);
 
     }
+
+    public function checksum($table = [])
+    {
+
+        return $this->array_get_function('CHECKSUM TABLE',$table);
+
+    }
+
+    public function optimize($table = [])
+    {
+
+        return $this->array_get_function('OPTIMIZE TABLE',$table);
+
+    }
+
+    public function repair($table = [])
+    {
+
+       return $this->array_get_function('REPAIR TABLE',$table);
+
+    }
+
+    public function check($table = [])
+    {
+
+       return $this->array_get_function('CHECK TABLE',$table);
+
+    }    
 
     public function where($field,$two = '',$three = '')
     {
@@ -795,7 +845,7 @@ Class pdo_mysql
 
         $sql = '';
 
-        if(count($this->sql["table"]) > 0 && ( count($this->sql["select"]) > 0 || count($this->sql["distinct"]) > 0) )
+        if(count($this->sql["table"]) > 0)
         {
 
             $where = $this->where_combine();
@@ -996,11 +1046,12 @@ Class pdo_mysql
            
             $where = $this->where_combine();
     
-            $sql = 'DELETE FROM '.$this->prefix. trim($table) .'   '.(!empty($where) ? $where:'');
+            $sql = 'DELETE FROM '.$this->prefix. trim($table) .' '.(!empty($where) ? $where:'');
 
             return $this->pdoexec($sql,$this->sql["value"] , 5);     
 
          }
+
     }
     
     public function update($table)
@@ -1080,9 +1131,11 @@ Class pdo_mysql
 
              $sqlstr = "INSERT INTO " . $this->prefix . $table . " (".implode(',',$sql[0]).") VALUES ".implode(',',$sql[2])."";
 
-             $this->pdoexec($sqlstr,$sql[1]);
+             return $this->pdoexec($sqlstr,$sql[1],5);
 
         }
+
+        return false;
 
     }
 
@@ -1107,7 +1160,7 @@ Class pdo_mysql
 
     }
 
-    private function array_get($table)
+    private function array_get_function($sql,$table)
     {
 
         $tablename = [];
@@ -1144,91 +1197,14 @@ Class pdo_mysql
 
         }
 
-        return implode(',',$tablename);        
-
-    }
-
-    public function checksum($table = [])
-    {
-
-        $tablename = $this->array_get($table);
-
-        if(empty($tablename))
+        if(count($tablename) > 0)
         {
 
-            return false;
+            $tablename = implode(',',$tablename);
+
+            return $this->pdoexec($sql . ' ' . $tablename,[],3);
 
         }
-
-        return $this->pdoexec('CHECKSUM TABLE ' . $tablename,[],3);
-
-    }
-
-    public function optimize($table = [])
-    {
-
-        $tablename = $this->array_get($table);
-
-        if(empty($tablename))
-        {
-
-            return false;
-
-        }
-
-        return $this->pdoexec('OPTIMIZE TABLE ' . $tablename,[],3);
-
-    }
-
-    public function repair($table = [])
-    {
-
-        $tablename = $this->array_get($table);
-
-        if(empty($tablename))
-        {
-
-            return false;
-
-        }
-
-        return $this->pdoexec('REPAIR TABLE ' . $tablename,[],3);
-
-    }
-
-    private function clearAndOr()
-    {
-
-        if(count($this->sql["where"]) > 0)
-        {
-
-            $minimum = min(array_keys($this->sql["where"]));
-            $select = strtoupper(trim($this->sql["where"][$minimum]));
-
-            if( in_array($select, $this->and_or) )
-            {
-
-                unset($this->sql["where"][$minimum]);
-
-            }
-
-        }
-
-    }
-
-    public function check($table = [])
-    {
-
-        $tablename = $this->array_get($table);
-
-        if(empty($tablename))
-        {
-
-            return false;
-
-        }
-
-        return $this->pdoexec('CHECK TABLE ' . $tablename,[],3);
 
     }
 
@@ -1258,12 +1234,31 @@ Class pdo_mysql
 
     }
 
+    private function clearAndOr()
+    {
+
+        if(count($this->sql["where"]) > 0)
+        {
+
+            $minimum = min(array_keys($this->sql["where"]));
+            $select = strtoupper(trim($this->sql["where"][$minimum]));
+
+            if( in_array($select, $this->and_or) )
+            {
+
+                unset($this->sql["where"][$minimum]);
+
+            }
+
+        }
+
+    }
+
     private function likeEscape($str)
     {
   
         return str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), $str);
 
     }
-
 
 }
