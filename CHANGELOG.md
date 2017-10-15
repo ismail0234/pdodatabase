@@ -3,7 +3,6 @@
   * code revize optimizasion
   * added multi_insert function return success count
   * debug output added function
-  *
 
 #### Version 1.2.4
 
