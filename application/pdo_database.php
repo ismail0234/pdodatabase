@@ -24,7 +24,6 @@ Class pdo_mysql
         "set"      => [],
         "orderby"  => [],
         "groupby"  => [],
-        "distinct" => [],
         "join"     => [],
         "having"   => [
             "text"  => [] , 
@@ -441,33 +440,6 @@ Class pdo_mysql
         return $this->having_function($array , $sec);
 
     }
-   /* 
-    public function distinct($select = '')
-    {
-
-        if(is_string($select))
-        {
-
-            $select = explode(',',$select);
-
-        }
-      
-        if(is_array($select) && count($select) > 0)
-        {
-
-            foreach($select as $slc)
-            {
-
-               $this->sql["distinct"][] = $slc;
-
-            }
-
-        }
-
-        return $this;
-
-    }
-    */
 
     public function join($table,$query,$join = '')
     {
@@ -738,27 +710,8 @@ Class pdo_mysql
 
         $select = 'SELECT ';
 
-        if(count($this->sql["distinct"]) > 0)
-        {
-
-
-           // $select .= 'DISTINCT ';
-
-        }
-
-
         if(count($this->sql["select"]) > 0)
         {
-
-            /*if(count($this->sql["distinct"]) > 0)
-            {
-
-                $dis = implode(',',$this->sql["distinct"]);
-
-                $select .= (empty($dis) ? '*':$dis) .',';
-
-            }
-            */
 
             $select .= implode(',',$this->sql["select"]);
 
@@ -1199,7 +1152,6 @@ Class pdo_mysql
                 "set"      => [],
                 "orderby"  => [],
                 "groupby"  => [],
-                "distinct" => [],
                 "join"     => [],
                 "having"   => [
                     "text"  => [] , 
