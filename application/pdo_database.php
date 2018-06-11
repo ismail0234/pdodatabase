@@ -1,22 +1,21 @@
 <?php 
 
-
 Class pdo_mysql
 {
 
-     protected $debugcss = '<style type="text/css">body{margin:40px;font:13px/20px normal Helvetica,Arial,sans-serif;color:#4F5155}h1{border-bottom:1px solid #D0D0D0;font-size:19px;font-weight:400;margin:0 0 14px;padding:14px 15px 10px}#container{margin:10px;border:1px solid #D0D0D0;box-shadow:0 0 8px #D0D0D0}p{margin:12px 15px}</style>';
+    protected $debugcss = '<style type="text/css">body{margin:40px;font:13px/20px normal Helvetica,Arial,sans-serif;color:#4F5155}h1{border-bottom:1px solid #D0D0D0;font-size:19px;font-weight:400;margin:0 0 14px;padding:14px 15px 10px}#container{margin:10px;border:1px solid #D0D0D0;box-shadow:0 0 8px #D0D0D0}p{margin:12px 15px}</style>';
 
-     protected $prefix = '';
+    protected $prefix = '';
      /*
       * Query Log 
       * 0 => CLOSE
       * 1 => Open 
       */
-     protected $querylog = 1;
+    protected $querylog = 1;
 
-     public $debug = [];
+    public $debug = [];
 
-     public $sql = [
+    public $sql = [
         
         "select"   => [],
         "table"    => [],
@@ -37,16 +36,16 @@ Class pdo_mysql
         ],
         "limit" => ["text" => []],
 
-     ];
+    ];
 
-     private $sqlsyntax = ["=", "!=", "<", "<>" , ">", "<=", ">="];
+    private $sqlsyntax = ["=", "!=", "<", "<>" , ">", "<=", ">="];
 
-     private $and_or = ["AND", "OR"];
+    private $and_or = ["AND", "OR"];
 
-     private $pdo = null;
+    private $pdo = null;
 
-     public function __construct($array = [])
-     {
+    public function __construct($array = [])
+    {
 
         $array = $this->install($array);
 
@@ -78,7 +77,7 @@ Class pdo_mysql
         $array["username"] = isset($array["username"]) && !empty(trim($array["username"])) ? $array["username"] : '';
         $array["password"] = isset($array["password"]) && !empty(trim($array["password"])) ? $array["password"] : '';
         $array["prefix"]   = isset($array["prefix"])   && !empty(trim($array["prefix"]))   ? $array["prefix"]   : '';
-        $this->querylog    = isset($array["querylog"]) && !empty(trim($array["querylog"])) ? $array["querylog"] : 1;
+        $this->querylog    = isset($array["querylog"]) && !empty(trim($array["querylog"])) && $array["querylog"] == false ? false : true;
 
         return $array;
 
@@ -135,12 +134,8 @@ Class pdo_mysql
     private function pdoexec($sql,$array = [],$status = 1)
     {
 
-        if($this->querylog !== 0)
-        {
-
+        if( $this->querylog )
             $start = microtime(1);
-
-        }
 
         $pre = $this->pdo->prepare($sql);
 
@@ -173,15 +168,8 @@ Class pdo_mysql
 
         }
 
-
-        if($this->querylog !== 0)
-        {
-
-            $finish = microtime(1);
-
-            $this->debugAdd($sql,$array,($finish - $start));
-
-        }
+        if( $this->querylog )
+            $this->debugAdd( $sql , $array , ( microtime(1) - $start ) );
 
         $this->clearQuery();
 
@@ -192,19 +180,11 @@ Class pdo_mysql
     public function select($select = [])
     {
 
-        if(is_string($select))
-        {
-
+        if( is_string( $select ) )
             $select = explode(',',$select);
-
-        }
       
         foreach($select as $slc)
-        {
-
            $this->sql["select"][] = $slc;
-
-        }
 
         return $this;
 
@@ -304,28 +284,28 @@ Class pdo_mysql
     public function drop($table)
     {
 
-        return $this->pdoexec('DROP TABLE '.$this->prefix . trim($table));
+        return $this->pdoexec('DROP TABLE '.$this->prefix . trim( $table ) );
 
     }
 
     public function empty_table($table)
     {
 
-        return $this->pdoexec('DELETE FROM '.$this->prefix . trim($table));
+        return $this->pdoexec('DELETE FROM '.$this->prefix . trim( $table ) );
 
     }
 
     public function truncate($table)
     {
 
-        return $this->pdoexec('TRUNCATE TABLE '.$this->prefix . trim($table));
+        return $this->pdoexec('TRUNCATE TABLE '.$this->prefix . trim( $table ) );
 
     }
 
     public function analyze($table)
     {
 
-        return $this->pdoexec('ANALYZE TABLE '.$this->prefix . trim($table),[],4);
+        return $this->pdoexec('ANALYZE TABLE '.$this->prefix . trim( $table ) ,[],4);
 
     }
 
@@ -357,108 +337,108 @@ Class pdo_mysql
 
     }    
 
-    public function where($field,$two = '',$three = '')
+    public function where($field , $two = '' , $three = '')
     {
 
-       return $this->where_function($field,$two,$three,'AND');
+       return $this->where_function($field , $two , $three , 'AND');
 
     }
 
-    public function or_where($field,$two = '',$three = '')
+    public function or_where($field , $two = '' , $three = '')
     {
 
-       return $this->where_function($field,$two,$three,'OR');
+       return $this->where_function($field , $two , $three , 'OR');
 
     }
 
-    public function where_in($field,$arr = [])
+    public function where_in($field , $arr = [])
     {
 
-       return $this->where_in_function($field,$arr,'AND');
+       return $this->where_in_function($field , $arr , 'AND');
 
     }
 
-    public function where_not_in($field,$arr = [])
+    public function where_not_in($field , $arr = [])
     {
 
-       return $this->where_in_function($field,$arr,'AND','NOT');
+       return $this->where_in_function($field , $arr , 'AND' , 'NOT');
 
     }
 
-    public function or_where_in($field,$arr = [])
+    public function or_where_in($field , $arr = [])
     {
 
-       return $this->where_in_function($field,$arr,'OR');
+       return $this->where_in_function($field , $arr , 'OR');
 
     }
 
-    public function or_where_not_in($field,$arr = [])
+    public function or_where_not_in($field , $arr = [])
     {
 
-       return $this->where_in_function($field,$arr,'OR','NOT');
+       return $this->where_in_function($field , $arr , 'OR' , 'NOT');
 
     }
 
-    public function between($field,$one,$two)
+    public function between($field , $one , $two)
     {
 
-       return $this->where_between_function($field,$one,$two,'AND');
+       return $this->where_between_function($field , $one , $two , 'AND');
 
     }
 
-    public function or_between($field,$one,$two)
+    public function or_between($field , $one , $two)
     {
 
-       return $this->where_between_function($field,$one,$two,'OR');
+       return $this->where_between_function($field , $one , $two , 'OR');
 
     }
 
-    public function between_not($field,$one,$two)
+    public function between_not($field , $one , $two)
     {
 
-       return $this->where_between_function($field,$one,$two,'AND','NOT');
+       return $this->where_between_function($field , $one , $two , 'AND' , 'NOT');
 
     }
 
-    public function or_between_not($field,$one,$two)
+    public function or_between_not($field , $one , $two)
     {
 
-       return $this->where_between_function($field,$one,$two,'OR','NOT');
+       return $this->where_between_function($field , $one , $two , 'OR' , 'NOT');
 
     }
 
-    public function like($field,$val,$type = 'center')
+    public function like($field , $val , $type = 'center')
     {
 
-        return $this->where_like_function($field,$val,'AND','',$type);
+        return $this->where_like_function($field , $val , 'AND' , '' , $type);
 
     }
 
-    public function or_like($field,$val,$type = 'center')
+    public function or_like($field , $val , $type = 'center')
     {
 
-        return $this->where_like_function($field,$val,'OR','',$type);
+        return $this->where_like_function($field , $val , 'OR' , '' , $type);
 
     }
 
-    public function like_not($field,$val,$type = 'center')
+    public function like_not($field , $val , $type = 'center')
     {
 
-        return $this->where_like_function($field,$val,'AND','NOT',$type);
+        return $this->where_like_function($field , $val , 'AND' , 'NOT' , $type);
 
     }
 
-    public function or_like_not($field,$val,$type = 'center')
+    public function or_like_not($field , $val , $type = 'center')
     {
 
-        return $this->where_like_function($field,$val,'OR','NOT',$type);
+        return $this->where_like_function($field , $val , 'OR' , 'NOT' , $type);
 
     }    
 
-    public function having($array = [],$sec = '')
+    public function having($array = [] , $sec = '')
     {
 
-        return $this->having_function($array,$sec);
+        return $this->having_function($array , $sec);
 
     }
    /* 
