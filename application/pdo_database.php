@@ -1123,4 +1123,11 @@ Class pdo_mysql
 
     }
 
+    public function __destruct()
+    {
+
+        $this->pdo = null;
+
+    }
+
 }
