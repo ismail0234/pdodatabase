@@ -744,14 +744,13 @@ Class pdo_mysql
 
     private function get_result($type = 1)
     {
-
-        $where  = $this->where_combine();
         
+        $where  = $this->where_combine();
         $select =  $this->select_combine();
         
         $sql    = $select . ' ' . $where;
 
-        return $this->pdoexec($sql,$this->sql["value"] , $type);
+        return $this->pdoexec($sql , $this->sql["value"] , $type);
 
     }
 
@@ -839,13 +838,8 @@ Class pdo_mysql
                 {
 
                     $ayrac = ' = ';
-
                     if(strpbrk($regex,$key))
-                    {
-
                         $ayrac = '';
-
-                    }
 
                     $this->sql["where"][] = $andor;
                     $this->sql["where"][] = trim($key) . ' ' . $ayrac . ' ?'; 
@@ -881,7 +875,7 @@ Class pdo_mysql
         return $this;
     }
 
-    public function set($one = [],$two = '',$three = '')
+    public function set($one = [] , $two = '' , $three = '')
     {
 
         if(is_array($one))
@@ -895,9 +889,11 @@ Class pdo_mysql
              
                     $this->sql["set"][] = [
                         "field1" => trim($value[0]),
-                        "field2" => (isset($value[2])  ? trim($value[1]) : '?'),
+                        "field2" => isset($value[2])  ? trim($value[1]) : '?',
                     ];
+
                     $this->sql["value"][] = (isset($value[2])  ? trim($value[2]) : trim($value[1]));
+
                 }
 
             }
@@ -908,9 +904,10 @@ Class pdo_mysql
 
             $this->sql["set"][] = [
                 "field1" => trim($one),
-                "field2" => (strlen($three) > 0 ? trim($two) : '?'),
+                "field2" => strlen($three) > 0 ? trim($two) : '?',
             ];
-            $this->sql["value"][] = (strlen($three) > 0 ? trim($three) : trim($two));
+
+            $this->sql["value"][] = strlen($three) > 0 ? trim($three) : trim($two);
 
         }
 
@@ -921,10 +918,10 @@ Class pdo_mysql
     public function delete($table)
     {
 
-         $table = trim($table);
+        $table = trim($table);
         
-         if(!empty($table))
-         {
+        if(!empty($table))
+        {
            
             $where = $this->where_combine();
     
@@ -932,7 +929,7 @@ Class pdo_mysql
 
             return $this->pdoexec($sql,$this->sql["value"] , 5);     
 
-         }
+        }
 
     }
     
@@ -949,11 +946,7 @@ Class pdo_mysql
             {
 
                 foreach($this->sql["set"] as $up)
-                {
-
                     $set[] = $up["field1"] . ' = ' . $up["field2"];
-
-                }
 
             }
 
@@ -968,20 +961,17 @@ Class pdo_mysql
     }
 
 
-    public function multi_insert($table = '',$field = [] ,$arr = [])
+    public function multi_insert($table = '' , $field = []  , $arr = [])
     {
 
         $sql = [];
 
-        if(count($field) > 0)
+        if( count( $field ) > 0 )
         {
 
-            foreach ($field as $value)
-            {
-            
-                $sql[0][] =  trim($value);  
+            foreach( $field as $value )
+                $sql[0][] =  trim( $value );  
 
-            }
 
         }
 
@@ -999,7 +989,6 @@ Class pdo_mysql
                     $marray[] = '?';
                     $sql[1][] = trim($val);
 
-
                 }
 
                 $sql[2][] =  '(' . implode(',',$marray) . ')';
@@ -1013,7 +1002,7 @@ Class pdo_mysql
 
              $sqlstr = "INSERT INTO " . $this->prefix . $table . " (".implode(',',$sql[0]).") VALUES ".implode(',',$sql[2])."";
 
-             return $this->pdoexec($sqlstr,$sql[1],5);
+             return $this->pdoexec($sqlstr , $sql[1] , 5);
 
         }
 
@@ -1056,11 +1045,7 @@ Class pdo_mysql
                 $value = trim($value);
 
                 if(!empty($value))
-                {
-
                     $tablename[] = $this->prefix . $value;
-
-                }
 
             }
 
@@ -1071,11 +1056,7 @@ Class pdo_mysql
             $table = trim($table);
 
             if(!empty($table))
-            {
-
                 $tablename[] = $this->prefix . $table;
-
-            }
 
         }
 
@@ -1122,7 +1103,7 @@ Class pdo_mysql
         {
 
             $minimum = min(array_keys($this->sql["where"]));
-            $select = strtoupper(trim($this->sql["where"][$minimum]));
+            $select  = strtoupper(trim($this->sql["where"][$minimum]));
 
             if( in_array($select, $this->and_or) )
             {
