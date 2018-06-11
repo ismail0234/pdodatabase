@@ -441,7 +441,7 @@ Class pdo_mysql
 
     }
 
-    public function join($table,$query,$join = '')
+    public function join($table , $query , $join = '')
     {
 
         $this->sql["join"][] = ' '. trim($join) . ' JOIN ' . $this->prefix . $table.' ON '.$query;
@@ -461,65 +461,50 @@ Class pdo_mysql
     public function groupby($array = [])
     {
 
-        if(is_string($array))
-        {
-
+        if( is_string( $array ) )
             $array = explode(',',$array);
-
-        }
       
         foreach($array as $frm)
-        {
-
            $this->sql['groupby'][] = $frm;
-
-        }
 
         return $this;
 
     }
 
-    public function having_function($array,$sec)
+    public function having_function($array , $sec)
     {
 
-        $sec = trim($sec);
+        $sec = trim( $sec );
 
-        if(!empty($sec))
+        if( !empty( $sec ) )
         {
 
-            $array = [$array => $sec];
+            $array = [ $array => $sec ];
 
         }
-        else if(empty($sec) && is_string($array))
+        else if( empty( $sec ) && is_string( $array ) )
         {
 
-            $array = [$array => ''];
+            $array = [ $array => '' ];
 
         }
 
-        if(is_array($array) && count($array) > 0)
+        if( is_array( $array ) && count( $array ) > 0)
         {
 
             foreach ($array as $key => $value)
             {
 
-                if(is_int($key))
-                {
+                if( is_int( $key ) )
+                    $key = $value;
 
-                    $key   = $value;
+                $regex = implode( "" , $this->sqlsyntax);
 
-                }
-
-                $regex = implode("",$this->sqlsyntax);
                 $ayrac = '';
-                if(!strpbrk($regex,$key))
-                {
-
-                    $ayrac = ' = ';
-
-                }
-
-                $this->sql["having"]["text"][] = $key .  $ayrac . '? ';
+                if( !strpbrk( $regex , $key ) )
+                      $ayrac = ' = ';
+                
+                $this->sql["having"]["text"][]  = $key .  $ayrac . '? ';
                 $this->sql["having"]["value"][] = $value;
 
             }
@@ -529,36 +514,32 @@ Class pdo_mysql
         return $this;
     }
 
-    private function select_multiple($select = [],$sec,$mm)
+    private function select_multiple($select = [] , $sec , $mm)
     {
 
-        $sec = trim($sec);
+        $sec = trim( $sec );
 
-        if(!empty($sec))
+        if( !empty( $sec ) )
         {
 
-            $select = [$select => $sec];
+            $select = [ $select => $sec ];
 
         }
-        else if(empty($sec) && is_string($select))
+        else if( empty( $sec ) && is_string( $select ) )
         {
 
-            $select = [$select => $select];
+            $select = [ $select => $select ];
 
         }
 
-        if(is_array($select) && count($select) > 0)
+        if( is_array( $select ) && count( $select ) > 0)
         {
 
             foreach ($select as $key => $value)
             {
 
-                if(is_int($key))
-                {
-
-                    $key   = $value;
-
-                }
+                if( is_int( $key ) )
+                    $key = $value;
 
                 $this->sql["select"][] = $mm . '(' . $key .') AS '.$value;
 
@@ -573,19 +554,11 @@ Class pdo_mysql
     public function from($from)
     {
 
-        if(is_string($from))
-        {
-
+        if( is_string( $from ) )
             $from = explode(',',$from);
-
-        }
       
         foreach($from as $frm)
-        {
-
            $this->sql["table"][] = $this->prefix . $frm;
-
-        }
 
         return $this;        
 
@@ -594,28 +567,28 @@ Class pdo_mysql
     public function orderby($array = [],$desc = '')
     {
 
-        $desc = trim($desc);
+        $desc = trim( $desc );
 
-        if(!empty($desc))
+        if( !empty( $desc ) )
         {
 
-            $array = [$array => $desc];
+            $array = [ $array => $desc ];
 
         }
-        else if(empty($desc) && is_string($array))
+        else if( empty( $desc ) && is_string( $array ) )
         {
 
-            $array = [$array => ''];
+            $array = [ $array => '' ];
 
         }
 
-        if(is_array($array) && count($array) > 0)
+        if( is_array( $array ) && count( $array ) > 0)
         {
 
             foreach ($array as $key => $value)
             {
 
-                if(is_int($key))
+                if( is_int( $key ) )
                 {
 
                     $key   = $value;
@@ -623,21 +596,17 @@ Class pdo_mysql
 
                 }
 
-                $this->sql["orderby"][]  = trim($key) . ' '. trim($value);
+                $this->sql["orderby"][]  = trim( $key ) . ' '. trim( $value );
  
             }
 
         }
 
         return $this;
-        //ORDER BY Country ASC, CustomerName DESC;
-        //ORDER BY Country, CustomerName;
-        //ORDER BY Country DESC;
-        //ORDER BY Country;
 
     }
 
-    private function group_function($bas = '(' ,$and_or = 'AND')
+    private function group_function($bas = '(' , $and_or = 'AND')
     {
 
         $this->sql["where"][] = $and_or;
@@ -654,8 +623,7 @@ Class pdo_mysql
 
         $this->clearAndOr();
 
-        
-        if(count($this->sql["where"]) > 0)
+        if( count( $this->sql["where"] ) > 0 )
         {
 
             $where = 'WHERE ' . implode(' ',$this->sql["where"]);
@@ -665,32 +633,25 @@ Class pdo_mysql
 
         }
 
-        if(count($this->sql["groupby"]) > 0)
-        {
+        if( count( $this->sql["groupby"] ) > 0 )
+            $where .= ' GROUP BY ' . implode( ',' , $this->sql["groupby"] );
+ 
 
-            $where .= ' GROUP BY ' . implode(',',$this->sql["groupby"]);
-         
-        }
-
-        if(count($this->sql["having"]["text"]) > 0)
+        if( count( $this->sql["having"]["text"] ) > 0 )
         {
 
             $where .= ' HAVING ' . implode(',',$this->sql["having"]["text"]);
-            $this->sql["value"] = array_merge($this->sql["value"],$this->sql["having"]["value"]);
+            $this->sql["value"] = array_merge( $this->sql["value"] , $this->sql["having"]["value"] );
        
         }
 
-        if(count($this->sql["orderby"]) > 0)
-        {
-
-            $where .= ' ORDER BY ' . implode(',',$this->sql["orderby"]);
-         
-        }
-
-        $where = $this->addPrefix($where);
+        if( count( $this->sql["orderby"] ) > 0 )
+            $where .= ' ORDER BY ' . implode(',' , $this->sql["orderby"]);
 
 
-        if(count($this->sql["limit"]["text"]) > 0)
+        $where = $this->addPrefix( $where );
+
+        if( count( $this->sql["limit"]["text"] ) > 0)
         {
 
             $where .= ' ' . implode(' ',$this->sql["limit"]["text"]);
@@ -710,48 +671,36 @@ Class pdo_mysql
 
         $select = 'SELECT ';
 
-        if(count($this->sql["select"]) > 0)
+        if( count( $this->sql["select"] ) > 0 )
         {
 
             $select .= implode(',',$this->sql["select"]);
-
 
         }
         else
         {
 
-              $select .= '*';
+            $select .= '*';
           
         }
 
         $select .= ' FROM '; 
 
-        if(count($this->sql["table"]) > 0)
-        {
+        if( count( $this->sql["table"] ) > 0 )
+            $select .= implode( ',' , $this->sql["table"] );
 
-            $select .= implode(',',$this->sql["table"]);
+        if( count( $this->sql["join"] ) > 0 )
+            $select .= implode( ' ' , $this->sql["join"] );
 
-        }
-
-        if(count($this->sql["join"]) > 0)
-        {
-
-            $select .= implode(' ',$this->sql["join"]);
-
-        }
-
-        $select = $this->addPrefix($select);
-
-        return $select;
+        return $this->addPrefix( $select );
 
     }     
 
     public function limit($min,$max = 0)
     {
-        // UPDATE FONKSIYONDA LIMIT 0,20 ŞEKLİNDE ÇALIŞMAZ
-        // BÜYÜK İHTİMAL DELETE DE AYNI
 
-        if($max > 0){
+        if($max > 0)
+        {
 
             $sql = 'LIMIT ?,?';
 
@@ -759,7 +708,9 @@ Class pdo_mysql
             $this->sql["limit"]["value"]["val1"] = $min;
             $this->sql["limit"]["value"]["val2"] = $max;
 
-        }else if($min > 0){
+        }
+        else if($min > 0)
+        {
 
             $sql = 'LIMIT ?';
 
@@ -768,7 +719,6 @@ Class pdo_mysql
 
         }
 
-       
         return $this;
 
     }
@@ -778,12 +728,11 @@ Class pdo_mysql
 
         $sql = '';
 
-        if(count($this->sql["table"]) > 0)
+        if( count( $this->sql["table"] ) > 0 )
         {
 
-            $where = $this->where_combine();
-
-            $select =  $this->select_combine();
+            $where  = $this->where_combine();
+            $select = $this->select_combine();
 
             $sql = $select . ' ' . $where;
 
