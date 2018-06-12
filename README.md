@@ -113,6 +113,8 @@ $db = new pdo_mysql([
 	'charset'  => 'utf8',
 	// Database table prefix Default: null
 	'prefix'   => 'is_',
+    	// Database Debug Type
+    	'debugType' => true,
 	// Database query log Default: on
 	'querylog' => 1,
 ]);
@@ -167,6 +169,7 @@ Array
 
 ## Speed dial
  * [debugOutput Function](#debugoutput-function)
+ * [setDebug Function](#setdebug-function)
  * [Special Function](#special-function)
  * [Truncate Table](#truncate-table)
  * [Drop Table](#drop-table)
@@ -220,6 +223,19 @@ Array
  *
  */	
 $db->debugOutput();
+
+```
+
+### setDebug Function
+
+```php
+/*
+ * sql query error print type
+ * @params false/true
+ *         true  => sql query error print exit
+ *	   false => sql query error throw exception
+ */	
+$db->setDebug( false );
 
 ```
 
