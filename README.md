@@ -67,6 +67,7 @@
 - [x] sql query log
 - [x] speed sql query
 - [x] join Function
+- [x] Transaction Function
 
 ## Note: requires ext-pdo: *
 
@@ -171,6 +172,7 @@ Array
  * [debugOutput Function](#debugoutput-function)
  * [setDebug Function](#setdebug-function)
  * [Special Function](#special-function)
+ * [Transaction Function](#transaction-function)
  * [Truncate Table](#truncate-table)
  * [Drop Table](#drop-table)
  * [Empty Table](#empty-table) 
@@ -254,6 +256,50 @@ $db->setDebug( false );
  * 6 => lastInsertId ( int )
  */
 $db->query("SELECT * FROM is_users WHERE id = ?",[22],1);
+
+```
+
+### Transaction Function
+```php
+/*
+ * @void started transaction
+ */
+$db->transactionStart();
+/*
+ * sql query error throw exception type
+ */
+$db->setDebug( false );
+
+try {
+        
+    echo $db->multi_insert('table',["name","surname"],[
+        [
+            'ismail_satilmis',
+            'ismaiil_0234@hotmail.com',
+        ],
+        [
+            'ismail_satilmis',
+            'ismaiil_0234@hotmail.com',
+        ],
+        [
+            'ismail_satilmis',
+            'ismaiil_0234@hotmail.com',
+        ],      
+     ]);
+     
+    /*
+     *	@void sql querys send commit
+     */
+    $db->commit();
+
+} catch (Exception $e) {
+    
+    /*
+     *	@void sql querys roll back
+     */
+    $db->rollBack();
+
+}
 
 ```
 
