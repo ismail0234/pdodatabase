@@ -16,6 +16,8 @@ $db = new pdo_mysql([
     'charset'  => 'utf8',
     // Database table prefix Default: null
     'prefix'   => 'is_',
+    // Database Debug Type
+    'debugType' => true,       
     // Database query log Default: on
     'querylog' => 1,
 ]);
@@ -39,6 +41,37 @@ $db = new pdo_mysql([
  	'email' => 'ismaiil_0234@hotmail.com',
  ]);
  */
+/*
+ * TRANSACTION PROCESS
+ */
+$db->transactionStart();
+$db->setDebug( false );
+
+try {
+        
+    echo $db->multi_insert('table',["name","surname"],[
+        [
+            'ismail_satilmis',
+            'ismaiil_0234@hotmail.com',
+        ],
+        [
+            'ismail_satilmis',
+            'ismaiil_0234@hotmail.com',
+        ],
+        [
+            'ismail_satilmis',
+            'ismaiil_0234@hotmail.com',
+        ],      
+     ]);
+
+    $db->commit();
+
+} catch (Exception $e) {
+    
+    $db->rollBack();
+
+}
+
 /*
  * MULTI INSERT DATA
  * @param $tablename
