@@ -6,12 +6,14 @@ Class pdo_mysql
     protected $debugcss = '<style type="text/css">body{margin:40px;font:13px/20px normal Helvetica,Arial,sans-serif;color:#4F5155}h1{border-bottom:1px solid #D0D0D0;font-size:19px;font-weight:400;margin:0 0 14px;padding:14px 15px 10px}#container{margin:10px;border:1px solid #D0D0D0;box-shadow:0 0 8px #D0D0D0}p{margin:12px 15px}</style>';
 
     protected $prefix = '';
-     /*
-      * Query Log 
-      * 0 => CLOSE
-      * 1 => Open 
-      */
+    /*
+     * Query Log 
+     * 0 => CLOSE
+     * 1 => Open 
+    */
     protected $querylog = 1;
+
+    protected $debugType = false;
 
     public $debug = [];
 
@@ -69,31 +71,49 @@ Class pdo_mysql
     private function install($array)
     {
 
-        $array["ip"]       = isset($array["ip"])       && !empty(trim($array["ip"]))       ? $array["ip"]       : 'localhost';
-        $array["dbengine"] = isset($array["dbengine"]) && !empty(trim($array["dbengine"])) ? $array["dbengine"] : 'mysql';
-        $array["charset"]  = isset($array["charset"])  && !empty(trim($array["charset"]))  ? $array["charset"]  : 'utf8';
-        $array["database"] = isset($array["database"]) && !empty(trim($array["database"])) ? $array["database"] : '';
-        $array["username"] = isset($array["username"]) && !empty(trim($array["username"])) ? $array["username"] : '';
-        $array["password"] = isset($array["password"]) && !empty(trim($array["password"])) ? $array["password"] : '';
-        $array["prefix"]   = isset($array["prefix"])   && !empty(trim($array["prefix"]))   ? $array["prefix"]   : '';
-        $this->querylog    = isset($array["querylog"]) && !empty(trim($array["querylog"])) && $array["querylog"] == false ? false : true;
+        $array["ip"]       = isset($array["ip"])        && !empty(trim($array["ip"]))       ? $array["ip"]       : 'localhost';
+        $array["dbengine"] = isset($array["dbengine"])  && !empty(trim($array["dbengine"])) ? $array["dbengine"] : 'mysql';
+        $array["charset"]  = isset($array["charset"])   && !empty(trim($array["charset"]))  ? $array["charset"]  : 'utf8';
+        $array["database"] = isset($array["database"])  && !empty(trim($array["database"])) ? $array["database"] : '';
+        $array["username"] = isset($array["username"])  && !empty(trim($array["username"])) ? $array["username"] : '';
+        $array["password"] = isset($array["password"])  && !empty(trim($array["password"])) ? $array["password"] : '';
+        $array["prefix"]   = isset($array["prefix"])    && !empty(trim($array["prefix"]))   ? $array["prefix"]   : '';
+        $this->querylog    = isset($array["querylog"])  && !empty(trim($array["querylog"])) && $array["querylog"] == false ? false : true;
+        $this->debugType   = isset($array["debugType"]) && !empty(trim($array["debugType"])) ? $this->setDebug( $array["debugType"] ) : $this->setDebug( $array["debugType"] );
 
         return $array;
+
+    }
+
+
+    public function setDebug( $type )
+    {
+
+        return $this->debugType = $type == true ? true : false;
 
     }
 
     private function debug($name,$arr = [],$sql)
     {
 
-       echo $this->debugcss;
+        $html = $this->debugcss;
 
-       echo '<div id="container"><h1>'.$name.'</h1>';
-       echo '<p> Error Number: '.(isset($arr[0]) ? $arr[0]:'-');
-       echo '<p> '.(isset($arr[2]) ? $arr[2]:'-');
-       echo '<p> '.(isset($sql) ? $sql:'-');
-       echo '</div>';
+        $html .= '<div id="container"><h1>'.$name.'</h1>';
+        $html .= '<p> Error Number: '.(isset($arr[0]) ? $arr[0]:'-');
+        $html .= '<p> '.(isset($arr[2]) ? $arr[2]:'-');
+        $html .= '<p> '.(isset($sql) ? $sql:'-');
+        $html .= '</div>';
 
-       exit;
+        if( $this->debugType )
+        {
+
+            echo $html;
+            exit;
+
+        }
+
+        throw new Exception( $html , 1);
+        
     }
 
     public function debugOutput()
