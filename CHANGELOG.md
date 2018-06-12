@@ -1,3 +1,10 @@
+#### Version 1.2.6
+
+  * Join function prefix joker bug fixed
+  * Code syntax revize
+  * Disctinct remove code
+  * Class desctruct added
+
 #### Version 1.2.5
 
   * code revize optimizasion
