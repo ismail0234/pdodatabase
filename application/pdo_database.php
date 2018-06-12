@@ -461,6 +461,24 @@ Class pdo_mysql
 
     }
 
+    public function transactionStart()
+    {
+
+        return $this->pdo->beginTransaction();
+    }
+
+    public function rollBack()
+    {
+
+        return $this->pdo->rollBack();
+    }
+
+    public function commit()
+    {
+
+        return $this->pdo->commit();
+    }
+
     public function join($table , $query , $join = '')
     {
 
