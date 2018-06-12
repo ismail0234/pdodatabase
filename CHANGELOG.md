@@ -1,3 +1,8 @@
+#### Version 1.2.7
+
+  * Debug Type Added
+  * Transaction Added
+
 #### Version 1.2.6
 
   * Join function prefix joker bug fixed
