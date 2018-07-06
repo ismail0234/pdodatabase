@@ -354,7 +354,7 @@ $db->check('TableName');
 ### Optimize Table
 ```php
 
-// OPTIMIZE FROM tablename
+// OPTIMIZE TABLE tablename
 $db->optimize('TableName');
 
 ```
@@ -362,7 +362,7 @@ $db->optimize('TableName');
 ### Repair Table
 ```php
 
-// REPAIR FROM tablename
+// REPAIR TABLE tablename
 $db->repair('TableName');
 
 ```
