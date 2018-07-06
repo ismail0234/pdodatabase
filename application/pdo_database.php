@@ -913,7 +913,7 @@ Class pdo_mysql
         return $this;
     }
 
-    public function set($one = [] , $two = '' , $three = '')
+    public function set($one = [] , $two = '' , $three = null)
     {
 
         if(is_array($one))
@@ -924,13 +924,15 @@ Class pdo_mysql
 
                 foreach ($one as $value)
                 {
-             
+
+                    $count = count( $value );
+
                     $this->sql["set"][] = [
-                        "field1" => trim($value[0]),
-                        "field2" => isset($value[2])  ? trim($value[1]) : '?',
+                        "field1" => trim( $value[0] ),
+                        "field2" => $count == 3 ? trim( $value[1] ) : '?',
                     ];
 
-                    $this->sql["value"][] = (isset($value[2])  ? trim($value[2]) : trim($value[1]));
+                    $this->sql["value"][] = $count == 3 ? trim($value[2]) : trim($value[1]);
 
                 }
 
@@ -942,10 +944,11 @@ Class pdo_mysql
 
             $this->sql["set"][] = [
                 "field1" => trim($one),
-                "field2" => strlen($three) > 0 ? trim($two) : '?',
+                "field2" => $three !== null ? trim($two) : '?',
             ];
 
-            $this->sql["value"][] = strlen($three) > 0 ? trim($three) : trim($two);
+            $this->sql["value"][] = $three !== null ? trim($three) : trim($two);
+
 
         }
 
