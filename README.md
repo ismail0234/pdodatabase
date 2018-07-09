@@ -16,7 +16,8 @@ pdo easy and fast speed framework strong database class.
 - See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/LICENSE)
 
 
->  Note: requires ext-pdo: *
+> **IMPORTANT!**  Note: requires ext-pdo: *
+
 
 
 ## Composer Install
