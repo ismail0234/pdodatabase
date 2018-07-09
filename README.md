@@ -3,6 +3,16 @@
 [![Latest Unstable Version](https://poser.pugx.org/ismail0234/pdodatabase/v/unstable)](https://packagist.org/packages/ismail0234/pdodatabase)
 [![License](https://poser.pugx.org/ismail0234/pdodatabase/license)](https://packagist.org/packages/ismail0234/pdodatabase)
 
+## Change Log
+- See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/CHANGELOG.md)
+
+## Documentation
+- See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/docs/README.md)
+
+## License
+- See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/LICENSE)
+
+
 ## Note: requires ext-pdo: *
 
 ## Composer Install
@@ -99,12 +109,3 @@ Array
 ### Debug
 
 ![alt text](http://i.imgur.com/vldGpuK.png)
-
-# Change Log
-- See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/CHANGELOG.md)
-
-# Documentation
-- See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/docs/README.md)
-
-# License
-- See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/LICENSE)
