@@ -1,3 +1,8 @@
+
+#### Version 1.2.9
+
+  * result and get function rename changed
+
 #### Version 1.2.7
 
   * Debug Type Added
