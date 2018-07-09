@@ -2,7 +2,7 @@
     "name": "ismail0234/pdodatabase",
     "type": "library",
     "description": "pdo easy and fast speed framework strong database class.",
-    "keywords": ["pdo database","database class","pdo strong database class"],
+    "keywords": ["pdo database","database class", "bot benson", "pdo strong database class"],
     "homepage": "https://github.com/ismail0234/pdodatabase",
     "license": "GPL-3.0",
     "authors": [
@@ -18,7 +18,7 @@
         "ext-pdo": "*"        
     },
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "pdodatabase": "application"
         }
     },
