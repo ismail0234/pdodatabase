@@ -265,7 +265,7 @@ Class pdo_mysql
 
     }        
 
-    public function result()
+    public function result_object()
     {  
 
         return $this->get_result(1);
@@ -279,7 +279,7 @@ Class pdo_mysql
 
     }
 
-    public function get()
+    public function get_object()
     { 
 
         return $this->get_result(3);
