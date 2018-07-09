@@ -805,13 +805,13 @@ $db->select('users.id')->from('users')->join('orders','orders.uid = users.id','R
  
 ```php
 
-result(); // object all
+result_object(); // object all
 result_array(); // array all
-get(); // object one
+get_object(); // object one
 get_array(); // array one
 
 // SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
-$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->result();
+$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->result_object();
 
 Array
 (
@@ -839,7 +839,7 @@ Array
 )
 
 // SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
-$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->get();
+$db->select('username,id')->from('users')->where('id',2)->orderby('id','ASC')->limit(1)->get_object();
 
 stdClass Object
 (
@@ -858,4 +858,3 @@ Array
     [1] => 2
 )
 ```
-
