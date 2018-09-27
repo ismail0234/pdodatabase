@@ -1066,8 +1066,6 @@ Class pdo_mysql
 
         $sqlstr = "INSERT INTO " . $this->prefix . $table ." (".implode(',',$sql[0]).") VALUES(".implode(',',$sql[1]).")";
 
-        $pre = $this->pdo->prepare($sqlstr);
-
         return $this->pdoexec($sqlstr,$sql[2],6);
 
     }
