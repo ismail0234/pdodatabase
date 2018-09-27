@@ -48,25 +48,39 @@ Class pdo_mysql
     public function __construct($array = [])
     {
 
-        $array = $this->install($array);
+        $this->info = $this->install( $array );
+        $this->connectDatabase();
 
-        $connstring = $array["dbengine"].":host=".$array["ip"].";dbname=".$array["database"].";charset=".$array["charset"];
+    }
+
+    public function retryConnectDatabase()
+    {
+
+        $this->connectDatabase();
+
+    }
+
+    private function connectDatabase(  )
+    {
+
+        $connstring = $this->info["dbengine"].":host=".$this->info["ip"].";dbname=".$this->info["database"].";charset=".$this->info["charset"];
 
         try{
 
 
-            $this->pdo = new PDO($connstring,$array["username"],$array["password"]);
+            $this->pdo = new PDO($connstring,$this->info["username"],$this->info["password"]);
 
             $this->pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
-            $this->prefix = $array["prefix"];
+            $this->prefix = $this->info["prefix"];
 
         }catch(Exception $e){
 
             $this->debug('Database Connection Failed',array(0 => "1049",2 => $e->getMessage()),$connstring);
 
-        }
-
+        }   
+        
     }
+
 
     private function install($array)
     {
