@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "pdodatabase": "application"
+            "pdodatabase\\": "application"
         }
     },
     "minimum-stability": "stable"    
