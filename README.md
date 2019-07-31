@@ -24,7 +24,7 @@ pdo easy and fast speed framework strong database class.
 
 ```php
 
-$ composer require ismail0234/pdodatabase
+composer require ismail0234/pdodatabase
 
 ```
 
