@@ -1,6 +1,5 @@
 [![Latest Stable Version](https://poser.pugx.org/ismail0234/pdodatabase/v/stable)](https://packagist.org/packages/ismail0234/pdodatabase)
 [![Total Downloads](https://poser.pugx.org/ismail0234/pdodatabase/downloads)](https://packagist.org/packages/ismail0234/pdodatabase)
-[![Latest Unstable Version](https://poser.pugx.org/ismail0234/pdodatabase/v/unstable)](https://packagist.org/packages/ismail0234/pdodatabase)
 [![License](https://poser.pugx.org/ismail0234/pdodatabase/license)](https://packagist.org/packages/ismail0234/pdodatabase)
 
 pdo easy and fast speed framework strong database class.
