@@ -10,7 +10,7 @@ pdo easy and fast speed framework strong database class.
 
 ### Documentation
 - See [Documentation v1.x](https://github.com/ismail0234/pdodatabase/blob/master/docs/README_v1.x.md)
-- See [Documentation v2.x](https://github.com/ismail0234/pdodatabase/blob/master/docs/README_v2.x.md)
+- See [Documentation v2.x - Coming Soon](https://github.com/ismail0234/pdodatabase/blob/master/docs/README_v2.x.md)
 
 ### License
 - See [License](https://github.com/ismail0234/pdodatabase/blob/master/LICENSE)
