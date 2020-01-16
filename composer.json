@@ -13,12 +13,10 @@
             "role": "Owner and Developer"
         }
     ],
-    "require": {
-        "php": ">=5.0.0"   
-    },
+    "require": {},
     "autoload": {
         "psr-4": {
-            "pdodatabase\\": "application"
+            "IS\\QueryBuilder\\Database\\": "IS/QueryBuilder/Database"
         }
     },
     "minimum-stability": "stable"    
