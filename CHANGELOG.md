@@ -1,4 +1,8 @@
 
+#### Version 1.3.0
+
+  * added retryConnectDatabase
+
 #### Version 1.2.9
 
   * result and get function rename changed
