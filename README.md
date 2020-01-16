@@ -32,31 +32,31 @@ composer require ismail0234/pdodatabase
 
 ```php
 
-// Manual require
-require "application/pdo_database.php";
+use IS\QueryBuilder\Database\PdoClient;
 
-// Vendor require
-require  "vendor/autoload.php";
+include "vendor/autoload.php";
 
-$db = new pdo_mysql([
+$db = new PdoClient(array(
 	// Server Ip Default: localhost
-	'ip'       => 'localhost',
+	'ip'        => 'localhost',
 	// Database Name
-	'database' => 'is_test',
+	'database'  => 'databasename',
 	// Database Engine Name oracle,mysql ...
-	'dbengine' => 'mysql',
+	'dbengine'  => 'mysql',
 	// Database Username
-	'username' => 'root',
+	'username'  => 'root',
 	// Database Password
-	'password' => '',
+	'password'  => '123456',
 	// Database Charset Default: utf8
-	'charset'  => 'utf8',
+	'charset'   => 'utf8',
 	// Database table prefix Default: null
-	'prefix'   => 'is_',
-    	// Database Debug Type
-    	'debugType' => true,
-	// Database query log Default: on
-	'querylog' => 1,
+	'prefix'    => 'is_',
+	// Database exception Default: on
+	'exception' => true,
+	// Database persistent connection timeout Default: false
+	'persistent' => 30,
+	// Database query log Default: off
+	'querylog'  => false,
 ]);
 
 ```
@@ -64,36 +64,10 @@ $db = new pdo_mysql([
 ## Query Log
 ```php
 
-// query log on
-'querylog' => 1
 
-// print query log 
-// $db->debug returning all sql query ( speed , query , values )
-echo "<pre>";
-print_r($db->debug);
-echo "</pre>";
+$db->debugOutput();
 
 Output:
-
-Array
-(
-    [0] => Array
-        (
-            [sql] => INSERT INTO is_users (username,email) VALUES (?,?),(?,?),(?,?)
-            [value] => Array
-                (
-                    [0] => ismail_satilmis
-                    [1] => ismaiil_0234@hotmail.com
-                    [2] => ismail_satilmis
-                    [3] => ismaiil_0234@hotmail.com
-                    [4] => ismail_satilmis
-                    [5] => ismaiil_0234@hotmail.com
-                )
-
-            [speed] => 0.0016200542449951
-        )
-)
-	
 ```
 
 ### Query Log Output 
