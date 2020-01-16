@@ -9,7 +9,7 @@ pdo easy and fast speed framework strong database class.
 - See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/CHANGELOG.md)
 
 ### Documentation
-- See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/docs/README.md)
+- See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/docs/README_v1.x.md)
 
 ### License
 - See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/LICENSE)
