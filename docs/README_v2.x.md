@@ -38,7 +38,7 @@ $db = new PdoClient(array(
 ## Speed dial
  * [Persistent Database Connection](#persistent-database-connection)
  * [debugOutput Function](#debugoutput-function)
- * [setDebug Function](#setdebug-function)
+ * [setException Function](#setexception-function)
  * [Special Function](#special-function)
  * [Transaction Function](#transaction-function)
  * [Truncate Table](#truncate-table)
@@ -107,7 +107,7 @@ $db->debugOutput();
 
 ```
 
-### setDebug Function
+### setException Function
 
 ```php
 /*
