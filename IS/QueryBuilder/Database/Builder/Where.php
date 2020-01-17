@@ -221,7 +221,7 @@ Class Where
             $seperator = "";
         }
 
-        $builder["having"]["text"][0] = sprintf("%s%s %s", $havingKey, $seperator);
+        $builder["having"]["text"][0] = sprintf("%s%s ?", $havingKey, $seperator);
         $builder["having"]["value"][0] = $value;
         return $builder;
     }
