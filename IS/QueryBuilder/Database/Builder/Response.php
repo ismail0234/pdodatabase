@@ -166,7 +166,7 @@ Class Response
             $setList[] = $up["field1"] . ' = ' . $up["field2"];
         }
 
-        $sqlQuery = sprintf('UPDATE %s%s SET %s %s', $builder->sql['prefix'], $table, implode(',', $set), $whereCombine['query']);
+        $sqlQuery = sprintf('UPDATE %s%s SET %s %s', $builder->sql['prefix'], $table, implode(',', $setList), $whereCombine['query']);
         return $builder->execute($sqlQuery, $whereCombine["value"], 5);       
 
 	}
