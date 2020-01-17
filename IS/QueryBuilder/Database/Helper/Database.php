@@ -133,7 +133,7 @@ Class Database
         if($errorCode[0] > 0){
         	Debug::sendException('SQL Prepare Error', $errorCode, $sql, $this->config['exception']);
         }else if(!$prepare->execute($array)){
-        	Debug::sendException('SQL Execute Error', $pre->errorInfo(), $sql, $this->config['exception']);
+        	Debug::sendException('SQL Execute Error', $prepare->errorInfo(), $sql, $this->config['exception']);
         }
 
         $sonuc = true;
