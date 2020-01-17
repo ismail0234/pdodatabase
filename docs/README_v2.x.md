@@ -31,7 +31,7 @@ $db = new PdoClient(array(
   'persistent' => 30,
   // Database query log Default: off
   'querylog'  => false,
-]);
+));
 
 ```
 
