@@ -6,7 +6,7 @@ Kurulum için composer kullanmanız gerekmektedir. Composer'a sahip değilseniz 
 
 ```php
 
-composer require ismail0234/n11-php-api
+composer require ismail0234/pdodatabase
 
 ```
 
