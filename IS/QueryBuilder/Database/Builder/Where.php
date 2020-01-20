@@ -251,7 +251,6 @@ Class Where
             }
         }
 
-        $syntaxFull = implode("", Utility::$syntaxValues);
         foreach ($columns as $columnKey => $columnData) 
         {
 
@@ -265,7 +264,7 @@ Class Where
             $seperator   = $dataCount == 3 && $columnData[2] !== null ? trim($columnData[1]) : '=';
             $columnValue = $dataCount == 3 && $columnData[2] !== null ? trim($columnData[2]) : trim($columnData[1]);
 
-            if(!strpbrk($syntaxFull, $column) && !in_array($seperator, Utility::$syntaxValues)){
+            if(!in_array($seperator, Utility::$syntaxValues)){
                 $seperator = "=";
             }
 
