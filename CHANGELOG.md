@@ -1,3 +1,7 @@
+#### Version 2.0.2
+  * Update function bug fixed.
+  * Having function bug fixed.
+
 #### Version 2.0.0
 
   * syntax changed completely

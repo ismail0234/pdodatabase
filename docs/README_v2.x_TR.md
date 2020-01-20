@@ -1,7 +1,16 @@
-#  Documentation
+#  Döküman
 
+## Composer Kurulum
 
-## Install
+Kurulum için composer kullanmanız gerekmektedir. Composer'a sahip değilseniz windows için [Buradan](https://getcomposer.org/) indirebilirsiniz.
+
+```php
+
+composer require ismail0234/pdodatabase
+
+```
+
+## Kullanım
 
 ```php
 
@@ -11,36 +20,36 @@ use IS\QueryBuilder\Database\Helper\DatabaseException;
 include "vendor/autoload.php";
 
 $db = new PdoClient(array(
-  // Server Ip Default: localhost
+  // Sunucu Ip Varsayılan: localhost
   'ip'        => 'localhost',
-  // Database Name
+  // Veritabanı Adı
   'database'  => 'databasename',
-  // Database Engine Name oracle,mysql ...
+  // Veritabanı Motoru oracle,mysql ...
   'dbengine'  => 'mysql',
-  // Database Username
+  // Veritabanı Kullanıcı Adı
   'username'  => 'root',
-  // Database Password
+  // Veritabanı Şifresi
   'password'  => '123456',
-  // Database Charset Default: utf8
+  // Veritabanı Karakter Seti Varsayılan: utf8
   'charset'   => 'utf8',
-  // Database table prefix Default: null
+  // Veritabanı tablo öneki Varsayılan: null
   'prefix'    => 'is_',
-  // Database exception Default: on
+  // Veritabanı hata ayıklama Varsayılan: aktif
   'exception' => true,
-  // Database persistent connection timeout Default: false
+  // Veritabanı mysql kalıcı bağlantı zaman aşımı süresi Varsayılan: false
   'persistent' => 30,
-  // Database query log Default: off
+  // Veritabanı sorgu logları Varsayılan: pasif
   'querylog'  => false,
 ));
 
 ```
 
 ## Speed dial
- * [Persistent Database Connection](#persistent-database-connection)
- * [debugOutput Function](#debugoutput-function)
- * [setException Function](#setexception-function)
- * [Special Function](#special-function)
- * [Transaction Function](#transaction-function)
+ * [Veritabanı Kalıcı Bağlantı](#persistent-database-connection)
+ * [debugOutput Fonksiyonu](#debugoutput-function)
+ * [setException Fonksiyonu](#setexception-function)
+ * [Special Fonksiyonu](#special-function)
+ * [Transaction Fonksiyonu](#transaction-function)
  * [Truncate Table](#truncate-table)
  * [Drop Table](#drop-table)
  * [Empty Table](#empty-table) 
@@ -85,13 +94,12 @@ $db = new PdoClient(array(
  * [Response](#response) 
  
 
-### Persistent Database Connection
+### Veritabanı Kalıcı Bağlantı
 
 ```php
 $db = new PdoClient(array(
-	// Mysql Connection Timeout (second)
-  	// Database persistent connection timeout Default: false
-  	'persistent' => 30,
+	// Mysql Bağlantı Zaman aşımı süresi (saniye)
+  'persistent' => 30,
 ]);
 
 ```
@@ -100,7 +108,7 @@ $db = new PdoClient(array(
 
 ```php
 /*
- * return all sql query html table details speed , query , ms speed
+ * Bütün sorguların detaylarını ekrana basar. Hız, sorgu , milisaniye hız
  *
  */ 
 $db->debugOutput();
@@ -113,8 +121,8 @@ $db->debugOutput();
 /*
  * sql exception
  * @params false/true
- *         true  => sql query error throw exception
- *         false => sql query error print exit
+ *         true  => aktif durumda bir exception fırlatır
+ *         false => pasif durumda hata mesajını anlaşılır şekilde ekrana basar.
  */ 
 $db->setException(true);
 
@@ -123,9 +131,9 @@ $db->setException(true);
 ### Special Function
 ```php
 /*
- * @param sql query
- * @param sql query values
- * @param return type
+ * @param sql sorgusu
+ * @param sql sorgu değerleri
+ * @param dönüş türü
  * 0 => DEFAULT true
  * 1 => fetchAll ( Object )
  * 2 => fetchAll ( Array )
@@ -142,7 +150,7 @@ $db->query("SELECT * FROM is_users WHERE id = ?", array(22), 1);
 
 ```php
 /*
- * @void started transaction
+ * @void transactionı başlat
  */
 $db->beginTransaction();
 
@@ -155,14 +163,14 @@ try {
      ));
      
     /*
-     *  @void sql querys send commit
+     *  @void işlem tamam verileri ekle.
      */
     $db->commit();
 
 } catch (DatabaseException $e) {
     
     /*
-     *  @void sql querys roll back
+     *  @void hata var işlemi geri al
      */
     $db->rollBack();
 
@@ -674,8 +682,8 @@ Array
     [0] => stdClass Object
         (
             [username] => ismail
-            [id] => 2
-        )
+            [id] => 2
+        )
 
 )
 
@@ -688,9 +696,9 @@ Array
         (
             [username] => ismail
             [0] => ismail
-            [id] => 2
-            [1] => 2
-        )
+            [id] => 2
+            [1] => 2
+        )
 
 )
 
@@ -700,7 +708,7 @@ $db->select('username,id')->from('users')->where('id', 2)->orderby('id', 'ASC')-
 stdClass Object
 (
     [username] => ismail
-    [id] => 2
+    [id] => 2
 )
 
 // SELECT username,id FROM users WHERE id = 2  ORDER BY id ASC LIMIT 1
@@ -710,7 +718,7 @@ Array
 (
     [username] => ismail
     [0] => ismail
-    [id] => 2
-    [1] => 2
+    [id] => 2
+    [1] => 2
 )
 ```
