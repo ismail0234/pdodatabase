@@ -217,7 +217,7 @@ Class Where
     {
 
         $seperator = " = ";
-        if(strpbrk(implode("", Utility::$syntaxValues), $havingKey)){
+        if(strpbrk($havingKey, implode("", Utility::$syntaxValues))){
             $seperator = "";
         }
 
