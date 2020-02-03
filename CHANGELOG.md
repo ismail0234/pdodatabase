@@ -1,4 +1,9 @@
 #### Version 2.0.2
+  * Update bug fixed.
+  * Insert return data bug fixed.
+  * Removed unnecessary code.
+
+#### Version 2.0.2
   * Update function bug fixed.
   * Having function bug fixed.
 
