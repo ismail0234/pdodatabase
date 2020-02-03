@@ -234,7 +234,7 @@ Class PDOClient extends Database
     public function insert($table, $data)
     {
         $response = Insert::addData($this->prefix, $table, array(), $data);
-        return $this->execute($response['sqlQuery'], $response['values'], 5);
+        return $this->execute($response['sqlQuery'], $response['values'], 6);
     }
 
     /**
