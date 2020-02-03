@@ -155,18 +155,18 @@ Class Response
 	public static function update($builder, $table)
 	{
 
-		if (count($builder->sql['set']) <= 0 || empty($table)) {
+		if (count($builder->sqlData['set']) <= 0 || empty($table)) {
 			return 0;
 		}
 
 		$whereCombine = self::whereCombine($builder->sqlData, $builder->prefix);
 
 		$setList = array();
-        foreach($builder->sql['set'] as $up){
+        foreach($builder->sqlData['set'] as $up){
             $setList[] = $up["field1"] . ' = ' . $up["field2"];
         }
 
-        $sqlQuery = sprintf('UPDATE %s%s SET %s %s', $builder->sql['prefix'], $table, implode(',', $setList), $whereCombine['query']);
+        $sqlQuery = sprintf('UPDATE %s%s SET %s %s', $builder->sqlData['prefix'], $table, implode(',', $setList), $whereCombine['query']);
         return $builder->execute($sqlQuery, $whereCombine["value"], 5);       
 
 	}
