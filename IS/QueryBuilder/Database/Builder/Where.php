@@ -244,7 +244,7 @@ Class Where
 
         if (!is_array($columns)) 
         {
-            if ($value == null) {
+            if ($value === null) {
                 $columns = array(array($columns, $seperator));
             }else{
                 $columns = array(array($columns, $seperator, $value));
