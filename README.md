@@ -33,11 +33,11 @@ composer require ismail0234/pdodatabase
 
 ```php
 
-use IS\QueryBuilder\Database\PdoClient;
+use IS\QueryBuilder\Database\PDOClient;
 
 include "vendor/autoload.php";
 
-$db = new PdoClient(array(
+$db = new PDOClient(array(
 	// Server Ip Default: localhost
 	'ip'        => 'localhost',
 	// Database Name
