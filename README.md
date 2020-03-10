@@ -2,8 +2,7 @@
 [![Total Downloads](https://poser.pugx.org/ismail0234/pdodatabase/downloads)](https://packagist.org/packages/ismail0234/pdodatabase)
 [![License](https://poser.pugx.org/ismail0234/pdodatabase/license)](https://packagist.org/packages/ismail0234/pdodatabase)
 
-pdo easy and fast speed framework strong database class.
-
+pdo easy and fast speed query builder framework strong database class.
 
 ### Change Log
 - See [ChangeLog](https://github.com/ismail0234/pdodatabase/blob/master/CHANGELOG.md)
