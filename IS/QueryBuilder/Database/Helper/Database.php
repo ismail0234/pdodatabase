@@ -250,11 +250,11 @@ Class Database
      * @author Ismail Satilmis <ismaiil_0234@hotmail.com>
      *
      */
-    protected function clearQuery()
+    public function clearQuery()
     {
 
         $this->sqlData = array(
-        	'prefix'   => $this->config['prefix'],
+            'prefix'   => $this->config['prefix'],
             'select'   => array(),
             'table'    => array(),
             'where'    => array(),
@@ -271,7 +271,8 @@ Class Database
                 'text'  => array() , 
                 'value' => array()
             ),
-            'limit' => array('text' => array()),
+            'limit'       => array('text' => array()),
+            'ignoreAlias' => array(),
         );
 
     }

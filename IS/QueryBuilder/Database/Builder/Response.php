@@ -105,7 +105,15 @@ Class Response
             $select .= implode(' ', $sqlData['join']);
         }
 
-        return Utility::addPrefix($select, $prefix);
+        $select = Utility::addPrefix($select, $prefix);
+        if (count($sqlData['ignoreAlias']) > 0) 
+        {
+            foreach ($sqlData['ignoreAlias'] as $alias) {
+                $select = str_replace($prefix . $alias . '.', $alias . '.', $select);
+            }
+        }
+
+        return $select;
     }     
 
     /**

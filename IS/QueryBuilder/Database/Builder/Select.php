@@ -116,6 +116,14 @@ Class Select
             $joinType = 'INNER';
         }
 
+        if (strstr($table, 'as') !== false) 
+        {
+            $alias = Utility::getAlias($table);
+            if ($alias !== false) {
+                $builder['ignoreAlias'][$alias] = $alias;
+            }
+        }        
+
         $builder["join"][] = ' ' . $joinType . ' JOIN ' . $builder['prefix'] . $table . ' ON ' . $query;
         return $builder;
     }

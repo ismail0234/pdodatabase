@@ -251,6 +251,7 @@ Class Where
             }
         }
 
+
         foreach ($columns as $columnKey => $columnData) 
         {
 
