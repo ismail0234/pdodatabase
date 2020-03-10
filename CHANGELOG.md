@@ -1,3 +1,6 @@
+#### Version 2.1.0
+  * Join Function, alias properties added.
+
 #### Version 2.0.4
   * Where critical bug fixed.
   
