@@ -655,6 +655,9 @@ $db->select('users.id')->from('users')->join('orders', 'orders.uid = users.id', 
 // SELECT is_users.id FROM is_users RIGHT JOIN is_orders ON is_orders.uid = is_users.id WHERE is_users.id = ?
 $db->select('users.id')->from('users')->join('orders', 'orders.uid = users.id', 'RIGHT')->where('users.id', 1)->getArray()
 
+// SELECT is_users.id FROM is_users RIGHT JOIN is_orders as orderTable ON orderTable.uid = is_users.id WHERE is_users.id = ?
+$db->select('users.id')->from('users')->join('orders as orderTable', 'orderTable.uid = users.id', 'RIGHT')->where('users.id', 1)->getArray()
+
 ```
 
 ### Response
