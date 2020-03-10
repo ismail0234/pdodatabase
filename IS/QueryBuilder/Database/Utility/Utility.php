@@ -247,6 +247,30 @@ Class Utility
 
 	/**
 	 *
+	 * Alias ekini döner.
+	 *
+	 * @author Ismail Satilmis <ismaiil_0234@hotmail.com>
+	 * @param string $table
+	 * @return string
+	 *
+	 */
+	public static function getAlias($table)
+    {
+
+        $alias = explode('as', $table);
+        if (isset($alias[1])) 
+        {
+            $alias = trim($alias[1]);
+            if (!empty($alias)) {
+                return $alias;
+            }
+        }
+        
+        return false;
+    }
+
+	/**
+	 *
 	 * Like için metin üzerindeki özel karakterleri temizelr.
 	 *
 	 * @author Ismail Satilmis <ismaiil_0234@hotmail.com>
