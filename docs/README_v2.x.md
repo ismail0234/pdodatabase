@@ -5,12 +5,12 @@
 
 ```php
 
-use IS\QueryBuilder\Database\PdoClient;
+use IS\QueryBuilder\Database\PDOClient;
 use IS\QueryBuilder\Database\Helper\DatabaseException;
 
 include "vendor/autoload.php";
 
-$db = new PdoClient(array(
+$db = new PDOClient(array(
   // Server Ip Default: localhost
   'ip'        => 'localhost',
   // Database Name
