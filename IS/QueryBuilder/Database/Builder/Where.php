@@ -87,8 +87,8 @@ Class Where
      */
     public static function whereIn($builder, $column, $data, $andOr, $not = "")
     {
-        
-        if (count($data) <= 0) {
+        if ($data == null || count($data) <= 0) 
+        {
             return $builder;
         }
 
